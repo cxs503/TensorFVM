@@ -173,6 +173,21 @@ def _bulk_exchange_operator(operator, mass, volume, cells, coefficient):
     return operator,conductance
 
 
+def _apply_source_derivatives(rhs,layout,volume,width,slope,curvature):
+    # For z measured from the midpoint, remove the cell mean from
+    # slope*z + curvature*z²/2. Integrating -k*T'' twice gives cubic
+    # and quartic corrections to the two rightward face powers.
+    odd = volume*width*slope/12
+    even = volume*width**2*curvature/120
+    west, east = odd-even, odd+even
+    rhs[layout.cells] += west-east
+    rhs[layout.left[1:]-1] -= west[1:]
+    rhs[layout.right[:-1]-1] += east[:-1]
+    if layout.free_ends.size:
+        rhs[-len(layout.free_ends):] += np.array([-west[0],east[-1]])[layout.free_ends]
+    return np.stack((west,east))
+
+
 def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                              end_temperatures, *, source=0., source_gradient=None, source_curvature=None, film_coefficient=0.,
                              ambient_temperature=0., shoulder_areal_heat_capacity=0.,
@@ -207,18 +222,7 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
         width = np.asarray(dx)
         slope = _profile(0. if source_gradient is None else source_gradient,n,"source gradient")
         curvature = _profile(0. if source_curvature is None else source_curvature,n,"source curvature")
-        # For z measured from the midpoint, remove the cell mean from
-        # slope*z + curvature*z²/2. Integrating -k*T'' twice gives cubic
-        # and quartic corrections to the two rightward face powers.
-        odd = volume*width*slope/12
-        even = volume*width**2*curvature/120
-        west, east = odd-even, odd+even
-        offsets = west, east
-        rhs[layout.cells] += west-east
-        rhs[layout.left[1:]-1] -= west[1:]
-        rhs[layout.right[:-1]-1] += east[:-1]
-        if layout.free_ends.size:
-            rhs[-len(layout.free_ends):] += np.array([-west[0],east[-1]])[layout.free_ends]
+        offsets = _apply_source_derivatives(rhs,layout,volume,width,slope,curvature)
     if not layout.anchored and not np.any(bulk_g):
         if mean_temperature is None or not np.isscalar(mean_temperature) or not np.isfinite(mean_temperature):
             raise ValueError("unanchored ends without film exchange require a finite mean_temperature")
@@ -288,6 +292,8 @@ def reconstruct_interval_rod_field(dx, area, conductivity, temperatures, fractio
     powers divided by interval duration. The reconstruction assumes constant
     conductivity and area inside each cell.
 
+    When net source derivatives are present, integrate them to recover the
+    cubic or quartic profile with the same mean and endpoint temperatures.
     fractions are local positions from 0 (west) to 1 (east), common to every
     cell. Both results have shape (interval, cell, sample).
     """
@@ -317,6 +323,17 @@ def reconstruct_interval_rod_field(dx, area, conductivity, temperatures, fractio
     jump = east-west
     field = west[:,:,None]+jump[:,:,None]*f+bend[:,:,None]*(f*(1-f))
     power = -(section*k/width)[None,:,None]*(jump[:,:,None]+bend[:,:,None]*(1-2*f))
+    y = f-.5
+    for key,degree,shape,derivative in (
+            ("net_source_gradient",3,(y*y-.25)*y,3*y*y-.25),
+            ("net_source_curvature",4,(y*y-.25)*(y*y-.05),4*y**3-.6*y)):
+        if key in temperatures:
+            value = np.asarray(temperatures[key])
+            if value.shape!=mean.shape or np.iscomplexobj(value) or not np.isfinite(value).all():
+                raise ValueError(f"{key} must contain one finite real value per interval and cell")
+            factor = value*width**degree/(6 if degree==3 else 24)
+            field -= (factor/k)[:,:,None]*shape
+            power += (factor*section/width)[:,:,None]*derivative
     return field,power
 
 
@@ -382,7 +399,8 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                                 theta=.5, flux_order=1, contact_resistance=0., return_traces=False,
                                 method="theta", return_step_heat=False, end_types=("temperature","temperature"), end_film_coefficient=0.,
                                end_areal_heat_capacity=0., initial_end_temperature=None, initial_trace_temperatures=(None,None), load_jump_times=(), interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
-                               heat_loss_coefficient=0., bulk_ambient_temperature=0., return_interval_temperatures=False):
+                               heat_loss_coefficient=0., bulk_ambient_temperature=0., return_interval_temperatures=False,
+                               net_source_gradient=None, net_source_curvature=None):
     """Advance the stepped rod with theta-weighted cell and shoulder storage.
 
     Uses the geometry, units, power signs and four outputs of the harmonic solve,
@@ -429,6 +447,14 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     the instantaneous output locations; trace_left and trace_right are the
     two material temperatures on each interior face. Each row averages all
     internal time steps across one requested output interval.
+    With flux_order=2, optional net_source_gradient (W/m⁴) and
+    net_source_curvature (W/m⁵) specify axial derivatives of the net
+    volumetric input at each cell midpoint, including bulk exchange and
+    subtracting the local storage rate. These prescribed scalar or cellwise
+    values may be functions of time; list any jumps in load_jump_times.
+    The interval dictionary also carries their stage-weighted means for
+    reconstruct_interval_rod_field. The source parameter remains the
+    applied volumetric heating, averaged over each cell.
     """
     time = np.asarray(time,dtype=float)
     if time.ndim != 1 or len(time)<2 or not np.isfinite(time).all() or np.any(np.diff(time)<=0):
@@ -450,17 +476,31 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     operator,bulk_g = _bulk_exchange_operator(operator,mass,volume,layout.cells,heat_loss_coefficient)
     if not callable(bulk_ambient_temperature):
         fixed_reservoir = _profile(bulk_ambient_temperature,n,"bulk ambient temperature")
+    graded = net_source_gradient is not None or net_source_curvature is not None
+    if graded and flux_order!=2:
+        raise ValueError("net source derivatives require flux_order=2")
+    width = np.asarray(dx)
+    derivative_inputs = [(0. if value is None else value,name) for value,name in
+                         ((net_source_gradient,"net source gradient"),(net_source_curvature,"net source curvature"))]
     def forcing(t):
         values = [v(float(t)) if callable(v) else v for v in (end_temperatures,source,ambient_temperature,interface_power,trace_power)]
         load, boundary, deposited = _load(volume,end_load,layout,film,*values,float)
         reservoir = (_profile(bulk_ambient_temperature(float(t)),n,"bulk ambient temperature")
                      if callable(bulk_ambient_temperature) else fixed_reservoir)
         load[layout.cells] += bulk_g*reservoir
-        return load, boundary, values[1], values[2], deposited, reservoir
+        derivatives = offsets = None
+        if graded:
+            derivatives = np.stack([_profile(v(float(t)) if callable(v) else v,n,name)
+                                    for v,name in derivative_inputs])
+            offsets = _apply_source_derivatives(load,layout,volume,width,*derivatives)
+        return load, boundary, values[1], values[2], deposited, reservoir, derivatives, offsets
 
     states = np.empty((len(time),len(mass)))
     ends = np.empty((len(time),2))
-    rhs,ends[0],src,air,face_power,reservoir = forcing(time[0])
+    rhs,ends[0],src,air,face_power,reservoir,derivatives,offsets = forcing(time[0])
+    if graded:
+        power_offsets = np.empty((len(time),2,n))
+        power_offsets[0] = offsets
     initial = _profile(initial_temperature,n,"initial temperature")
     states[0,layout.cells] = initial
     # At t0 a supplied storing-face temperature is a constraint on adjacent
@@ -496,6 +536,9 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     if return_interval_temperatures:
         temperatures = {key:np.zeros((len(time)-1,size)) for key,size in
                         (("cell",n),("face",n+1),("trace_left",n-1),("trace_right",n-1))}
+        if graded:
+            for key in ("net_source_gradient","net_source_curvature"):
+                temperatures[key] = np.zeros((len(time)-1,n))
     if return_step_heat:
         step_heat = {key:np.zeros((len(time)-1,size)) for key,size in
                      (("left",n),("right",n),("source",n),("bulk_exchange",n),("ambient",n-1),("interface",n-1),("trace_left",n-1),("trace_right",n-1),("contact",n-1),("end_input",2))}
@@ -541,9 +584,9 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 stage_time = start+weight*dt
                 if not start<stage_time<stop:
                     raise ValueError("internal stage has no representable time")
-                rhs,stage_ends,src,air,face_power,reservoir = forcing(stage_time)
+                rhs,stage_ends,src,air,face_power,reservoir,derivatives,offsets = forcing(stage_time)
                 stage = lu.solve(mass*u+weight*dt*rhs)
-            next_rhs,next_ends,next_src,next_air,next_power,next_reservoir = forcing(np.nextafter(stop,start) if stop in events else stop)
+            next_rhs,next_ends,next_src,next_air,next_power,next_reservoir,next_derivatives,next_offsets = forcing(np.nextafter(stop,start) if stop in events else stop)
             next_u = lu.solve(mass*u+dt*((1-weight)*(rhs-operator@stage)+weight*next_rhs))
             if return_step_heat or return_interval_temperatures:
                 # Flux, storage and film operators are linear, so their time
@@ -552,9 +595,17 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 boundary = (1-weight)*stage_ends+weight*next_ends
                 cells,faces,left,right,(up,down) = layout.output(mean,boundary,g,flux_order,True)
             if return_interval_temperatures:
+                if graded:
+                    gradient,curvature = (1-weight)*derivatives+weight*next_derivatives
+                    temperatures["net_source_gradient"][step] += dt*gradient
+                    temperatures["net_source_curvature"][step] += dt*curvature
                 for key,values in (("cell",cells),("face",faces),("trace_left",up),("trace_right",down)):
                     temperatures[key][step] += dt*values
             if return_step_heat:
+                if graded:
+                    west,east = (1-weight)*offsets+weight*next_offsets
+                    left += west
+                    right += east
                 step_heat["left"][step] += dt*left
                 step_heat["right"][step] += dt*right
                 external = np.where(types=="power",boundary,[left[0],-right[-1]])
@@ -578,15 +629,21 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 contact[split] = contact_g*(up[split]-down[split])
                 step_heat["contact"][step] += dt*contact+contact_heat
             rhs,src,air,face_power,reservoir = next_rhs,next_src,next_air,next_power,next_reservoir
+            derivatives,offsets = next_derivatives,next_offsets
             u,boundary_start,start = next_u,next_ends,stop
         if end in events:
-            rhs,boundary_start,src,air,face_power,reservoir = forcing(end)
+            rhs,boundary_start,src,air,face_power,reservoir,derivatives,offsets = forcing(end)
             if np.any(massless):
                 u[massless] = trace_factor.solve(rhs[massless]-coupling @ u[~massless])
         if end==time[step+1]:
             step += 1
+            if graded:
+                power_offsets[step] = offsets
             states[step],ends[step] = u,boundary_start
     output = layout.output(states,ends,g,flux_order,return_traces)
+    if graded:
+        cell,faces,left,right,*traces = output
+        output = (cell,faces,left+power_offsets[:,0],right+power_offsets[:,1],*traces)
     if return_step_heat:
         output += (step_heat,)
     if return_interval_temperatures:

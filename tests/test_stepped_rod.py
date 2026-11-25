@@ -664,3 +664,37 @@ def test_interval_rod_polynomial_preserves_energy_and_one_sided_powers(dx):
         np.testing.assert_allclose(power[:,:,i]*np.diff(time)[:,None],heat[key],rtol=0.,atol=2e-14)
     with pytest.raises(ValueError,match="fractions"):
         reconstruct_interval_rod_field(dx,area,k,means,[-.1])
+
+
+@pytest.mark.parametrize("method", ["theta", "sdirk2", "sdirk2_start"])
+def test_transient_quartic_temperature_and_cubic_power_across_switch(method):
+    from tensorfvm.cht.rod import reconstruct_interval_rod_field, solve_transient_stepped_rod
+
+    x = np.array([0.,.17,.51,.8,1.])
+    dx,mid = np.diff(x),(x[1:]+x[:-1])/2
+    k,area,capacity = 2.1,1.3,1.7
+    time = np.array([0.,.09,.25,.4])
+    switch = .14
+    amp = lambda t: 1+.8*t-1.1*np.maximum(t-switch,0.)
+    primitive = time+.4*time**2-.55*np.maximum(time-switch,0.)**2
+    average = np.diff(primitive)/np.diff(time)
+    temp = lambda z: 1.+.4*z-.2*z**2+.3*z**3-.1*z**4
+    power = lambda z: -k*area*(.4-.4*z+.9*z**2-.4*z**3)
+    nodes,weights = np.polynomial.legendre.leggauss(3)
+    cell = temp(mid[:,None]+dx[:,None]*nodes/2) @ (weights/2)
+    net = np.diff(power(x))/(area*dx)
+    u,faces,west,east,heat,means = solve_transient_stepped_rod(dx,area,k,capacity,
+        lambda t: [power(0.)*amp(t),temp(1.)*amp(t)],time,cell,flux_order=2,method=method,
+        end_types=("power","temperature"),load_jump_times=[switch],
+        source=lambda t: capacity*(.8 if t<switch else -.3)*cell+amp(t)*net,
+        net_source_gradient=lambda t: -k*(1.8-2.4*mid)*amp(t),
+        net_source_curvature=lambda t: 2.4*k*amp(t),return_interval_temperatures=True,return_step_heat=True)
+    for actual,exact in ((u,cell),(faces,temp(x)),(west,power(x[:-1])),(east,power(x[1:]))):
+        np.testing.assert_allclose(actual,amp(time)[:,None]*exact,atol=3e-13,rtol=0.)
+    f = np.array([0.,.17,.5,.69,1.])
+    field,flux = reconstruct_interval_rod_field(dx,area,k,means,f)
+    z = x[:-1,None]+dx[:,None]*f
+    np.testing.assert_allclose(field,average[:,None,None]*temp(z),atol=3e-13,rtol=0.)
+    np.testing.assert_allclose(flux,average[:,None,None]*power(z),atol=3e-13,rtol=0.)
+    for key,index in (("left",0),("right",-1)):
+        np.testing.assert_allclose(heat[key],np.diff(time)[:,None]*flux[:,:,index],atol=3e-14,rtol=0.)

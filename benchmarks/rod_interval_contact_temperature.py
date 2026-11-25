@@ -1,4 +1,5 @@
 """Interval temperatures on both sides of a heated, resistive material contact."""
+import argparse
 import json
 from pathlib import Path
 import subprocess
@@ -7,7 +8,7 @@ import numpy as np
 from tensorfvm.cht.rod import reconstruct_interval_rod_field, solve_transient_stepped_rod
 
 
-def measure(n, order, method):
+def measure(n, order, method, graded=False):
     split = .4
     time = np.array([0., .11, .27, .4])
     switch = .153
@@ -23,21 +24,29 @@ def measure(n, order, method):
     offset = np.repeat([1.,1.-contact_jump],n)
     slope = -power/(area*k)
 
+    cubic = np.repeat([.45,-.32],n) if graded else np.zeros(2*n)
+    quartic = np.repeat([-.18,.37],n) if graded else np.zeros(2*n)
     def profile(z):
-        return offset+z*(slope+curve*z)
+        return offset+z*(slope+z*(curve+z*(cubic+z*quartic)))
+    def flux(z):
+        return -area*k*(slope+z*(2*curve+z*(3*cubic+4*z*quartic)))
 
     z = (faces[:-1]+faces[1:])/2-split
-    cell = profile(z)+curve*dx**2/12
+    gauss,weights = np.polynomial.legendre.leggauss(3)
+    cell = (weights/2) @ profile(z+gauss[:,None]*dx/2)
+    net_source = (flux(faces[1:]-split)-flux(faces[:-1]-split))/(area*dx)
+    derivatives = dict(net_source_gradient=-k*(6*cubic+24*quartic*z),
+                       net_source_curvature=-24*k*quartic) if graded and order==2 else {}
     west,east = profile(faces[:-1]-split),profile(faces[1:]-split)
     contact = np.zeros(2*n-1)
     contact[n-1] = 1.
     *_,heat,means = solve_transient_stepped_rod(dx,area,k,c,
         lambda t: np.array([west[0],east[-1]])+rise(t),time,cell,
-        flux_order=order,method=method,source=lambda t: c*rate(t)-2*k*curve,
+        flux_order=order,method=method,source=lambda t: c*rate(t)+net_source,
         contact_resistance=contact*resistance,interface_heat_capacity=contact*storage,
         initial_trace_temperatures=(east[:-1],west[1:]),interface_capacity_left_fraction=fraction,
         interface_left_fraction=fraction,interface_power=lambda t: contact*storage*rate(t),
-        load_jump_times=[switch],return_step_heat=True,return_interval_temperatures=True)
+        load_jump_times=[switch],return_step_heat=True,return_interval_temperatures=True,**derivatives)
     errors = {}
     for key,expected in (("cell",cell),("trace_left",east[:-1]),("trace_right",west[1:])):
         errors[key+"_K"] = float(abs(means[key]-expected-mean_rise[:,None]).max())
@@ -48,25 +57,28 @@ def measure(n, order, method):
         fractions = np.array([0.,.13,.38,.73,1.])
         distance = (faces[:-1,None]-split)+dx[:,None]*fractions
         temperature,powers = reconstruct_interval_rod_field(dx,area,k,means,fractions)
-        reference = offset[:,None]+distance*(slope[:,None]+curve[:,None]*distance)
-        rightward = -(area*k)[:,None]*(slope[:,None]+2*curve[:,None]*distance)
+        reference = profile(distance.T).T
+        rightward = flux(distance.T).T
         errors["interior_temperature_K"] = float(abs(temperature-reference-mean_rise[:,None,None]).max())
         errors["interior_power_W"] = float(abs(powers-rightward).max())
     return errors
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--graded",action="store_true",help="use different quartic profiles and net source derivatives in the two materials")
+    graded = parser.parse_args().graded
     rows = []
     for method in ("theta","sdirk2"):
         for order in (1,2):
             previous = None
             for n in (4,8,16,32):
-                errors = measure(n,order,method)
+                errors = measure(n,order,method,graded)
                 rates = {k:float(np.log2(previous[k]/v)) for k,v in errors.items()} if order==1 and previous else {}
                 passed = all(v>1.7 for v in rates.values()) if order==1 else max(errors.values())<1e-10
                 rows.append(dict(cells_per_material=n,flux_order=order,method=method,
                                  errors=errors,orders=rates,passed=passed))
                 previous = errors
     version = subprocess.check_output(["git","rev-parse","HEAD"],cwd=Path(__file__).parent,text=True).strip()
-    print(json.dumps(dict(commit=version,runs=rows),indent=2,allow_nan=False))
+    print(json.dumps(dict(commit=version,graded=graded,runs=rows),indent=2,allow_nan=False))
     raise SystemExit(0 if all(row["passed"] for row in rows) else 1)
