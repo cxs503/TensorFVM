@@ -95,3 +95,25 @@ def test_quadratic_rod_reproduces_exact_means_and_both_powers(n):
                  film_coefficient=h,ambient_temperature=ambient,shoulder_areal_heat_capacity=cw,flux_order=2)
     for result, exact in zip(observed,(means,faces,incoming,outgoing)):
         np.testing.assert_allclose(result,exact,atol=2e-13,rtol=0)
+
+
+@pytest.mark.parametrize("order",[1,2])
+def test_resistive_shoulder_transient_temperature_and_power_paths(order):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+    area = np.array([.8,1.3,.6,.6])
+    resistance = np.array([.3,.2,.15])
+    times = np.array([0.,.003,.013,.1])
+    cell,faces,enter,leave,(up,down) = solve_transient_stepped_rod(
+        [.2,.3,.4,.1],area,2.,1.,[.3,1.],times,0.,film_coefficient=2.,
+        shoulder_areal_heat_capacity=.5,ambient_temperature=1.,initial_shoulder_temperature=3.,
+        theta=.6,contact_resistance=resistance,return_traces=True,flux_order=order)
+    bridge = (up-down)*np.minimum(area[:-1],area[1:])/resistance
+    np.testing.assert_allclose(faces[:,1:-1],np.column_stack((down[:,0],up[:,1],up[:,2])))
+    np.testing.assert_allclose(faces[0,1:3],3.)
+    np.testing.assert_allclose(bridge[:,0],leave[:,0],atol=1e-12)
+    np.testing.assert_allclose(bridge[:,1:],enter[:,2:],atol=1e-12)
+    np.testing.assert_allclose(bridge[:,2],leave[:,2],atol=1e-12)
+    exposed = abs(np.diff(area))
+    net = leave[:,:-1]-enter[:,1:]+2*exposed*(1.-faces[:,1:-1])
+    np.testing.assert_allclose(.5*exposed*np.diff(faces[:,1:-1],axis=0),
+                               np.diff(times)[:,None]*(.4*net[:-1]+.6*net[1:]),atol=1e-12)
