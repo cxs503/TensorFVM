@@ -46,3 +46,18 @@ def test_uniform_angular_mode_is_invariant_to_sheet_conductivity():
     baseline = solve_storing_rings(*args, **options)
     actual = solve_storing_rings(*args, **options, sheet_conductivities=(10., .3))
     np.testing.assert_array_equal(actual, baseline)
+
+
+def test_layer_storage_matches_single_domain_with_spatial_capacity():
+    from tensorfvm.cht.annulus import solve_annular_conduction
+
+    r = np.geomspace(.4, 1.1, 25)
+    cv = np.linspace(.7, 2.3, 24)
+    walls = [1.+.4j, -.2j]
+    field, _ = solve_annular_conduction(r, 2., cv, walls, 8., azimuthal_mode=2,
+        distributed_source=True, cell_location="volume_centroid")
+    _, _, _, storage = solve_storing_rings(r, 2., [8, 16], walls, 8., azimuthal_mode=2,
+        volumetric_heat_capacity=cv, sheet_capacities=(0., 0.), contact_resistances=(0., 0.),
+        return_bulk_storage=True)
+    expected = (8j*cv*np.pi*np.diff(r**2)*field).reshape(3, 8).sum(axis=1)
+    np.testing.assert_allclose(storage, expected, rtol=1e-12)

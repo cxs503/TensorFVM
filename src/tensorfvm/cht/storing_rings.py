@@ -8,7 +8,7 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.),
                         azimuthal_mode=0, volumetric_heat_capacity=None,
                         inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
-                        return_wall_rates=False):
+                        return_wall_rates=False, return_bulk_storage=False):
     """Return two sheet temperatures and their incoming and outgoing radial fluxes.
 
     The cell faces include both sheets. Conductivity is scalar or per cell.
@@ -24,6 +24,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     With return_wall_rates, append the bore and exterior radial heat rates per unit
     axial length (W/m), both positive towards increasing radius. For angular modes
     above zero these are 2πr times the flux amplitudes.
+    With return_bulk_storage, append three modal storage rates in W/m, ordered
+    by radius, after any wall rates. Each equals iω times the radial integral
+    of 2πr times capacity and temperature amplitude. Quasi-steady layers give zero.
     """
     r = np.asarray(radii, dtype=float)
     faces = np.asarray(sheet_faces)
@@ -56,15 +59,20 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     layer_resistances = [(0., inner[0]), (outer[0], inner[1]), (outer[1], 0.)]
     ends = [0, *faces, len(r)-1]
     domains = []
+    if return_bulk_storage:
+        cell_storage = 1j*bulk_frequency*cv*np.pi*np.diff(r)*(r[:-1]+r[1:])
+        storage_maps = np.empty((3, 2), dtype=complex)
     for layer, (a, b) in enumerate(zip(ends, ends[1:])):
         film = tuple(1/value if value else None for value in layer_resistances[layer])
         # The two unit Dirichlet responses map end temperatures to radial rates.
         columns = []
-        for boundary in np.eye(2):
-            _, rate = solve_annular_conduction(
+        for column, boundary in enumerate(np.eye(2)):
+            field, rate = solve_annular_conduction(
                 r[a:b+1], k[a:b], cv[a:b], boundary, bulk_frequency, film_coefficients=film,
                 azimuthal_mode=azimuthal_mode, cell_location="volume_centroid", distributed_source=True)
             columns.append(rate[[0, -1]])
+            if return_bulk_storage:
+                storage_maps[layer, column] = cell_storage[a:b] @ field
         domains.append(np.column_stack(columns))
 
     area = 2*np.pi*r[faces]
@@ -80,6 +88,10 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     outer_rates = c @ [sheet[1], walls[1]]
     incoming = np.array([inner_rates[1], middle[1]]) / area
     outgoing = np.array([middle[0], outer_rates[0]]) / area
+    result = (sheet, incoming, outgoing)
     if return_wall_rates:
-        return sheet, incoming, outgoing, np.array([inner_rates[0], outer_rates[1]])
-    return sheet, incoming, outgoing
+        result += (np.array([inner_rates[0], outer_rates[1]]),)
+    if return_bulk_storage:
+        nodes = np.r_[walls[0], sheet, walls[1]]
+        result += (storage_maps[:, 0]*nodes[:-1] + storage_maps[:, 1]*nodes[1:],)
+    return result
