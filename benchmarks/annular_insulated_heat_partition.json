@@ -1,0 +1,38 @@
+{
+  "source_commit": "e7fffc083c1dd2ed0d5183d8a16d3e382aa38a0a",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_annular_conduction.py -o junit_family=legacy --junitxml=/tmp/annular_insulated_partition.xml",
+  "tests": 91,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Steady two-material annulus with positive generation in both materials and at a resistive sheet. Integrate d(r q)/dr=r S from the zero-flux wall and apply the sheet flux jump. The other wall must reject all integrated generation. Compare both wall orientations and both cell-location conventions.",
+  "measurements": {
+    "test_generated_heat_partition_in_two_material_annulus[midpoint-inner-insulated]": {
+      "field_error_K": 2.220446049250313e-16,
+      "wall_rate_error_W_per_m": 8.881784197001252e-16,
+      "balance_W_per_m": 0.0,
+      "inner_outward_W_per_m": -0.0,
+      "outer_outward_W_per_m": 7.998494896039613
+    },
+    "test_generated_heat_partition_in_two_material_annulus[midpoint-outer-insulated]": {
+      "field_error_K": 4.440892098500626e-16,
+      "wall_rate_error_W_per_m": 8.881784197001252e-16,
+      "balance_W_per_m": 8.881784197001252e-16,
+      "inner_outward_W_per_m": 7.998494896039612,
+      "outer_outward_W_per_m": 0.0
+    },
+    "test_generated_heat_partition_in_two_material_annulus[volume_centroid-inner-insulated]": {
+      "field_error_K": 6.661338147750939e-16,
+      "wall_rate_error_W_per_m": 2.092721098805179e-16,
+      "balance_W_per_m": 8.881784197001252e-16,
+      "inner_outward_W_per_m": -0.0,
+      "outer_outward_W_per_m": 7.998494896039612
+    },
+    "test_generated_heat_partition_in_two_material_annulus[volume_centroid-outer-insulated]": {
+      "field_error_K": 1.5543122344752192e-15,
+      "wall_rate_error_W_per_m": 0.0,
+      "balance_W_per_m": 0.0,
+      "inner_outward_W_per_m": 7.998494896039613,
+      "outer_outward_W_per_m": 0.0
+    }
+  }
+}
