@@ -546,6 +546,13 @@ def _fixed_wall_operator(A, b, faces, dx, dy, k, conductivity_y, order):
     return A, fixed_wall_links
 
 
+def _wall_half_resistance(side,dx,dy,kx,ky,shape,cells):
+    horizontal = side in ("west","east")
+    widths = dx if horizontal else dy
+    material = kx if horizontal or ky is None else ky
+    return .5*widths[0 if side in ("west","south") else -1]/np.broadcast_to(material,shape).ravel()[cells]
+
+
 def _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,angular_frequency,source,
                       conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order):
     dx, dy = np.asarray(dx, dtype=float), np.asarray(dy, dtype=float)
@@ -576,10 +583,7 @@ def _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,angular_fre
         if flux.shape not in ((),(int(storing.sum()),)) or not np.isfinite(flux).all():
             raise ValueError("wall_heater_flux requires a finite phasor per storing face or a scalar")
         h = np.broadcast_to(spec["film_coefficient"],area.shape)[storing]
-        horizontal = side in ("west","east")
-        widths = dx if horizontal else dy
-        material = k if horizontal or conductivity_y is None else np.broadcast_to(conductivity_y,k.shape)
-        half_r = .5*widths[0 if side in ("west","south") else -1]/material.ravel()[cells[storing]]
+        half_r = _wall_half_resistance(side,dx,dy,k,conductivity_y,k.shape,cells[storing])
         # Eliminate the surface node. Its independent heater transmits through
         # the half cell even at DC when the ambient film is fully insulated.
         delivered = area[storing]*flux/(1+half_r*(h+1j*angular_frequency*cw[storing]))
@@ -611,7 +615,7 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
                               angular_frequency, *, source=0., conductivity_y=None,
                               contact_resistance_x=0., contact_resistance_y=0.,
                               return_interior_power=False, periodic_y=False, heat_loss_coefficient=0.,
-                              dirichlet_flux_order=1):
+                              dirichlet_flux_order=1, return_storing_wall_response=False):
     """Return cell temperature and inward power per wall face for unit depth.
 
     Use Re(phasor * exp(iωt)), with positive angular frequency in rad/s.
@@ -623,6 +627,10 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     per face. wall_heater_flux adds an independent complex heat-flux phasor
     (W/m², positive into the wall), scalar or one value per storing face in
     face order. The returned wall power enters the material after wall storage.
+    return_storing_wall_response appends a dict keyed by each storing side.
+    Each entry contains complex arrays in storing-face order: temperature (K)
+    and powers (W) named heater, ambient (film into wall), material (wall into
+    cells), and storage (rate of increase of wall energy).
     With return_interior_power=True also return a third item, a dictionary
     of interior face powers (W). Its x and y arrays have shapes (ny,nx-1)
     and (ny-1,nx), positive toward increasing coordinates. periodic_y joins
@@ -636,7 +644,27 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     A,b,faces,mass,seam,fixed_wall_links,heater_power,_ = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,
         angular_frequency,source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order)
     state = spla.spsolve(sp.diags(1j*angular_frequency*mass, format="csc") - A, -b)
-    return _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links,heater_power)
+    result = _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links,heater_power)
+    if not return_storing_wall_response:
+        return result
+    response = {}
+    for side,cells,_,_,_,area in faces[2]:
+        spec = bc.get(side) or {}
+        cw = np.broadcast_to(spec.get("wall_areal_heat_capacity",0.),area.shape)
+        active = cw > 0
+        if not active.any():
+            continue
+        cells,area,cw = cells[active],area[active],cw[active]
+        h = np.broadcast_to(spec["film_coefficient"],active.shape)[active]
+        ambient = np.broadcast_to(spec.get("values",0.),active.shape)[active]
+        heater_flux = np.asarray(spec.get("wall_heater_flux",0.),dtype=complex)
+        half_r = _wall_half_resistance(side,dx,dy,conductivity,conductivity_y,result[0].shape,cells)
+        storage_rate = 1j*angular_frequency*cw
+        surface = (state[cells]+half_r*(heater_flux+h*ambient))/(1+half_r*(h+storage_rate))
+        response[side] = dict(temperature=surface, heater=area*heater_flux,
+                              ambient=area*h*(ambient-surface), material=result[1][side][active],
+                              storage=area*storage_rate*surface)
+    return (*result,response)
 
 
 def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc, *,

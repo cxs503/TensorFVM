@@ -205,3 +205,41 @@ def test_balanced_insulated_wall_heater_low_frequency_coefficients():
     np.testing.assert_allclose(lag[0],heater/9)
     np.testing.assert_allclose(dc[1]["west"],heater)
     np.testing.assert_allclose(lag[1]["west"],-heater/3)
+
+
+@pytest.mark.parametrize("omega", [.03125, 1., 32.])
+@pytest.mark.parametrize("film", [0., 3.])
+def test_harmonic_storing_wall_response(omega,film,record_property):
+    heater,ambient = 1.+.75j,-.5+.25j
+    spec = dict(type="robin",values=ambient,film_coefficient=film,
+                wall_areal_heat_capacity=2.,wall_heater_flux=heater)
+    _,powers,_,wall = solve_harmonic_conduction([.5],[1.],.25,1.,{"north":spec},omega,
+        conductivity_y=1.,return_interior_power=True,return_storing_wall_response=True)
+    s = 1j*omega
+    cell = (heater+film*ambient)/(s+(2*s+film)*(1+s/2))
+    surface = (1+s/2)*cell
+    ref = dict(temperature=surface,heater=.5*heater,ambient=.5*film*(ambient-surface),
+               material=.5*s*cell,storage=s*surface)
+    response = wall["north"]
+    for name, expected in ref.items():
+        error = abs(response[name].item()-expected)
+        record_property(name+"_error",float(error))
+        assert error < 1e-13
+    np.testing.assert_array_equal(response["material"],powers["north"])
+    balance = abs((response["ambient"]+response["heater"]-response["material"]-response["storage"]).item())
+    record_property("energy_balance_W",float(balance))
+    assert balance < 1e-13
+
+
+def test_harmonic_storing_wall_response_selects_mixed_faces_without_heater():
+    spec = dict(types=["robin","neumann","robin"],values=[1.,-.25,2j],
+                wall_areal_heat_capacity=[1.,0.,3.],film_coefficient=[2.,0.,4.])
+    cell,power,wall = solve_harmonic_conduction([.5],[.125,.25,.375],2.,1.,{"west":spec},3.,
+                                               return_storing_wall_response=True)
+    report = wall["west"]
+    assert set(wall)=={"west"} and report["temperature"].shape==(2,)
+    np.testing.assert_array_equal(report["heater"],np.zeros(2))
+    rows = [0,2]
+    area = np.array([.125,.375])
+    np.testing.assert_allclose(report["temperature"],cell[rows,0]+.125*power["west"][rows]/area)
+    np.testing.assert_allclose(report["storage"],report["ambient"]-report["material"])
