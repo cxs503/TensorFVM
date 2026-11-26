@@ -1,0 +1,19 @@
+{
+  "source_commit": "fd51857bfe3a2c352b928fa08c1f3002895fbb0c",
+  "baseline_commit": "4a363cef6a107928091529117c9b7c18ac9bb74e",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_transient_conduction.py tests/test_harmonic_conduction.py tests/test_robin_conduction.py tests/test_steady_directional_conduction.py -o junit_family=legacy --junitxml=/tmp/seam-ramp-after.xml",
+  "passed": 149,
+  "reference": "Two periodic cells with manufactured linear signed temperature contrast and unit seam conductance. Over a unit step the theta-rule heat is theta times the endpoint power. At theta=0.5 this is also the continuous time integral.",
+  "baseline_relative_error": {
+    "test_periodic_seam_heat_for_a_ramping_small_contrast[0.5--1]": 0.0,
+    "test_periodic_seam_heat_for_a_ramping_small_contrast[0.5-1]": 1.0,
+    "test_periodic_seam_heat_for_a_ramping_small_contrast[0.75--1]": 0.33333333333333326,
+    "test_periodic_seam_heat_for_a_ramping_small_contrast[0.75-1]": 0.33333333333333326
+  },
+  "verified_relative_error": {
+    "test_periodic_seam_heat_for_a_ramping_small_contrast[0.5--1]": 0.0,
+    "test_periodic_seam_heat_for_a_ramping_small_contrast[0.5-1]": 0.0,
+    "test_periodic_seam_heat_for_a_ramping_small_contrast[0.75--1]": 0.0,
+    "test_periodic_seam_heat_for_a_ramping_small_contrast[0.75-1]": 0.0
+  }
+}
