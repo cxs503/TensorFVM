@@ -450,6 +450,44 @@ def reconstruct_interval_rod_field(dx, area, conductivity, temperatures, fractio
     return field,power
 
 
+def linear_face_directional_heat(time, face_power):
+    """Integrate positive and negative parts of piecewise-linear face power.
+
+    Supply times in s and real rightward powers in W, with time on the first
+    axis. Return (rightward, leftward) nonnegative heats in J for each
+    interval, preserving any trailing face dimensions. Their difference
+    equals the trapezoidal integral. This uses endpoint interpolation;
+    the transient solver's stage-integrated heat can differ for other
+    temporal quadratures or unresolved load jumps.
+    """
+    if np.iscomplexobj(time) or np.iscomplexobj(face_power):
+        raise ValueError("time and face_power must be real")
+    times = np.asarray(time, dtype=float)
+    powers = np.asarray(face_power, dtype=float)
+    if times.ndim != 1 or len(times) < 2 or not np.isfinite(times).all():
+        raise ValueError("provide at least two finite times")
+    dt = np.diff(times)
+    if not np.isfinite(dt).all() or (dt <= 0).any():
+        raise ValueError("time must increase with finite intervals")
+    if powers.ndim == 0 or powers.shape[0] != len(times) or not np.isfinite(powers).all():
+        raise ValueError("provide finite face powers at every time")
+    dt = dt.reshape((-1,)+(1,)*(powers.ndim-1))
+    left, right = powers[:-1], powers[1:]
+    crossing = ((left < 0) & (right > 0)) | ((left > 0) & (right < 0))
+    # Normalize before adding magnitudes. Compute each lobe's duration
+    # independently so a crossing close to an endpoint retains the short lobe.
+    scale = np.maximum(abs(left), abs(right))
+    scale = np.where(crossing, scale, 1.)
+    a = np.where(crossing, abs(left), 0.)/scale
+    b = np.where(crossing, abs(right), 0.)/scale
+    total = np.where(crossing, a+b, 1.)
+    left_weight = .5*np.where(crossing, a/total, 1.)
+    right_weight = .5*np.where(crossing, b/total, 1.)
+    forward = dt*(left_weight*np.maximum(left, 0.)+right_weight*np.maximum(right, 0.))
+    reverse = dt*(left_weight*np.maximum(-left, 0.)+right_weight*np.maximum(-right, 0.))
+    return forward, reverse
+
+
 def harmonic_face_cycle_heat(face_power, angular_frequency, *, steady_power=0.):
     """Return forward and reverse heat magnitudes in J for one full cycle.
 

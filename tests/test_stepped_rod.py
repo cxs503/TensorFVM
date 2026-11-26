@@ -1068,3 +1068,44 @@ def test_resistive_decay_mode_interface_traces_and_heat(record_property):
         assert np.all(coarse > 3*fine)
     assert np.all(errors[-1] < [1e-3, 1e-3, 1e-4])
     assert np.all(abs(errors[-1]-errors[-2]) < .1*errors[-1])
+
+
+def test_linear_face_directional_heat_resistive_ramp(record_property):
+    from tensorfvm.cht.rod import linear_face_directional_heat, solve_transient_stepped_rod
+
+    n, resistance, crossing = 8, .25, .3
+    times = np.array([0., .2, .7, 1.])
+    x = (np.arange(n)+.5)/n
+    # T=(crossing-t)*shape has a unit rightward flux per unit amplitude.
+    # The distributed load supplies only the prescribed rate of storage.
+    shape = 1-x-resistance*(x>.5)
+    contacts = np.zeros(n-1)
+    contacts[n//2-1] = resistance
+    _, _, _, _, traces, heat = solve_transient_stepped_rod(
+        np.full(n, 1/n), 1., 1., 1., lambda t: (crossing-t)*np.array([1., -resistance]),
+        times, crossing*shape, source=-shape, contact_resistance=contacts, theta=.5,
+        return_traces=True, return_step_heat=True)
+    cut = n//2-1
+    power = (traces[0][:, cut]-traces[1][:, cut])/resistance
+    forward, reverse = linear_face_directional_heat(times, power)
+    # Analytic integrals of max(0, crossing-t) and max(0, t-crossing).
+    exact_forward = -.5*np.diff(np.maximum(crossing-times, 0.)**2)
+    exact_reverse = .5*np.diff(np.maximum(times-crossing, 0.)**2)
+    for label, error in (("forward", forward-exact_forward), ("reverse", reverse-exact_reverse),
+                         ("net", forward-reverse-heat["contact"][:, cut])):
+        maximum = np.max(abs(error))
+        record_property(f"max_{label}_error_J", maximum)
+        assert maximum < 1e-13
+
+
+def test_linear_face_directional_heat_endpoint_crossings_and_short_lobes():
+    from tensorfvm.cht.rod import linear_face_directional_heat
+
+    power = np.array([[1., -1e-20, 0., -2.], [-1e-20, 1., 0., 0.]])
+    forward, reverse = linear_face_directional_heat([0., 2.], power)
+    np.testing.assert_allclose(forward, [[1., 1., 0., 0.]], rtol=1e-14, atol=0.)
+    np.testing.assert_allclose(reverse, [[1e-40, 1e-40, 0., 2.]], rtol=1e-14, atol=0.)
+    for times, values in (([1., 0.], power), ([0., 1.], [1.]), ([0., 1.], [1j, 0.]),
+                          ([0., np.nan], power), ([0., 1.], [np.inf, 0.])):
+        with pytest.raises(ValueError):
+            linear_face_directional_heat(times, values)
