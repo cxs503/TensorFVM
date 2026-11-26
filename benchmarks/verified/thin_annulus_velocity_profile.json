@@ -1,0 +1,51 @@
+{
+  "source_commit": "5e7e65c27533a884d070149b4af18d3d1ae0f624",
+  "baseline_commit": "a0884cea9620b0be4f39e36edd69115cb9b39a53",
+  "reference": "80-digit decimal evaluation of the direct logarithmic Poiseuille profile at the binary64 radii. Check both walls, the adjacent interior floats, and 1/8, 1/2 and 7/8 of each gap for both public reference paths.",
+  "command": "PYTHONPATH=src OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/fvm-velocity-after.xml",
+  "baseline_procedure": "Use the source commit test file with baseline src, selecting -k thin_gap_velocity_profile.",
+  "before": {
+    "tests": 4,
+    "failures": 4,
+    "measurements": {
+      "test_thin_gap_velocity_profile[0.2]": {
+        "max_wall_speed_m_s": 0.0,
+        "max_relative_interior_error": 3.4512941425505255
+      },
+      "test_thin_gap_velocity_profile[0.0001]": {
+        "max_wall_speed_m_s": 0.0,
+        "max_relative_interior_error": 13334.111114826164
+      },
+      "test_thin_gap_velocity_profile[1e-08]": {
+        "max_wall_speed_m_s": 0.0,
+        "max_relative_interior_error": 16666670.272749253
+      },
+      "test_thin_gap_velocity_profile[9.094947017729282e-13]": {
+        "max_wall_speed_m_s": 0.0,
+        "max_relative_interior_error": 916408844900.6548
+      }
+    }
+  },
+  "after": {
+    "tests": 180,
+    "failures": 0,
+    "measurements": {
+      "test_thin_gap_velocity_profile[0.2]": {
+        "max_wall_speed_m_s": 0.0,
+        "max_relative_interior_error": 2.220446049250313e-16
+      },
+      "test_thin_gap_velocity_profile[0.0001]": {
+        "max_wall_speed_m_s": 0.0,
+        "max_relative_interior_error": 4.440892098500626e-16
+      },
+      "test_thin_gap_velocity_profile[1e-08]": {
+        "max_wall_speed_m_s": 0.0,
+        "max_relative_interior_error": 4.440892098500626e-16
+      },
+      "test_thin_gap_velocity_profile[9.094947017729282e-13]": {
+        "max_wall_speed_m_s": 0.0,
+        "max_relative_interior_error": 4.440892098500626e-16
+      }
+    }
+  }
+}
