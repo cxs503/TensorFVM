@@ -1,29 +1,38 @@
 {
-  "source_commit": "dfcbddebb950a5f1261d34fa07bd82e911e9f208",
-  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_stepped_rod.py -o junit_family=legacy --junitxml=/tmp/fvm_directional_decay.xml",
+  "source_commit": "e9e13537286f4648cf0b9b37b70b9156bdf80ebc",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_stepped_rod.py -o junit_family=legacy --junitxml=/tmp/fvm_duration.xml",
   "reference": "Two half-length layers of unit cross section, k=C=1 and k=C=3, with finite contact resistance 4/(3*1.5*pi). Three decaying modes give zero contact power at 0.005 and 0.018 s. Analytic phase integrals determine the two directional totals through 0.053 s. Compare trapezoidal time integration with second-order face fluxes, two steps per cell count, initialized from exact cell means.",
-  "tests": 146,
+  "tests": 147,
   "errors": 0,
   "failures": 0,
   "skipped": 0,
   "measurements": {
     "reference_forward_J": 0.016312862694575624,
     "reference_reverse_J": 0.0030719372943027205,
+    "n24_reverse_duration_error_s": 6.204683993604049e-06,
     "n24_forward_error_J": 8.429312586141074e-05,
     "n24_reverse_error_J": 0.0002441669586904444,
     "n24_net_error_J": 0.00015987383282903278,
     "n24_interval_balance_J": 2.168404344971009e-19,
+    "n48_reverse_duration_error_s": 1.495192598347482e-05,
     "n48_forward_error_J": 2.189168857462051e-05,
     "n48_reverse_error_J": 6.149623675703658e-05,
     "n48_net_error_J": 3.960454818241477e-05,
     "n48_interval_balance_J": 2.168404344971009e-19,
+    "n96_reverse_duration_error_s": 4.03389595694803e-06,
     "n96_forward_error_J": 5.463016074409854e-06,
     "n96_reverse_error_J": 1.5341996631623462e-05,
     "n96_net_error_J": 9.878980557213174e-06,
     "n96_interval_balance_J": 2.168404344971009e-19,
+    "n192_reverse_duration_error_s": 6.121163214738157e-07,
     "n192_forward_error_J": 1.366791151289487e-06,
     "n192_reverse_error_J": 3.835160602873224e-06,
     "n192_net_error_J": 2.468369451582436e-06,
     "n192_interval_balance_J": 5.421010862427522e-20
+  },
+  "reference_duration_s": {
+    "forward": 0.04,
+    "reverse": 0.013,
+    "idle": 0.0
   }
 }
