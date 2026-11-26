@@ -407,8 +407,9 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     return_contact_temperatures appends the inner and outer material traces at
     the sheet (shape time × 2), after optional wall temperatures. Massless
     contact traces use the same one-sided convention as sheet temperatures.
-    return_interval_temperatures appends a dict of cell, sheet and contact
-    temperatures in K, averaged with the actual interval heat quadrature.
+    return_interval_temperatures appends a dict with cell, sheet, contact and
+    wall temperatures in K, averaged with the actual interval heat quadrature.
+    The wall array has one row per output interval and columns (bore, exterior).
     """
     r = np.asarray(radii,dtype=float)
     t = np.asarray(times,dtype=float)
@@ -561,29 +562,39 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         heat[i] = -dt*g*np.diff(np.r_[0.,stage,0.])
         heat[i,[0,-1]] += dt*wall_input
         reservoir[i] = dt*circum*sheet_film*(stage[j]-avg_a)
-    keep = np.searchsorted(t,output_times)
-    if len(t)!=len(output_times):
-        heat = np.add.reduceat(heat,keep[:-1],axis=0)
-        reservoir = np.add.reduceat(reservoir,keep[:-1])
-        if return_interval_temperatures:
-            integral = np.add.reduceat(interval_state*np.diff(t)[:,None],keep[:-1],axis=0)
-            interval_state = integral/np.diff(output_times)[:,None]
-        state = state[keep]
-        t = output_times
-    result = np.delete(state,j,axis=1),state[:,j],heat[:,:j+1],heat[:,j+1:],reservoir
-    if return_wall_temperatures:
-        surfaces = np.empty((len(t),2))
-        for column,index,data in ((0,0,west),(1,-1,east)):
-            data = np.r_[data[:,0],data[-1,1]][keep]
+    def wall_surfaces(states, west_input, east_input):
+        surfaces = np.empty((len(states),2))
+        for column,index,data in ((0,0,west_input),(1,-1,east_input)):
             if wall_fluxes[column] is not None:
                 inward = 2*np.pi*r[index]*data
             elif film_coefficients[column] is None:
                 surfaces[:,column] = data
                 continue
             else:
-                inward = g[index]*(data-state[:,index])
-            surfaces[:,column] = state[:,index]+links[index]*inward
-        result += (surfaces,)
+                inward = g[index]*(data-states[:,index])
+            surfaces[:,column] = states[:,index]+links[index]*inward
+        return surfaces
+
+    if return_interval_temperatures:
+        f = .5 if sdirk else theta
+        interval_wall = wall_surfaces(interval_state, (1-f)*west[:,0]+f*west[:,1],
+                                      (1-f)*east[:,0]+f*east[:,1])
+    keep = np.searchsorted(t,output_times)
+    if len(t)!=len(output_times):
+        heat = np.add.reduceat(heat,keep[:-1],axis=0)
+        reservoir = np.add.reduceat(reservoir,keep[:-1])
+        if return_interval_temperatures:
+            def output_means(values):
+                integral = np.add.reduceat(values*np.diff(t)[:,None],keep[:-1],axis=0)
+                return integral/np.diff(output_times)[:,None]
+            interval_state = output_means(interval_state)
+            interval_wall = output_means(interval_wall)
+        state = state[keep]
+        t = output_times
+    result = np.delete(state,j,axis=1),state[:,j],heat[:,:j+1],heat[:,j+1:],reservoir
+    if return_wall_temperatures:
+        wall_samples = (np.r_[v[:,0],v[-1,1]][keep] for v in (west,east))
+        result += (wall_surfaces(state, *wall_samples),)
     if return_contact_temperatures:
         inner_flux = g[j]*(state[:,j-1]-state[:,j])/circum
         outer_flux = g[j+1]*(state[:,j]-state[:,j+1])/circum
@@ -596,5 +607,5 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         mean_sheet = interval_state[:,j]
         mean_contact = np.column_stack((mean_sheet+inner_resistance_fraction*resistance*inner_flux,
                                         mean_sheet-(1-inner_resistance_fraction)*resistance*outer_flux))
-        result += (dict(cell=np.delete(interval_state,j,axis=1),sheet=mean_sheet,contact=mean_contact),)
+        result += (dict(cell=np.delete(interval_state,j,axis=1),sheet=mean_sheet,contact=mean_contact,wall=interval_wall),)
     return result

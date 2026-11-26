@@ -450,10 +450,10 @@ def test_wall_power_pulse_inside_output_interval_and_right_limit_surface():
     clock = np.array([0.,.035,.12,.2,.3])
     powers = np.array([0.,1.3,-.7,0.])
     cap = .45
-    u,s,qi,qo,external,surface = solve_transient_annular_sheet(edges,1.7,1.2,(None,None),times,.2,1,
+    u,s,qi,qo,external,surface,avg = solve_transient_annular_sheet(edges,1.7,1.2,(None,None),times,.2,1,
         wall_fluxes=(np.repeat(powers[:,None],2,axis=1),0.),wall_times=clock,
         initial_sheet_temperature=.2,sheet_capacity=cap,resistance=.2,return_wall_temperatures=True,
-        method="sdirk2")
+        method="sdirk2",return_interval_temperatures=True)
     exact_heat = 2*np.pi*.4*np.array([1.3*(.12-.035),-.7*(.2-.12)])
     total = u@(1.2*np.pi*np.diff(edges**2))+s*2*np.pi*.6*cap
     np.testing.assert_allclose(qi[:,0],exact_heat,atol=1e-14)
@@ -462,6 +462,11 @@ def test_wall_power_pulse_inside_output_interval_and_right_limit_surface():
     np.testing.assert_array_equal(external,0.)
     center = (2/3)*(.6**3-.4**3)/(.6**2-.4**2)
     np.testing.assert_allclose(surface[:,0]-u[:,0],.4*np.log(center/.4)/1.7*np.array([0.,-.7,0.]),atol=2e-14)
+    # Integrate the radial Fourier drop over each pulse and output window.
+    integrated_drop = exact_heat*np.log(center/.4)/(2*np.pi*1.7)
+    np.testing.assert_allclose(np.diff(times)*(avg["wall"][:,0]-avg["cell"][:,0]),
+                               integrated_drop, atol=1e-14, rtol=0.)
+    np.testing.assert_allclose(avg["wall"][:,1],avg["cell"][:,-1],atol=1e-14,rtol=0.)
 
 
 @pytest.mark.parametrize("mode", [0, 2])
@@ -1119,3 +1124,33 @@ def test_generated_annular_insulated_surface_and_fixed_wall():
         return_wall_temperatures=True, return_contact_temperatures=True)
     np.testing.assert_allclose(surface, reference(r[[0, -1]]), atol=1e-14, rtol=0)
     np.testing.assert_allclose(contact, np.tile(reference(r[1:-1]), (2, 1)), atol=1e-14, rtol=0)
+
+
+@pytest.mark.parametrize("method,theta", [("theta", .5), ("theta", 1.), ("sdirk2", .5)])
+@pytest.mark.parametrize("film_side", [0, 1])
+def test_interval_wall_temperature_recovers_switched_film_heat(method, theta, film_side, record_property):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+
+    edges = np.array([.4, .6, 1.])
+    clock = np.array([0., .04, .16, .2])
+    # Both prescribed inputs switch discontinuously inside the output interval.
+    ambient = np.array([[2., 3.], [-1., .5], [1., -2.]])
+    fixed = np.array([[.2, .5], [2., 1.], [-1., -.2]])
+    walls = [fixed, fixed]
+    walls[film_side] = ambient
+    films = [None, None]
+    films[film_side] = 1.7
+    _, _, qi, qo, _, avg = solve_transient_annular_sheet(
+        edges, [1., .7], 1.4, walls, [0., .2], [.1, .9], 1, resistance=.3,
+        sheet_capacity=.4, initial_sheet_temperature=.3, wall_times=clock,
+        film_coefficients=films, method=method, theta=theta, return_interval_temperatures=True)
+    dt = np.diff(clock)
+    def integrated(samples):
+        return dt @ ((1-theta)*samples[:,0] + theta*samples[:,1])
+    inward_heat = (qi[0,0], -qo[0,-1])[film_side]
+    area = 2*np.pi*edges[[0,-1]][film_side]
+    surface = avg["wall"][0]
+    residual = abs(inward_heat - area*1.7*(integrated(ambient)-.2*surface[film_side]))
+    record_property("film_heat_residual_J_per_m", float(residual))
+    assert residual < 3e-15
+    assert abs(.2*surface[1-film_side] - integrated(fixed)) < 1e-15
