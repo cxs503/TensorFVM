@@ -77,9 +77,8 @@ def quadrature_flow_rate(ri=RI, ro=RO, G=DP_DZ, mu=MU):
 
 def analytic_wall_shear(ri=RI, ro=RO, G=DP_DZ, mu=MU):
     """``(tau_inner, tau_outer)`` = ``mu du/dr`` at the two walls (Pa)."""
-    K = (ro * ro - ri * ri) / math.log(ro / ri)
-    tau = lambda r: mu * G / (4.0 * mu) * (-2.0 * r + K / r)
-    return tau(ri), tau(ro)
+    from ..annular import annular_wall_shear
+    return annular_wall_shear(ri, ro, G)
 
 
 def analytic_max_velocity(ri=RI, ro=RO, G=DP_DZ, mu=MU):

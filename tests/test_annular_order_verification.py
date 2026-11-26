@@ -134,3 +134,27 @@ def test_thin_gap_velocity_profile(gap_ratio, record_property):
     record_property("max_relative_interior_error", interior_error)
     assert wall_error == 0.
     assert interior_error < 2e-14
+
+
+@pytest.mark.parametrize("gap_ratio", [0.2, 1e-4, 1e-8, 2.**-40])
+def test_thin_gap_wall_traction(gap_ratio, record_property):
+    from decimal import Decimal, localcontext
+
+    ri, ro = .75, .75*(1+gap_ratio)
+    gradient = 3.
+    with localcontext() as ctx:
+        ctx.prec = 80
+        a, b = map(Decimal.from_float, (ri, ro))
+        k = (b*b-a*a)/(b/a).ln()
+        expected = [float(3*(k/r-2*r)/4) for r in (a, b)]
+    inner, outer = ao.analytic_wall_shear(ri, ro, gradient)
+    shear_error = max(abs(inner/expected[0]-1), abs(outer/expected[1]-1))
+    pressure_force = gradient*math.pi*(ro-ri)*(ro+ri)
+    wall_drag = 2*math.pi*(ri*inner - ro*outer)
+    balance_error = abs(wall_drag/pressure_force-1)
+    record_property("reference_inner_Pa", expected[0])
+    record_property("reference_outer_Pa", expected[1])
+    record_property("max_relative_wall_error", shear_error)
+    record_property("relative_force_imbalance", balance_error)
+    assert inner > 0 > outer
+    assert max(shear_error, balance_error) < 2e-14

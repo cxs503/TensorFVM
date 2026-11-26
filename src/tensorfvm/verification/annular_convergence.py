@@ -37,7 +37,7 @@ import math
 
 import numpy as np
 
-from ..annular import AnnularConfig, analytic_flow, analytic_velocity, solve
+from ..annular import AnnularConfig, analytic_flow, analytic_velocity, annular_wall_shear, solve
 from .engineering_audit import annular_metrics
 
 __all__ = [
@@ -175,9 +175,10 @@ def analytic_reference_check(config, resolutions=(301, 601, 1201)):
     flow_quad = float(np.trapezoid(2.0 * math.pi * r * formula, r))
     # Exact identity check: with K=(Ro^2-Ri^2)/ln(Ro/Ri), d/dr(r du/dr) = -(G/mu) r.
     exact = -config.pressure_gradient_pa_m / config.viscosity_pa_s * r
-    du = config.pressure_gradient_pa_m / (4.0 * config.viscosity_pa_s) * (
-        -2.0 * r + (config.outer_radius_m ** 2 - config.inner_radius_m ** 2)
-        / math.log(config.outer_radius_m / config.inner_radius_m) / r)
+    ri = config.inner_radius_m
+    inner_shear, _ = annular_wall_shear(ri, config.outer_radius_m, config.pressure_gradient_pa_m)
+    # Integrate radial momentum from the inner wall in factored form.
+    du = (ri/r*inner_shear - .5*config.pressure_gradient_pa_m*(r-ri)*(1+ri/r)) / config.viscosity_pa_s
     identity = np.gradient(r * du, r, edge_order=2) - exact
     return {
         "fd_resolutions": rows,

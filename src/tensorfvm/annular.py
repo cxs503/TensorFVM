@@ -64,6 +64,26 @@ def _factory(c):return AnnularMesh(c)
 register_backend(SolverBackend(name='annular',solver_factory=BodyFittedSolver,mesh_factory=_factory,structured=True,min_nx=8,min_ny=2,forbids_cylinder=True,reference_length='height'))
 
 
+def _exp_remainder(z):
+    """(exp(z)-1-z)/z² for |z| <= 2*log(1.25), including zero."""
+    value = 1/math.factorial(17)
+    for n in range(16, 1, -1):
+        value = 1/math.factorial(n) + z*value
+    return value
+
+
+def annular_wall_shear(ri, ro, gradient):
+    """Signed inner and outer wall shear stresses for axial Poiseuille flow."""
+    gap = ro-ri
+    if gap <= .25*ri:
+        log_ratio = math.log1p(gap/ri)
+        # At each wall the linear term in the exponential cancels exactly.
+        return (gradient*ri*log_ratio*_exp_remainder(2*log_ratio),
+                -gradient*ro*log_ratio*_exp_remainder(-2*log_ratio))
+    k = gap*(ro+ri)/math.log(ro/ri)
+    return gradient/4*(k/ri-2*ri), gradient/4*(k/ro-2*ro)
+
+
 def annular_velocity_profile(r, ri, ro, gradient, viscosity):
     """Axial no-slip Poiseuille velocity for scalar or array radii."""
     r = np.asarray(r, dtype=float)
@@ -79,16 +99,9 @@ def annular_velocity_profile(r, ri, ro, gradient, viscosity):
         t = np.log1p((interior-ri)/ri)
         s = np.log1p((ro-interior)/interior)
 
-        def phi(z):
-            # |z| <= 2*log(1.25). The Taylor tail is below binary64 precision.
-            value = 1/math.factorial(17)
-            for n in range(16, 1, -1):
-                value = 1/math.factorial(n) + z*value
-            return value
-
         velocity = np.empty_like(r)
         velocity[inside] = (gradient/viscosity * interior**2*t*s
-                            * (s*phi(2*s)+t*phi(-2*t))/math.log1p(gap/ri))
+                            * (s*_exp_remainder(2*s)+t*_exp_remainder(-2*t))/math.log1p(gap/ri))
         if inside.all():
             return velocity[()]
         # Polygonal cell centers can lie outside the circular domain.
