@@ -1183,3 +1183,35 @@ def test_linear_face_directional_duration_short_lobes_and_idle_plateau():
     np.testing.assert_allclose(forward, [[2., 2., 0.], [0., 3., 3.], [0., 0., 1.]], atol=0.)
     np.testing.assert_allclose(reverse, [[2e-20, 2e-20, 0.], [3., 0., 0.], [0., 1., 0.]], atol=0.)
     np.testing.assert_array_equal(idle, [[0., 0., 2.], [0., 0., 0.], [1., 0., 0.]])
+
+
+@pytest.mark.parametrize("method", ["sdirk2", "theta", "sdirk2_start", "rannacher", "positive_cn"])
+def test_stage_directional_resistive_contact_heat(method, record_property):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    n, resistance = 8, .25
+    x = (np.arange(n)+.5)/n
+    shape = 1-x-resistance*(x>.5)
+    contacts = np.zeros(n-1)
+    contacts[n//2-1] = resistance
+    times = np.array([0., .2, .7, 1.])
+    _, _, _, _, ledger, parts = solve_transient_stepped_rod(
+        np.full(n, 1/n), 1., 1., 1., lambda t: (.3-t)*np.array([1., -resistance]),
+        times, .3*shape, source=-shape, contact_resistance=contacts, method=method,
+        load_jump_times=[.5], return_step_heat=True, return_resistive_contact_heat=True)
+    np.testing.assert_array_equal(parts["face_indices"], [n//2-1])
+    forward, reverse = parts["rightward"][:, 0], parts["leftward"][:, 0]
+    error = max(abs(forward-reverse-ledger["contact"][:, n//2-1]))
+    record_property("net_error_J", error)
+    assert error < 1e-13
+    assert np.all(forward >= 0.) and np.all(reverse >= 0.)
+    if method == "rannacher":
+        # Right-end rectangles on [0,.1,.2] and [.5,.6,.7], trapezoids elsewhere.
+        exact_forward = [.03, .005, 0.]
+        exact_reverse = [0., .09, .165]
+    else:
+        exact_forward = -.5*np.diff(np.maximum(.3-times, 0.)**2)
+        exact_reverse = .5*np.diff(np.maximum(times-.3, 0.)**2)
+    error = max(np.max(abs(forward-exact_forward)), np.max(abs(reverse-exact_reverse)))
+    record_property("directional_error_J", error)
+    assert error < 1e-13

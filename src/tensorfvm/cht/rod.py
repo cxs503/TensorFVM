@@ -677,7 +677,8 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                                 method="theta", return_step_heat=False, end_types=("temperature","temperature"), end_film_coefficient=0.,
                                end_areal_heat_capacity=0., end_applied_power=0., initial_end_temperature=None, initial_trace_temperatures=(None,None), load_jump_times=(), interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
                                heat_loss_coefficient=0., bulk_ambient_temperature=0., return_interval_temperatures=False,
-                               net_source_gradient=None, net_source_curvature=None, temperature_reference=0.):
+                               net_source_gradient=None, net_source_curvature=None, temperature_reference=0.,
+                               return_resistive_contact_heat=False):
     """Advance the stepped rod with theta-weighted cell and shoulder storage.
 
     Supply absolute initial, wall and reservoir temperatures. temperature_reference
@@ -733,6 +734,15 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     the instantaneous output locations; trace_left and trace_right are the
     two material temperatures on each interior face. Each row averages all
     internal time steps across one requested output interval.
+    return_resistive_contact_heat appends a dictionary with face_indices
+    (zero-based interior faces of positive resistance) and rightward/leftward
+    heat magnitudes in J, shaped (output intervals, selected faces). At each
+    internal step, integrate an affine power ending at the final contact power
+    and having the integrator's weighted mean. For SDIRK2 this line passes
+    through both stage powers; for Crank-Nicolson it joins the endpoints.
+    Rannacher startup uses a constant power for each backward Euler half-step.
+    Declared jumps separate reconstructions. Directional heat within a step
+    is an estimate; its signed difference reproduces stage-integrated heat.
     With flux_order=2, optional net_source_gradient (W/m⁴) and
     net_source_curvature (W/m⁵) specify axial derivatives of the net
     volumetric input at each cell midpoint, including bulk exchange and
@@ -840,11 +850,18 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         step_heat = {key:np.zeros((len(time)-1,size)) for key,size in
                      (("left",n),("right",n),("source",n),("bulk_exchange",n),("ambient",n-1),("interface",n-1),("trace_left",n-1),("trace_right",n-1),("contact",n-1),("end_input",2),("end_applied",2),("end_film",2))}
         types = np.asarray(end_types)
-        area_values = _profile(area,n,"area")
-        larger_left = area_values[:-1]>=area_values[1:]
+    if return_step_heat or return_resistive_contact_heat:
         resistance = _profile(contact_resistance,n-1,"contact resistance")
         split = resistance>0
-        contact_g = np.minimum(area_values[:-1],area_values[1:])[split]/resistance[split]
+        areas = _profile(area,n,"area")
+        larger_left = areas[:-1]>=areas[1:]
+        contact_g = np.minimum(areas[:-1],areas[1:])[split]/resistance[split]
+    if return_resistive_contact_heat:
+        indices = np.flatnonzero(split)
+        west_nodes = layout.right[indices]-1
+        east_nodes = layout.left[indices+1]-1
+        rightward = np.zeros((len(time)-1, len(indices)))
+        leftward = np.zeros_like(rightward)
     # Eliminating massless faces of the first-order conductance network
     # preserves nonpositive off-diagonals and can only lower its diagonal.
     # This bound therefore makes the explicit CN half nonnegative too.
@@ -885,6 +902,19 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 stage = lu.solve(mass*u+weight*dt*rhs)
             next_rhs,next_ends,next_src,next_air,next_power,next_reservoir,next_derivatives,next_offsets,next_applied = forcing(np.nextafter(stop,start) if stop in events else stop)
             next_u = lu.solve(mass*u+dt*((1-weight)*(rhs-operator@stage)+weight*next_rhs))
+            if return_resistive_contact_heat:
+                q_stage = contact_g*(stage[west_nodes]-stage[east_nodes])
+                q_end = contact_g*(next_u[west_nodes]-next_u[east_nodes])
+                if two_stages and not sdirk:
+                    rightward[step] += .5*dt*(np.maximum(q_stage, 0.)+np.maximum(q_end, 0.))
+                    leftward[step] += .5*dt*(np.maximum(-q_stage, 0.)+np.maximum(-q_end, 0.))
+                else:
+                    # Extrapolate the two SDIRK powers to the beginning, or
+                    # apply the theta weight to match the step's mean power.
+                    q_start = 2*(1-weight)*q_stage+(2*weight-1)*q_end
+                    forward, reverse = linear_face_directional_heat((0., dt), np.stack((q_start, q_end)))
+                    rightward[step] += forward[0]
+                    leftward[step] += reverse[0]
             if return_step_heat or return_interval_temperatures:
                 # Flux, storage and film operators are linear, so their time
                 # integrals can be evaluated on the stage-weighted state.
@@ -951,4 +981,6 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         for values in temperatures.values():
             values /= widths
         output += (temperatures,)
+    if return_resistive_contact_heat:
+        output += (dict(face_indices=indices, rightward=rightward, leftward=leftward),)
     return output
