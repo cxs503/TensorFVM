@@ -391,3 +391,48 @@ def test_harmonic_cell_storage_retains_common_heating_power():
     np.testing.assert_allclose(t,0.,atol=1e-15)
     np.testing.assert_array_equal(cell["source"],cell["storage"])
     np.testing.assert_array_equal(cell["bulk"],0.)
+
+
+@pytest.mark.parametrize("resistance", [0., .25, 8.])
+def test_low_frequency_cell_power_from_two_material_response(resistance,record_property):
+    from tensorfvm.cht.energy import solve_low_frequency_conduction
+
+    widths = np.array([.25,.75])
+    volume = .5*widths
+    mass = volume*np.array([2.,3.])
+    h = volume*np.array([.75,2.])
+    source = np.array([1.+.25j,-.125+.75j])
+    ambient = np.array([.25-.5j,1.+.25j])
+    g = .5/(.125+resistance+.375/3)
+    a,b = g+h
+    load = volume*source+h*ambient
+    # Differentiate the numerator and determinant of the exact 2x2 solution.
+    det = a*b-g*g
+    t0 = np.array([b*load[0]+g*load[1],g*load[0]+a*load[1]])/det
+    t1 = (mass[::-1]*load-(a*mass[1]+b*mass[0])*t0)/det
+    dc,lag = solve_low_frequency_conduction(widths,[.5],[1.,3.],[2.,3.],{},source=source,
+        contact_resistance_x=resistance,heat_loss_coefficient=[.75,2.],bulk_ambient_temperature=ambient,
+        return_interior_power=True,return_cell_power=True)
+    for j,(out,t,ta,heater,stored) in enumerate(((dc,t0,ambient,volume*source,0.),
+                                                   (lag,t1,0.,0.,mass*t0))):
+        field,_,cut,power = out
+        transfer = cut["x"].item()
+        errors = dict(temperature=np.max(abs(field-t)),bulk=np.max(abs(power["bulk"]-h*(ta-t))),
+                      source=np.max(abs(power["source"]-heater)),storage=np.max(abs(power["storage"]-stored)),
+                      balance=np.max(abs(power["storage"]-power["source"]-power["bulk"]
+                                         -np.array([-transfer,transfer]))))
+        for name,error in errors.items():
+            record_property(f"order_{j}_{name}",float(error))
+            assert error < 2e-13
+
+
+def test_low_frequency_cell_storage_includes_common_heating_and_relative_field():
+    from tensorfvm.cht.energy import solve_low_frequency_conduction
+
+    rate,dc,lag = solve_low_frequency_conduction([.25,.75],[1.],1.,[1.,2.],{},source=[2.,1.],
+                                                 return_uniform_rate=True,return_cell_power=True)
+    mass = np.array([.25,1.5])
+    np.testing.assert_allclose(rate,1.25/mass.sum())
+    np.testing.assert_allclose(dc[-1]["storage"][0],mass*rate)
+    np.testing.assert_allclose(lag[-1]["storage"],mass*dc[0])
+    np.testing.assert_allclose(lag[-1]["storage"].sum(),0.,atol=1e-15)

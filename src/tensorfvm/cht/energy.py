@@ -651,6 +651,16 @@ def _floating_harmonic_state(matrix,faces,mass,bc,omega,dx,dy,kx,ky):
     return solution[:-1],rate,delivered
 
 
+def _frequency_bulk_exchange(dx,dy,coefficient,temperature):
+    volume = np.outer(dy,dx)
+    ambient = 0.
+    if temperature is not None:
+        ambient = np.broadcast_to(np.asarray(temperature,dtype=complex),volume.shape)
+        if not np.isfinite(ambient).all():
+            raise ValueError("bulk_ambient_temperature must be finite")
+    return volume*np.asarray(coefficient),ambient
+
+
 def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                               angular_frequency, *, source=0., conductivity_y=None,
                               contact_resistance_x=0., contact_resistance_y=0.,
@@ -695,13 +705,8 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     A,b,faces,mass,seam,fixed_wall_links,heater_power,_ = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,
         angular_frequency,source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order)
     if return_cell_power or bulk_ambient_temperature is not None:
-        volume = np.outer(dy,dx)
-        bulk_conductance = volume*np.asarray(heat_loss_coefficient)
-        ambient = 0.
+        bulk_conductance,ambient = _frequency_bulk_exchange(dx,dy,heat_loss_coefficient,bulk_ambient_temperature)
         if bulk_ambient_temperature is not None:
-            ambient = np.broadcast_to(np.asarray(bulk_ambient_temperature,dtype=complex),volume.shape)
-            if not np.isfinite(ambient).all():
-                raise ValueError("bulk_ambient_temperature must be finite")
             b -= (bulk_conductance*ambient).ravel()
     matrix = sp.diags(1j*angular_frequency*mass,format="csc")-A
     rate = 0j
@@ -766,7 +771,7 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
                                    source=0., conductivity_y=None, contact_resistance_x=0.,
                                    contact_resistance_y=0., periodic_y=False, heat_loss_coefficient=0.,
                                    return_interior_power=False, dirichlet_flux_order=1, return_storing_wall_response=False,
-                                   return_uniform_rate=False):
+                                   return_uniform_rate=False, bulk_ambient_temperature=None, return_cell_power=False):
     """Return steady and first-order coefficients for the exp(+i*omega*t) response.
 
     Both outputs follow solve_harmonic_conduction's temperature and face-power
@@ -782,10 +787,18 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
     return_storing_wall_response appends the same surface quantities as the
     harmonic solver to each output. The second dictionary gives coefficients
     of i*omega, with surface temperature in K s and powers in W s.
+    bulk_ambient_temperature supplies the frequency-independent scalar or cell
+    ambient phasor for H*(Ta-T). return_cell_power appends a dict to each
+    output with source, bulk and storage power per cell. The first dict gives
+    constant terms in W and the second gives coefficients of i*omega in W s.
     dirichlet_flux_order selects the same fixed-wall reconstruction as in the harmonic solve.
     """
     A,b,faces,mass,seam,fixed_wall_links,heater_power,heater_surface_energy = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,0.,
         source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order)
+    if return_cell_power or bulk_ambient_temperature is not None:
+        bulk_conductance,ambient = _frequency_bulk_exchange(dx,dy,heat_loss_coefficient,bulk_ambient_temperature)
+        if bulk_ambient_temperature is not None:
+            b -= (bulk_conductance*ambient).ravel()
     _,_,sides,types,_,_ = faces
     anchored = any(np.any((g.real>0)&np.isin(types[side],["dirichlet","robin"]))
                    for side,_,g,_,_,_ in sides)
@@ -867,6 +880,12 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
         wall_lag = _storing_wall_response(first,sides,bc,dx,dy,conductivity,conductivity_y,0.,wall_dc)
         steady += (wall_dc,)
         first += (wall_lag,)
+    if return_cell_power:
+        capacity = mass.reshape(shape)
+        steady += (dict(source=faces[5],bulk=bulk_conductance*(ambient-steady[0]),
+                        storage=capacity*uniform_rate),)
+        first += (dict(source=np.zeros_like(faces[5]),bulk=-bulk_conductance*cells_lag,
+                       storage=capacity*steady[0]),)
     return (uniform_rate,steady,first) if return_uniform_rate else (steady,first)
 
 
