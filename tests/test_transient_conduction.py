@@ -513,3 +513,56 @@ def test_relative_cell_reference_with_default_zero_ambient():
     relative, shifted = solve_transient_conduction(initial_temperature=[0.,1.],cell_temperature_reference=305.,**args)
     np.testing.assert_allclose(relative,absolute-305.,rtol=0,atol=2e-13)
     np.testing.assert_allclose(shifted["bulk"],heat["bulk"],rtol=0,atol=1e-13)
+
+
+@pytest.mark.parametrize("steps", [4, 8, 16, 32])
+def test_storing_wall_relative_restart_matches_two_capacity_solution(steps, record_property):
+    # Unit cell and wall capacities, half-cell conductance 2 W/K. Mean
+    # excess is conserved, while the cell-wall difference decays at 4/s.
+    amplitude = 2.**-50
+    times = np.linspace(0., .5, steps+1)
+    opts = dict(dx=[1.],dy=[1.],conductivity=1.,volumetric_heat_capacity=1.,
+                bc={"west":dict(type="robin",values=305.,film_coefficient=0.,
+                                wall_areal_heat_capacity=1.,initial_wall_temperature=305.)},
+                cell_temperature_reference=305.,return_face_heat=True,return_storing_wall_state=True)
+    initial_wall = {"west":np.array([-amplitude])}
+    fields, faces, walls = solve_transient_conduction(time=times,initial_temperature=amplitude,
+                                                     initial_storing_wall_state=initial_wall,**opts)
+    state, wall = fields[0], initial_wall
+    heat = 0.
+    for start,end in zip(times,times[1:]):
+        field, face, history = solve_transient_conduction(time=[start,end],initial_temperature=state,
+                                                         initial_storing_wall_state=wall,**opts)
+        state = field[-1]
+        wall = {"west":history["west"][-1]}
+        heat += face["wall"]["west"].item()
+    np.testing.assert_array_equal(state,fields[-1])
+    np.testing.assert_array_equal(wall["west"],walls["west"][-1])
+    expected = np.exp(-4*times[-1])
+    cell_end,wall_end = state.item()/amplitude, wall["west"].item()/amplitude
+    errors = dict(continuum_end_scaled=max(abs(cell_end-expected),abs(wall_end+expected)),
+                  continuum_heat_scaled=abs(heat/amplitude-(expected-1)),
+                  restart_heat_scaled=abs(heat-faces["wall"]["west"].sum())/amplitude,
+                  storage_balance_scaled=abs(cell_end+wall_end))
+    for name,error in errors.items():
+        record_property(name,float(error))
+    assert max(errors["continuum_end_scaled"],errors["continuum_heat_scaled"]) < (.5/steps)**2
+    assert max(errors["restart_heat_scaled"],errors["storage_balance_scaled"]) < 1e-14
+
+
+def test_storing_wall_state_preserves_active_face_order_and_absolute_temperatures():
+    bc = {"west":dict(types=["robin","neumann","robin"],values=[305.,0.,305.],
+                      film_coefficient=1.,wall_areal_heat_capacity=[1.,0.,2.])}
+    opts = dict(dx=[.5],dy=[.25,.5,.25],conductivity=1.,volumetric_heat_capacity=1.,bc=bc,
+                bulk_ambient_temperature=305.,return_storing_wall_state=True)
+    restart = {"west":[304.,307.]}
+    full,walls = solve_transient_conduction(time=[0.,.1,.2],initial_temperature=305.,
+                                            initial_storing_wall_state=restart,**opts)
+    np.testing.assert_array_equal(walls["west"][0],restart["west"])
+    split,end = solve_transient_conduction(time=[.1,.2],initial_temperature=full[1],
+                                           initial_storing_wall_state={"west":walls["west"][1]},**opts)
+    np.testing.assert_allclose(split[-1],full[-1],atol=1e-13,rtol=0)
+    np.testing.assert_allclose(end["west"][-1],walls["west"][-1],atol=1e-13,rtol=0)
+    for invalid in ({"west":[305.]},{"east":[305.]}):
+        with pytest.raises(ValueError):
+            solve_transient_conduction(time=[0.,.1],initial_temperature=305.,initial_storing_wall_state=invalid,**opts)

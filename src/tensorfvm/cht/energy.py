@@ -691,7 +691,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False,
                                load_jump_times=(), return_face_heat=False, rannacher=False,
                                monotone_theta=False, dirichlet_flux_order=1, return_cell_heat=False,
-                               bulk_ambient_temperature=None, cell_temperature_reference=None):
+                               bulk_ambient_temperature=None, cell_temperature_reference=None,
+                               initial_storing_wall_state=None, return_storing_wall_state=False):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -700,7 +701,13 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     deviations in K from that constant reference. A returned cell field can
     then start a subsequent solve at the same reference. Prescribed wall,
     bulk ambient and explicit initial wall temperatures still use absolute K.
-    Restarting a wall with heat capacity also requires its own temperature.
+    return_storing_wall_state appends a dict keyed by sides with storing faces.
+    Its arrays have shape (nt, number of storing faces on that side), ordered
+    by increasing face index, in the same temperature coordinates as the cell
+    history. To restart, pass the last row for each side in
+    initial_storing_wall_state along with the last cell field. Each supplied
+    side overrides its BC initial_wall_temperature; omitted sides use the BC.
+    Use the same storing faces and temperature reference across the restart.
     Cell widths are in metres, conductivity in W/(m K), volumetric heat capacity
     in J/(m³ K), source in W/m³, and contact resistance in m² K/W. Fixed
     wall temperatures and prescribed inward flux use the steady BC format.
@@ -846,6 +853,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             spec["types"] = np.where(active, "adiabatic", types_on_side)
             wall_data[side] = (active, cw[active], h)
         static_bc[side] = spec
+    restart_walls = {} if initial_storing_wall_state is None else initial_storing_wall_state
+    if not isinstance(restart_walls, dict) or not restart_walls.keys() <= wall_data.keys():
+        raise ValueError("initial_storing_wall_state must map storing sides to face temperatures")
     volume = np.outer(dy, dx)
     def source_power(instant):
         field = np.broadcast_to(np.asarray(source(float(instant)), dtype=float), shape)
@@ -910,7 +920,14 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             mass = np.r_[mass, cw*area]
             spec = bc[side]
             init_wall = initial.ravel()[cells]
-            if "initial_wall_temperature" in spec:
+            if side in restart_walls:
+                restart = np.asarray(restart_walls[side])
+                if restart.shape != cells.shape or np.iscomplexobj(restart):
+                    raise ValueError(f"expected one real restart temperature per storing face on {side}")
+                init_wall = np.asarray(restart,dtype=float)
+                if cell_temperature_reference is None:
+                    init_wall = init_wall-datum
+            elif "initial_wall_temperature" in spec:
                 init_wall = np.broadcast_to(np.asarray(spec["initial_wall_temperature"], dtype=float), mask.shape)[mask]-datum
             if not np.isfinite(init_wall).all():
                 raise ValueError("initial wall temperature must be finite")
@@ -1005,6 +1022,14 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             relative_stage = stage[:,:cell_count].reshape(-1,ny,nx)
             bulk_heat = integrate((ambient_stage-relative_stage)*bulk_conductance)
         result.append({"source":source_heat, "bulk":bulk_heat})
+    if return_storing_wall_state:
+        wall_state = {}
+        for side, link in wall_links.items():
+            temperatures = states[:,link[1]][outputs]
+            if cell_temperature_reference is None and datum:
+                temperatures = temperatures+datum
+            wall_state[side] = temperatures
+        result.append(wall_state)
     if cell_temperature_reference is None and datum:
         result[0] = result[0]+datum
     return tuple(result) if len(result)>1 else result[0]
