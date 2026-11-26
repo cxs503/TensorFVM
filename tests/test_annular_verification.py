@@ -95,3 +95,32 @@ def test_thin_gap_flux_quadrature(ulps, record_property):
     record_property("full_reference_m3_s", full)
     record_property("max_relative_integral_error", max(values))
     assert max(values) < 1e-13
+
+
+@pytest.mark.parametrize("gap", [.25, 3*2.**-53])
+def test_partial_flow_audit_uses_requested_bounds(gap, record_property):
+    import math
+    import mpmath as mp
+
+    ri = .75
+    ro = ri+gap
+    split = math.nextafter(ri, ro) if gap < 1e-12 else ri+gap/3
+    cfg = AnnularConfig(inner_radius_m=ri, outer_radius_m=ro, pressure_gradient_pa_m=3., viscosity_pa_s=.125)
+    errors, differences = [], []
+    with mp.workdps(90):
+        inner, outer = mp.mpf(ri), mp.mpf(ro)
+        k = (outer**2-inner**2)/mp.log(outer/inner)
+        def integrand(r):
+            return 12*mp.pi*r*(outer**2-r**2-k*mp.log(outer/r))
+        for a, b in [(None, split), (ro, split), (ro, ri), (split, split)]:
+            expected = float(mp.quad(integrand, [ri if a is None else a, b]))
+            audit = flow_rate_audit(cfg, a, b)
+            reference = audit["closed_form_flow_m3_s"]
+            errors.append(abs(reference/expected-1) if expected else abs(reference))
+            differences.append(audit["relative_difference"])
+    record_property("max_reference_error_nonzero_intervals", max(errors[:-1]))
+    record_property("zero_interval_reference_m3_s", errors[-1])
+    record_property("max_reported_relative_difference", max(differences))
+    assert max(errors[:-1]) < 2e-14
+    assert errors[-1] == 0.
+    assert max(differences) < 1e-13

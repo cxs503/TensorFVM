@@ -85,16 +85,40 @@ def ode_and_bc_audit(c, radii=None):
                 peak_velocity_m_s=float(peak))
 
 
+def _partial_flow_reference(c, a, b):
+    """Signed analytic integral of 2*pi*r*u(r) between two positive radii."""
+    import mpmath as mp
+
+    # The primitive values can agree through dozens of digits when both
+    # bounds fall in a gap only a few binary64 spacings wide.
+    ctx = mp.mp.clone()
+    ctx.dps = 90
+    ri, ro = ctx.mpf(c.inner_radius_m), ctx.mpf(c.outer_radius_m)
+    k = (ro**2-ri**2)/ctx.log(ro/ri)
+
+    def primitive(radius):
+        r = ctx.mpf(radius)
+        return r**2*(ro**2/2-r**2/4-k*(ctx.log(ro/r)/2+ctx.mpf(".25")))
+
+    return float(ctx.pi*c.pressure_gradient_pa_m/(2*c.viscosity_pa_s)*(primitive(b)-primitive(a)))
+
+
 def flow_rate_audit(c, a=None, b=None):
-    """Independent adaptive quadrature of Q = 2*pi*int_a^b u(r) r dr."""
+    """Compare quadrature and closed form on the same oriented radial interval."""
     from .annular_order import integrate_annular_flow
     ri, ro = c.inner_radius_m, c.outer_radius_m
-    q, error = integrate_annular_flow(ri, ro, c.pressure_gradient_pa_m, c.viscosity_pa_s,
-                                      ri if a is None else a, ro if b is None else b)
-    closed = float(analytic_flow(c))
+    a = ri if a is None else a
+    b = ro if b is None else b
+    q, error = integrate_annular_flow(ri, ro, c.pressure_gradient_pa_m, c.viscosity_pa_s, a, b)
+    if a == b:
+        closed = 0.
+    elif (a, b) == (ri, ro) or (a, b) == (ro, ri):
+        closed = float(analytic_flow(c)) * (1 if b > a else -1)
+    else:
+        closed = _partial_flow_reference(c, a, b)
+    discrepancy = abs(q-closed)/abs(closed) if closed else (0. if q == 0 else math.inf)
     return dict(quadrature_flow_m3_s=q, quadrature_error_estimate=error,
-                closed_form_flow_m3_s=closed,
-                relative_difference=abs(q - closed) / abs(closed))
+                closed_form_flow_m3_s=closed, relative_difference=discrepancy)
 
 
 @capability('fvm.verification.annular_band',
