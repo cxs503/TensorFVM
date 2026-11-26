@@ -83,9 +83,8 @@ def analytic_wall_shear(ri=RI, ro=RO, G=DP_DZ, mu=MU):
 
 def analytic_max_velocity(ri=RI, ro=RO, G=DP_DZ, mu=MU):
     """Peak velocity and the radius where ``du/dr = 0`` (``r = sqrt(K/2)``)."""
-    K = (ro * ro - ri * ri) / math.log(ro / ri)
-    radius = math.sqrt(K / 2.0)
-    return float(analytic_velocity(radius, ri, ro, G, mu)), radius
+    from ..annular import annular_peak_velocity
+    return annular_peak_velocity(ri, ro, G, mu)
 
 
 def reference_self_check(samples=201):

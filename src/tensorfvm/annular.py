@@ -113,6 +113,22 @@ def annular_velocity_profile(r, ri, ro, gradient, viscosity):
     return gradient/(4*viscosity)*(ro*ro-r*r-k*np.log(ro/r))
 
 
+def annular_peak_velocity(ri, ro, gradient, viscosity):
+    """Maximum axial velocity and its radius in a concentric annulus."""
+    gap = ro-ri
+    if gap <= .25*ri:
+        # At the stationary point r_peak²/ri² = expm1(2L)/(2L).
+        # Keep log(r_peak/ri) until the speed is evaluated: rounding the
+        # physical radius first can lose much of a very narrow gap.
+        log_ratio = math.log1p(gap/ri)
+        t = .5*math.log1p(2*log_ratio*_exp_remainder(2*log_ratio))
+        radius = ri + ri*math.expm1(t)
+        speed = gradient/viscosity * (ri*math.exp(t)*t)**2 * _exp_remainder(-2*t)
+        return speed, radius
+    radius = math.sqrt(gap*(ro+ri)/(2*math.log(ro/ri)))
+    return float(annular_velocity_profile(radius, ri, ro, gradient, viscosity)), radius
+
+
 def analytic_velocity(r, c):
     return annular_velocity_profile(r, c.inner_radius_m, c.outer_radius_m,
                                     c.pressure_gradient_pa_m, c.viscosity_pa_s)

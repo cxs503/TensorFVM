@@ -158,3 +158,25 @@ def test_thin_gap_wall_traction(gap_ratio, record_property):
     record_property("relative_force_imbalance", balance_error)
     assert inner > 0 > outer
     assert max(shear_error, balance_error) < 2e-14
+
+
+@pytest.mark.parametrize("gap", [.15, 7.5e-5, 7.5e-9, 0.75*2.**-40, 3*math.ulp(.75)])
+def test_thin_gap_peak_speed_and_location(gap, record_property):
+    from decimal import Decimal, localcontext
+
+    ri, ro = .75, .75+gap
+    with localcontext() as ctx:
+        ctx.prec = 90
+        a, b = map(Decimal.from_float, (ri, ro))
+        k = (b*b-a*a)/(b/a).ln()
+        peak = (k/2).sqrt()
+        exact_speed = float(6*(b*b-peak*peak-k*(b/peak).ln()))
+    speed, radius = ao.analytic_max_velocity(ri, ro, 3., .125)
+    speed_error = abs(speed/exact_speed-1)
+    radius_ulps = abs(radius-float(peak))/math.ulp(ri)
+    record_property("reference_peak_speed_m_s", exact_speed)
+    record_property("relative_speed_error", speed_error)
+    record_property("radius_error_ulps", radius_ulps)
+    assert ri < radius < ro
+    assert radius_ulps <= 1
+    assert speed_error < 2e-14
