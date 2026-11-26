@@ -1,0 +1,35 @@
+{
+  "source_commit": "8025f4979c64667eca2bfd307847d76569f8179f",
+  "baseline_commit": "08a6191641667af26cf11cb0bf18f834159164a9",
+  "reference": "Concentric radii 1, 1.5 and 2 m, unit conductivity, 1 K imposed difference. Put the whole contact resistance 1e18 m^2 K/W on the cold side of the sheet. Exact power per unit length is 2*pi/(log(2)+1e18/1.5); cold material contact temperature is Q*abs(log(1.5/r_cold))/(2*pi). Start at this stationary solution and compare all instantaneous and interval mean contact traces on the cold side.",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/contact-limit-after.xml",
+  "baseline_procedure": "Run the source commit tests with baseline src and -k transient_one_sided_contact_insulating_limit.",
+  "before": {
+    "tests": 2,
+    "failures": 2,
+    "measurements": {
+      "test_transient_one_sided_contact_insulating_limit[0]": {
+        "analytic_cold_contact_temperature_K": 6.081976621622465e-19,
+        "relative_contact_error": 1.0
+      },
+      "test_transient_one_sided_contact_insulating_limit[1]": {
+        "analytic_cold_contact_temperature_K": 4.3152310867767136e-19,
+        "relative_contact_error": 1.0
+      }
+    }
+  },
+  "after": {
+    "tests": 160,
+    "failures": 0,
+    "measurements": {
+      "test_transient_one_sided_contact_insulating_limit[0]": {
+        "analytic_cold_contact_temperature_K": 6.081976621622465e-19,
+        "relative_contact_error": 0.0
+      },
+      "test_transient_one_sided_contact_insulating_limit[1]": {
+        "analytic_cold_contact_temperature_K": 4.3152310867767136e-19,
+        "relative_contact_error": 8.881784197001252e-16
+      }
+    }
+  }
+}
