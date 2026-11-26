@@ -354,3 +354,40 @@ def test_uniform_rate_multicell_periodic_plate_with_flux_load():
     np.testing.assert_allclose(mass*(rate+1e-15j*t),.75*area+net,atol=1e-14)
     rate,*_ = solve_harmonic_conduction(**opts,bc={"west":dict(type="dirichlet",values=1.)},angular_frequency=1.)
     assert rate==0.
+
+
+@pytest.mark.parametrize("omega", [.0625, 1., 16.])
+def test_harmonic_cell_power_with_independent_bulk_ambient(omega,record_property):
+    # Two unequal cells exchange heat across a finite contact. Invert the
+    # two energy equations analytically and check each physical channel.
+    dx,dy = np.array([.25,.75]),.5
+    volume = dx*dy
+    mass = volume*np.array([2.,3.])
+    bulk = volume*np.array([.75,2.])
+    source = np.array([1.+.25j,-.125+.75j])
+    ambient = np.array([.25-.5j,1.+.25j])
+    g = dy/(.125+.25+.375/3)
+    a,b = g+bulk+1j*omega*mass
+    rhs = source*volume+bulk*ambient
+    expected = np.array([b*rhs[0]+g*rhs[1],g*rhs[0]+a*rhs[1]])/(a*b-g*g)
+    t,_,cut,cell = solve_harmonic_conduction(dx,[dy],[1.,3.],[2.,3.],{},omega,
+        contact_resistance_x=.25,source=source,heat_loss_coefficient=[.75,2.],
+        bulk_ambient_temperature=ambient,return_cell_power=True,return_interior_power=True)
+    q = cut["x"].item()
+    errors = dict(temperature_K=np.max(abs(t-expected)),source_W=np.max(abs(cell["source"]-source*volume)),
+                  bulk_W=np.max(abs(cell["bulk"]-bulk*(ambient-expected))),
+                  storage_W=np.max(abs(cell["storage"]-1j*omega*mass*expected)),
+                  interface_W=abs(q-g*(expected[0]-expected[1])),
+                  balance_W=np.max(abs(cell["storage"]-cell["source"]-cell["bulk"]-np.array([-q,q]))))
+    for name,error in errors.items():
+        record_property(name,float(error))
+        assert error < 2e-14
+
+
+def test_harmonic_cell_storage_retains_common_heating_power():
+    rate,t,_,cell = solve_harmonic_conduction([.25,.75],[1.],1.,[1.,2.],{},1e-16,
+        source=[1.,2.],return_uniform_rate=True,return_cell_power=True)
+    assert rate==1.
+    np.testing.assert_allclose(t,0.,atol=1e-15)
+    np.testing.assert_array_equal(cell["source"],cell["storage"])
+    np.testing.assert_array_equal(cell["bulk"],0.)

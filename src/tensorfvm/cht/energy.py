@@ -655,14 +655,20 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
                               angular_frequency, *, source=0., conductivity_y=None,
                               contact_resistance_x=0., contact_resistance_y=0.,
                               return_interior_power=False, periodic_y=False, heat_loss_coefficient=0.,
-                              dirichlet_flux_order=1, return_storing_wall_response=False, return_uniform_rate=False):
+                              dirichlet_flux_order=1, return_storing_wall_response=False, return_uniform_rate=False,
+                              bulk_ambient_temperature=None, return_cell_power=False):
     """Return cell temperature and inward power per wall face for unit depth.
 
     Use Re(phasor * exp(iωt)), with positive angular frequency in rad/s.
     Wall values and volumetric sources may be complex amplitudes. Real
     materials, contact resistances and Robin films use the transient units.
     heat_loss_coefficient adds a nonnegative bulk sink H*T in W/m³, with H
-    broadcast to the cell grid. For an ambient phasor Ta include H*Ta in source.
+    broadcast to the cell grid. Set bulk_ambient_temperature to a scalar or
+    cell field of complex ambient phasors Ta to apply H*(Ta-T), with source
+    reserved for independent heating. The default ambient is zero.
+    return_cell_power appends a dict of complex arrays shaped (ny,nx), in
+    watts per cell for unit depth: source, bulk (ambient into material), and
+    storage (rate of increase of cell energy).
     Robin specs may include wall_areal_heat_capacity (J/(m² K)), scalar or
     per face. wall_heater_flux adds an independent complex heat-flux phasor
     (W/m², positive into the wall), scalar or one value per storing face in
@@ -688,6 +694,15 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
         raise ValueError("angular_frequency must be finite and positive")
     A,b,faces,mass,seam,fixed_wall_links,heater_power,_ = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,
         angular_frequency,source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order)
+    if return_cell_power or bulk_ambient_temperature is not None:
+        volume = np.outer(dy,dx)
+        bulk_conductance = volume*np.asarray(heat_loss_coefficient)
+        ambient = 0.
+        if bulk_ambient_temperature is not None:
+            ambient = np.broadcast_to(np.asarray(bulk_ambient_temperature,dtype=complex),volume.shape)
+            if not np.isfinite(ambient).all():
+                raise ValueError("bulk_ambient_temperature must be finite")
+            b -= (bulk_conductance*ambient).ravel()
     matrix = sp.diags(1j*angular_frequency*mass,format="csc")-A
     rate = 0j
     # A capacitive wall has nonzero dynamic admittance even without a film.
@@ -709,6 +724,10 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
         response = _storing_wall_response(result,faces[2],bc,dx,dy,conductivity,conductivity_y,
                                           angular_frequency,uniform_rate=rate)
         result += (response,)
+    if return_cell_power:
+        cell = result[0]
+        result += (dict(source=faces[5],bulk=bulk_conductance*(ambient-cell),
+                        storage=mass.reshape(cell.shape)*(rate+1j*angular_frequency*cell)),)
     return (rate,*result) if return_uniform_rate else result
 
 
