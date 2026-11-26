@@ -275,3 +275,43 @@ def test_low_frequency_storing_wall_surface_coefficients(film,record_property):
             error = abs(result[name].item()-value)
             record_property(f"order_{order}_{name}_error",float(error))
             assert error < 3e-13
+
+
+@pytest.mark.parametrize("source,heater", [(0.,1.+.5j),(.25-.5j,0.),(.25j,.5j)])
+def test_floating_plate_uniform_rate_and_regular_surface(source,heater,record_property):
+    from tensorfvm.cht.energy import solve_low_frequency_conduction
+
+    # Per unit area, s*T=S+2*(Tw-T), 2*s*Tw=P-2*(Tw-T).
+    # Thus T+2Tw=(S+P)/s and Tw-T=(P/2-S)/(3+s).
+    wall = dict(type="robin",film_coefficient=0.,wall_areal_heat_capacity=2.,wall_heater_flux=heater)
+    rate,dc,first = solve_low_frequency_conduction([1.],[.5],1.,1.,{"west":wall},source=source,
+        return_uniform_rate=True,return_storing_wall_response=True)
+    exact_rate = (source+heater)/3
+    difference = (heater/2-source)/3
+    errors = dict(rate_K_per_s=abs(rate-exact_rate))
+    for j,(result,delta) in enumerate(((dc,difference),(first,-difference/3))):
+        response = result[-1]["west"]
+        errors[f"order_{j}_cell"] = abs(result[0].item()+2*delta/3)
+        errors[f"order_{j}_surface"] = abs(response["temperature"].item()-delta/3)
+        errors[f"order_{j}_material"] = abs(response["material"].item()-delta)
+        errors[f"order_{j}_storage"] = abs(response["storage"].item()-(exact_rate if j==0 else difference/3))
+        errors[f"order_{j}_balance"] = abs((response["heater"]-response["material"]-response["storage"]).item())
+    for name,error in errors.items():
+        record_property(name,float(error))
+        assert error < 2e-14
+
+
+def test_uniform_rate_for_plate_without_wall_capacity_and_for_anchored_plate():
+    from tensorfvm.cht.energy import solve_low_frequency_conduction
+
+    opts = dict(dx=[.25,.75],dy=[.5],conductivity=1.,volumetric_heat_capacity=[1.,2.],source=[2.,4.])
+    rate,dc,lag = solve_low_frequency_conduction(**opts,bc={},return_uniform_rate=True)
+    assert rate==2.
+    np.testing.assert_allclose(dc[0],0.,atol=1e-15)
+    np.testing.assert_allclose(lag[0],0.,atol=1e-15)
+    bc = {"east":dict(type="dirichlet",values=0.)}
+    rate,dc,lag = solve_low_frequency_conduction(**opts,bc=bc,return_uniform_rate=True)
+    assert rate==0.
+    ref = solve_low_frequency_conduction(**opts,bc=bc)
+    np.testing.assert_array_equal(dc[0],ref[0][0])
+    np.testing.assert_array_equal(lag[0],ref[1][0])

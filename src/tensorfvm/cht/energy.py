@@ -651,7 +651,7 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     return (*result,response)
 
 
-def _storing_wall_response(result,sides,bc,dx,dy,conductivity,conductivity_y,angular_frequency,steady_wall=None):
+def _storing_wall_response(result,sides,bc,dx,dy,conductivity,conductivity_y,angular_frequency,steady_wall=None,uniform_rate=0.):
     response = {}
     state = result[0].ravel()
     for side,cells,_,_,_,area in sides:
@@ -666,7 +666,7 @@ def _storing_wall_response(result,sides,bc,dx,dy,conductivity,conductivity_y,ang
         heater_flux = np.asarray(spec.get("wall_heater_flux",0.),dtype=complex)
         half_r = _wall_half_resistance(side,dx,dy,conductivity,conductivity_y,result[0].shape,cells)
         storage_rate = 1j*angular_frequency*cw
-        storage_drive = 0.
+        storage_drive = cw*uniform_rate
         if steady_wall is not None:
             # Differentiate C*s*Tw about s=0 with frequency-independent loads.
             heater_flux = 0j
@@ -685,13 +685,19 @@ def _storing_wall_response(result,sides,bc,dx,dy,conductivity,conductivity_y,ang
 def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc, *,
                                    source=0., conductivity_y=None, contact_resistance_x=0.,
                                    contact_resistance_y=0., periodic_y=False, heat_loss_coefficient=0.,
-                                   return_interior_power=False, dirichlet_flux_order=1, return_storing_wall_response=False):
+                                   return_interior_power=False, dirichlet_flux_order=1, return_storing_wall_response=False,
+                                   return_uniform_rate=False):
     """Return steady and first-order coefficients for the exp(+i*omega*t) response.
 
     Both outputs follow solve_harmonic_conduction's temperature and face-power
     convention. First-order units are K s and W s. Loads and prescribed data
     are independent of frequency. An unanchored lossless body requires zero
-    net power. The harmonic limit then has zero total stored energy at both
+    net power by default. With return_uniform_rate=True return (rate, steady,
+    first), where rate is the complex net heating power divided by total heat
+    capacity (K/s) for an unanchored lossless body, or zero for an anchored
+    body. For s=i*omega the temperature is rate/s + steady + s*first to first
+    order. Wall storage power in steady includes the uniform heating. After
+    removing the pole the closed body has zero total stored energy at both
     orders, including any heat capacity on insulated Robin surfaces.
     return_storing_wall_response appends the same surface quantities as the
     harmonic solver to each output. The second dictionary gives coefficients
@@ -706,14 +712,29 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
     closed = not anchored and not np.any(heat_loss_coefficient)
     matrix = (-A).astype(complex).tocsc()
     energy_weight = mass.copy()
+    uniform_rate = 0j
     if closed:
-        if abs(b.sum())>64*np.finfo(float).eps*np.abs(b).sum():
+        if not return_uniform_rate and abs(b.sum())>64*np.finfo(float).eps*np.abs(b).sum():
             raise ValueError("unanchored low-frequency conduction requires zero net power")
         for side,cells,_,_,_,area in sides:
             spec = bc.get(side) or {}
             energy_weight[cells] += area*np.asarray(spec.get("wall_areal_heat_capacity",0.))
-        # For a compatible load, one added diagonal fixes the additive constant.
-        matrix[0,0] += max(1.,abs(matrix[0,0]))
+        if return_uniform_rate:
+            uniform_rate = -b.sum()/energy_weight.sum()
+            b += uniform_rate*energy_weight
+            for side,cells,_,_,_,area in sides:
+                cw = np.broadcast_to((bc.get(side) or {}).get("wall_areal_heat_capacity",0.),area.shape)
+                if cw.any():
+                    # Part of the wall heater drives uniform wall storage. Only
+                    # the remaining power creates a DC half-cell temperature drop.
+                    absorbed = uniform_rate*cw*area
+                    heater_power[side] = heater_power.get(side,0.)-absorbed
+                    half_r = _wall_half_resistance(side,dx,dy,conductivity,conductivity_y,
+                                                   (len(dy),len(dx)),cells)
+                    heater_surface_energy -= np.sum(cw*half_r*absorbed)
+        # A rank-one pin fixes the additive constant, including for one cell.
+        pin = sp.csc_matrix(([max(1.,abs(matrix[0,0]))],([0],[0])),shape=matrix.shape)
+        matrix = matrix+pin
     factor = spla.splu(matrix)
     state = factor.solve(-b)
     if closed:
@@ -741,7 +762,7 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
         correction[side] = np.zeros(area.shape,dtype=complex)
         if active.any():
             transmission = 1/(1+h*half_r[active])
-            wall = transmission*(state[cells[active]]+half_r[active]*(heater+h*ambient))
+            wall = transmission*(state[cells[active]]+half_r[active]*(heater+h*ambient-cw[active]*uniform_rate))
             correction[side][active] = -cw[active]*area[active]*wall*transmission
         rhs[cells] += correction[side]
         if closed:
@@ -762,11 +783,11 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
     if return_interior_power:
         first += (_interior_conduction_power(cells_lag,faces),)
     if return_storing_wall_response:
-        wall_dc = _storing_wall_response(steady,sides,bc,dx,dy,conductivity,conductivity_y,0.)
+        wall_dc = _storing_wall_response(steady,sides,bc,dx,dy,conductivity,conductivity_y,0.,uniform_rate=uniform_rate)
         wall_lag = _storing_wall_response(first,sides,bc,dx,dy,conductivity,conductivity_y,0.,wall_dc)
         steady += (wall_dc,)
         first += (wall_lag,)
-    return steady,first
+    return (uniform_rate,steady,first) if return_uniform_rate else (steady,first)
 
 
 def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
