@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import numpy as np
 import scipy.sparse as sp
 from scipy.sparse.linalg import splu, spsolve
+from scipy.special import spherical_jn
 
 
 def _profile(value, length, name, dtype=float):
@@ -447,6 +448,33 @@ def reconstruct_interval_rod_field(dx, area, conductivity, temperatures, fractio
             field -= (factor/k)[:,:,None]*shape
             power += (factor*section/width)[:,:,None]*derivative
     return field,power
+
+
+def harmonic_face_cycle_heat(face_power, angular_frequency, *, steady_power=0.):
+    """Return forward and reverse heat magnitudes in J for one full cycle.
+
+    Supply peak face power phasors in W from the rod solver, using its
+    rightward sign convention. The optional real steady power in W may
+    broadcast against the phasors. At a storing interface evaluate each
+    material-side power separately.
+    """
+    if np.ndim(angular_frequency) or np.iscomplexobj(angular_frequency) or not np.isfinite(angular_frequency) or angular_frequency <= 0:
+        raise ValueError("angular_frequency must be a positive finite real scalar")
+    if np.iscomplexobj(steady_power):
+        raise ValueError("steady_power must be real")
+    bias, amplitude = np.broadcast_arrays(np.asarray(steady_power,dtype=float),
+                                          np.abs(np.asarray(face_power,dtype=complex)))
+    if not np.isfinite(bias).all() or not np.isfinite(amplitude).all():
+        raise ValueError("face and steady powers must be finite")
+    # For a sign change, the smaller lobe spans [-angle,angle] about its
+    # extremum. The half-angle formula retains a narrow lobe near tangency.
+    gap = np.maximum(amplitude-np.abs(bias),0.)
+    fraction = np.divide(gap,amplitude,out=np.zeros_like(gap),where=amplitude>0)
+    angle = 2*np.arcsin(np.sqrt(.5*fraction))
+    # angle²*j1(angle) = sin(angle)-angle*cos(angle), including near zero.
+    minor = (2/angular_frequency)*amplitude*(angle**2*spherical_jn(1,angle))
+    period = 2*np.pi/angular_frequency
+    return minor+period*np.maximum(bias,0.), minor+period*np.maximum(-bias,0.)
 
 
 def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,

@@ -996,3 +996,31 @@ def test_end_heat_components_keep_primary_power_separate_from_extra_heater():
     np.testing.assert_array_equal(heat["end_film"][:, 0], np.zeros_like(dt))
     other = heat["end_input"]-heat["end_film"]-heat["end_applied"]
     np.testing.assert_allclose(other, dt[:, None]*[1.5, 0.], atol=1e-14)
+
+
+@pytest.mark.parametrize("bias", [-2., -1., -.375, 0., .375, 1., 2.])
+def test_harmonic_face_cycle_heat_against_period_integrals(bias,record_property):
+    from scipy.integrate import quad
+    from tensorfvm.cht.rod import harmonic_face_cycle_heat
+
+    omega = 2.3
+    phasor = .6+.8j
+    roots = ([(s*np.arccos(-bias)-np.angle(phasor))%(2*np.pi) for s in (-1,1)]
+             if abs(bias)<1 else [])
+    def q(t):
+        return bias+.6*np.cos(t)-.8*np.sin(t)
+    expected = [quad(lambda t:max(s*q(t),0.),0.,2*np.pi,points=roots)[0]/omega for s in (1,-1)]
+    phases = np.array([phasor,1j*phasor])
+    forward,reverse = harmonic_face_cycle_heat(phases,omega,steady_power=bias)
+    error = max(np.max(abs(forward-expected[0])),np.max(abs(reverse-expected[1])))
+    record_property("max_directional_error_J",float(error))
+    assert error < 5e-14
+
+
+def test_harmonic_face_cycle_heat_static_and_nearly_tangent():
+    from tensorfvm.cht.rod import harmonic_face_cycle_heat
+
+    gap = 2.**-50
+    forward,reverse = harmonic_face_cycle_heat([0.,1.],1.,steady_power=[-2.,1-gap])
+    assert forward[0]==0. and reverse[0]==4*np.pi
+    assert abs(reverse[1]/(4*np.sqrt(2)/3*gap**1.5)-1)<1e-14
