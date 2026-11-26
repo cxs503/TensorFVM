@@ -1004,3 +1004,41 @@ def test_flux_driven_contrasting_shells_with_mean(source, location, record_prope
     record_property("max_relative_face_rate_error", rate_error)
     assert rate_error < 2e-14
     assert field_error < 2e-13
+
+
+@pytest.mark.parametrize("flux_wall", [0, 1])
+@pytest.mark.parametrize("film", [None, 3.])
+def test_mixed_walls_with_generating_and_absorbing_shells(flux_wall, film, record_property):
+    r = np.array([1., 1.3, 1.7, 2., 2.5, 3., 4.])
+    center = (r[:-1]+r[1:])/2
+    # Choose flux q=A/r+s*r/2 in each layer, continuous at radius 2.
+    # Heat generation inside and absorption outside reverse its sign.
+    def flux(x):
+        return np.where(x <= 2., 1/x+x/2, 5/x-x/2)
+
+    def temperature(x):
+        return np.where(x < 2., 300.-(np.log(x/2)+(x*x-4)/4)/1e14,
+                        300.-.2*flux(2.)-(5*np.log(x/2)-(x*x-4)/4)/2)
+
+    wall_r = r[[0, -1]]
+    inward_flux = flux(wall_r)*[1, -1]
+    walls = list(temperature(wall_r))
+    anchored = 1-flux_wall
+    films = [None, None]
+    films[anchored] = film
+    if film is not None:
+        walls[anchored] += inward_flux[anchored]/film
+    fluxes = [None, None]
+    walls[flux_wall] = None
+    fluxes[flux_wall] = inward_flux[flux_wall]
+    field, rates = solve_annular_conduction(
+        r, np.where(center < 2., 1e14, 2.), 1., walls, 0., film_coefficients=films,
+        wall_fluxes=fluxes, source=np.where(center < 2., 1., -1.), distributed_source=True,
+        contact_resistance=np.where(r[1:-1] == 2., .2, 0.))
+    expected = 2*np.pi*r*flux(r)
+    rate_error = float(np.max(abs(rates-expected)))
+    field_error = float(np.max(abs(field-temperature(center))))
+    record_property("max_face_rate_error_W_per_m", rate_error)
+    record_property("max_temperature_error_K", field_error)
+    assert rate_error < 1e-12
+    assert field_error < 2e-13

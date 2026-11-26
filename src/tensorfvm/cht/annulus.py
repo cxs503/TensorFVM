@@ -144,24 +144,14 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     volume = np.pi*width*(r[1:]+r[:-1])
     lateral = _modal_conductance(r, kt, kz, volume, azimuthal_mode, axial_wavenumber)
     sink = lateral + 1j*angular_frequency*cv*volume
-    if not sink.any() and not density.any() and conductance[[0, -1]].any():
-        # Every face carries the same rate. Using series resistances avoids
-        # recovering that rate from rounded, nearly equal cell temperatures.
-        if conductance[0] == 0:
-            rate = inward[0]
-            to_outer = np.cumsum(1/conductance[:0:-1])[::-1]
-            field = walls[-1] + rate*to_outer
-        elif conductance[-1] == 0:
-            rate = -inward[-1]
-            from_inner = np.cumsum(1/conductance[:-1])
-            field = walls[0] - rate*from_inner
-        else:
-            resistance = 1/conductance
-            rate = (walls[0]-walls[-1])/resistance.sum()
-            from_inner = np.cumsum(resistance[:-1])
-            to_outer = np.cumsum(resistance[:0:-1])[::-1]
-            field = np.where(from_inner <= to_outer, walls[0] - rate*from_inner,
-                             walls[-1] + rate*to_outer)
+    anchored = conductance[[0, -1]] > 0
+    if not sink.any() and not density.any() and anchored.all():
+        resistance = 1/conductance
+        rate = (walls[0]-walls[-1])/resistance.sum()
+        from_inner = np.cumsum(resistance[:-1])
+        to_outer = np.cumsum(resistance[:0:-1])[::-1]
+        field = np.where(from_inner <= to_outer, walls[0] - rate*from_inner,
+                         walls[-1] + rate*to_outer)
         return field, np.full(n+1, rate, dtype=complex)
     if distributed_source:
         # Integrating dQ/dr=2πr*g and dT/dr=-Q/(2πkr) gives these
@@ -169,21 +159,36 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         dl, dr = .5*width+shift, .5*width-shift
         factor_l = _half_shell_source_drop(dl, r[:-1], k)
         factor_r = -_half_shell_source_drop(-dr, r[1:], k)
-    if needs_mean:
+    if needs_mean or (not sink.any() and anchored.sum() == 1):
+        # A flux boundary fixes one face rate. March the energy balance
+        # from that wall, including generation in each cell.
         generation = density*volume
-        net = generation.sum()+inward.sum()
-        throughput = np.abs(generation).sum()+np.abs(inward).sum()
-        if abs(net) > 1e-12*throughput:
-            raise ValueError("incompatible wall inputs and volume generation for steady conduction")
-        # Starting at the bore, cell generation determines the change in
-        # throughflow. Recover temperature differences directly from each
-        # internal face rate, then impose the prescribed volume mean.
-        rates = np.r_[inward[0], inward[0]+np.cumsum(generation[:-1]), -inward[-1]]
+        if anchored[0]:
+            rates = -inward[-1] - np.r_[np.cumsum(generation[::-1])[::-1], 0.]
+        else:
+            rates = inward[0] + np.r_[0., np.cumsum(generation)]
+        if needs_mean:
+            net = generation.sum()+inward.sum()
+            throughput = np.abs(generation).sum()+np.abs(inward).sum()
+            if abs(net) > 1e-12*throughput:
+                raise ValueError("incompatible wall inputs and volume generation for steady conduction")
+            rates[-1] = -inward[-1]
         drops = rates[1:-1]/conductance[1:-1]
         if distributed_source:
             drops += factor_r[:-1]*density[:-1] + factor_l[1:]*density[1:]
-        field = np.r_[0j, -np.cumsum(drops)]
-        field += mean_temperature - np.average(field, weights=volume)
+        if needs_mean:
+            field = np.r_[0j, -np.cumsum(drops)]
+            field += mean_temperature - np.average(field, weights=volume)
+        elif anchored[0]:
+            first_drop = rates[0]/conductance[0]
+            if distributed_source:
+                first_drop += factor_l[0]*density[0]
+            field = walls[0] - np.cumsum(np.r_[first_drop, drops])
+        else:
+            last_drop = rates[-1]/conductance[-1]
+            if distributed_source:
+                last_drop += factor_r[-1]*density[-1]
+            field = walls[-1] + np.cumsum(np.r_[last_drop, drops[::-1]])[::-1]
         return field, rates
     # Face power = offset + outward*T_inner - inward_coefficient*T_outer.
     outward = conductance[1:].astype(complex)
