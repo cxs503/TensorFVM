@@ -498,10 +498,14 @@ def test_harmonic_flux_and_film_annulus_against_bessel_solution(mode, flux_side,
 
 
 @pytest.mark.parametrize("flux_side", [None, 0, 1], ids=["fixed-walls", "inner-flux", "outer-flux"])
-@pytest.mark.parametrize("axial,sheet_k,axial_k,orthotropic", [(0., 0., None, False), (-1.25, .35, None, False),
-                                                  (-1.25, .35, 1.2, False), (-1.25, .35, 0., False),
-                                                  (-1.25, .35, 1.2, True)])
-def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k, axial_k, orthotropic, flux_side, record_property):
+@pytest.mark.parametrize("axial,sheet_k,axial_k,orthotropic,reservoir_film", [
+    (0., 0., None, False, 0.), (-1.25, .35, None, False, 0.),
+    (-1.25, .35, 1.2, False, 0.), (-1.25, .35, 0., False, 0.),
+    (-1.25, .35, 1.2, True, 0.),
+    pytest.param(-1.25, .35, 1.2, True, 2.4, id="reservoir-driven"),
+])
+def test_harmonic_two_material_sheet_traces_against_bessel_modes(
+        axial, sheet_k, axial_k, orthotropic, reservoir_film, flux_side, record_property):
     from scipy.special import iv, ivp, kv, kvp
     from tensorfvm.cht.annulus import solve_annular_sheet
 
@@ -517,7 +521,10 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k,
     resistance, fraction, surface_capacity = 0.25, 0.3, 0.4
     traces = sheet + resistance*np.array([fraction, -(1-fraction)])*q
     surface_response = 1j*omega*surface_capacity + sheet_k*(mode/radius)**2 + (sheet_k if axial_k is None else axial_k)*axial**2
-    generation = surface_response*sheet + q[1] - q[0]
+    required_load = surface_response*sheet + q[1] - q[0]
+    # Drive the same manufactured field entirely through reservoir exchange.
+    ambient = sheet + required_load/reservoir_film if reservoir_film else 0.
+    generation = 0. if reservoir_film else required_load
 
     def basis(side, r):
         z = wave[side]*r
@@ -550,7 +557,8 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k,
             axial_conductivity=np.repeat(kz, n) if orthotropic else None,
             azimuthal_mode=mode, resistance=resistance, inner_resistance_fraction=fraction,
             axial_wavenumber=axial, sheet_conductivity=sheet_k, sheet_axial_conductivity=axial_k,
-            sheet_capacity=surface_capacity, sheet_source=generation, distributed_source=True,
+            sheet_capacity=surface_capacity, sheet_source=generation, sheet_film=reservoir_film,
+            ambient=ambient, distributed_source=True,
             cell_location="volume_centroid", return_contact_temperatures=True)
         exact_field, exact_rates = [], []
         for side, r in enumerate(parts):
@@ -565,7 +573,12 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k,
         for side, error in zip(("inner", "outer"), interface_error):
             record_property(f"contact_{side}_{n}_W_per_m2", float(error))
         row.extend(interface_error)
-        residual = inner[-1]-outer[0]+2*np.pi*radius*(generation-surface_response*bulk_sheet)
+        exchange = reservoir_film*(ambient-bulk_sheet)
+        if reservoir_film:
+            exchange_error = abs(exchange-required_load)
+            record_property(f"reservoir_{n}_W_per_m2", float(exchange_error))
+            row.append(exchange_error)
+        residual = inner[-1]-outer[0]+2*np.pi*radius*(generation+exchange-surface_response*bulk_sheet)
         record_property(f"balance_{n}_W_per_m", float(abs(residual)))
         assert abs(residual) < 1e-11
         errors.append(row)
