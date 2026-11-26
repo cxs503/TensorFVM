@@ -1,0 +1,71 @@
+{
+  "source_commit": "4a5750fae2fc6a3258591add69abaeb653d70ced",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_stepped_rod.py -o junit_family=legacy --junitxml=/tmp/fvm_two_contacts.xml",
+  "reference": "Four 0.25 m cells, areas [1,2,2,0.5] m2. Resistive faces 0 and 2 enclose ideal face 1. Balanced trace and volume loads hold cells at zero and drive contact power from +1 to -3 W at 0.25 s and from -2 to +2 W at 0.75 s, respectively. Compare the interval heats and durations with the integrals of these two piecewise constant histories.",
+  "times_s": [
+    0,
+    0.5,
+    1
+  ],
+  "reference_rightward_J": [
+    [
+      0.25,
+      0.0
+    ],
+    [
+      0.0,
+      0.5
+    ]
+  ],
+  "reference_leftward_J": [
+    [
+      0.75,
+      1.0
+    ],
+    [
+      1.5,
+      0.5
+    ]
+  ],
+  "tests": 167,
+  "errors": 0,
+  "failures": 0,
+  "skipped": 0,
+  "cases": {
+    "test_two_resistive_contacts_with_independent_reversals[theta]": {
+      "rightward_max_error": 0.0,
+      "leftward_max_error": 0.0,
+      "rightward_duration_max_error": 0.0,
+      "leftward_duration_max_error": 0.0,
+      "idle_duration_max_error": 0.0
+    },
+    "test_two_resistive_contacts_with_independent_reversals[sdirk2]": {
+      "rightward_max_error": 5.551115123125783e-17,
+      "leftward_max_error": 2.220446049250313e-16,
+      "rightward_duration_max_error": 0.0,
+      "leftward_duration_max_error": 0.0,
+      "idle_duration_max_error": 0.0
+    },
+    "test_two_resistive_contacts_with_independent_reversals[rannacher]": {
+      "rightward_max_error": 0.0,
+      "leftward_max_error": 0.0,
+      "rightward_duration_max_error": 0.0,
+      "leftward_duration_max_error": 0.0,
+      "idle_duration_max_error": 0.0
+    },
+    "test_two_resistive_contacts_with_independent_reversals[sdirk2_start]": {
+      "rightward_max_error": 5.551115123125783e-17,
+      "leftward_max_error": 1.1102230246251565e-16,
+      "rightward_duration_max_error": 0.0,
+      "leftward_duration_max_error": 0.0,
+      "idle_duration_max_error": 0.0
+    },
+    "test_two_resistive_contacts_with_independent_reversals[positive_cn]": {
+      "rightward_max_error": 0.0,
+      "leftward_max_error": 0.0,
+      "rightward_duration_max_error": 0.0,
+      "leftward_duration_max_error": 0.0,
+      "idle_duration_max_error": 0.0
+    }
+  }
+}
