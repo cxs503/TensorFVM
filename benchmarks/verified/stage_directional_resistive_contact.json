@@ -1,0 +1,31 @@
+{
+  "source_commit": "5a75496ed560ce1cbabbfe03739e6facbc1194ff",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_stepped_rod.py -o junit_family=legacy --junitxml=/tmp/fvm_stage_directional.xml",
+  "reference": "Unit-area slab, contact resistance 0.25, prescribed contact power 0.3-t W. Requested times [0,0.2,0.7,1], internal restart at 0.5 s. Compare positive and negative integrals to the ramp and net heat to the step ledger. Rannacher uses right-end rectangles on its two pairs of backward Euler half steps.",
+  "tests": 152,
+  "errors": 0,
+  "failures": 0,
+  "skipped": 0,
+  "cases": {
+    "test_stage_directional_resistive_contact_heat[sdirk2]": {
+      "net_error_J": 1.3877787807814457e-17,
+      "directional_error_J": 5.551115123125783e-17
+    },
+    "test_stage_directional_resistive_contact_heat[theta]": {
+      "net_error_J": 2.7755575615628914e-17,
+      "directional_error_J": 5.551115123125783e-17
+    },
+    "test_stage_directional_resistive_contact_heat[sdirk2_start]": {
+      "net_error_J": 1.3877787807814457e-17,
+      "directional_error_J": 8.326672684688674e-17
+    },
+    "test_stage_directional_resistive_contact_heat[rannacher]": {
+      "net_error_J": 1.0408340855860843e-17,
+      "directional_error_J": 8.326672684688674e-17
+    },
+    "test_stage_directional_resistive_contact_heat[positive_cn]": {
+      "net_error_J": 1.3877787807814457e-17,
+      "directional_error_J": 1.1102230246251565e-16
+    }
+  }
+}
