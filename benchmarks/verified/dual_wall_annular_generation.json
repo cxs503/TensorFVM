@@ -1,0 +1,30 @@
+{
+  "source_commit": "2db51b35f553d083160f8b3575eadbdd19adc77e",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/dual_wall_after.xml",
+  "reference": "Two anchored boundaries (Dirichlet or finite films); radius 1..2 generates heat with q=1/r+r/2, radius 2..4 absorbs heat with q=5/r-r/2. The outward rate crosses zero at sqrt(10) m; interpolate in squared radius. Material conductivity ratio 5e13; areal contact resistance 0.2.",
+  "before": {
+    "test_mixed_walls_with_generating_and_absorbing_shells[None-None]": {
+      "max_face_rate_error_W_per_m": 246.57522203923062,
+      "max_temperature_error_K": 5.684341886080802e-14,
+      "reversal_radius_error_m": 0.0
+    },
+    "test_mixed_walls_with_generating_and_absorbing_shells[3.0-None]": {
+      "max_face_rate_error_W_per_m": 143.3623880760541,
+      "max_temperature_error_K": 1.0376251631886362,
+      "reversal_radius_error_m": 0.16227766016837952
+    }
+  },
+  "after": {
+    "test_mixed_walls_with_generating_and_absorbing_shells[None-None]": {
+      "max_face_rate_error_W_per_m": 3.801403636316536e-13,
+      "max_temperature_error_K": 0.0,
+      "reversal_radius_error_m": 1.9095836023552692e-14
+    },
+    "test_mixed_walls_with_generating_and_absorbing_shells[3.0-None]": {
+      "max_face_rate_error_W_per_m": 1.9584334154387761e-13,
+      "max_temperature_error_K": 0.0,
+      "reversal_radius_error_m": 1.021405182655144e-14
+    }
+  },
+  "passed": 131
+}
