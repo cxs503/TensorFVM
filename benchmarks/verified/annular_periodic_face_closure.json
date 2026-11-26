@@ -1,0 +1,39 @@
+{
+  "source_commit": "b97488ac2f22c8fe50d70eb123c53931a17f92dd",
+  "baseline_commit": "b5257522900defcf9fa85ac3c1e2ac16311bfaa3",
+  "reference": "Each polygon has matching start and end vertex multisets for its oriented faces, using owner and neighbor connectivity. Independently sum both components of the outward face vectors and compare periodic endpoint coordinates. Four rings, 17 or 32 sectors.",
+  "command": "PYTHONPATH=src OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/fvm-seam-after.xml",
+  "baseline_procedure": "Use the source commit test file against baseline src, selecting -k annular_periodic_face_chains.",
+  "before": {
+    "tests": 2,
+    "failures": 2,
+    "measurements": {
+      "test_annular_periodic_face_chains[17-0.25]": {
+        "max_seam_endpoint_mismatch_m": 2.4492935982947064e-16,
+        "open_cell_chains": 4.0,
+        "max_cell_normal_sum_m": 5.551115123125783e-17
+      },
+      "test_annular_periodic_face_chains[32-3.725290298461914e-09]": {
+        "max_seam_endpoint_mismatch_m": 1.8369702078453595e-16,
+        "open_cell_chains": 4.0,
+        "max_cell_normal_sum_m": 1.710811766357025e-25
+      }
+    }
+  },
+  "after": {
+    "tests": 193,
+    "failures": 0,
+    "measurements": {
+      "test_annular_periodic_face_chains[17-0.25]": {
+        "max_seam_endpoint_mismatch_m": 0.0,
+        "open_cell_chains": 0.0,
+        "max_cell_normal_sum_m": 5.551115123125783e-17
+      },
+      "test_annular_periodic_face_chains[32-3.725290298461914e-09]": {
+        "max_seam_endpoint_mismatch_m": 0.0,
+        "open_cell_chains": 0.0,
+        "max_cell_normal_sum_m": 1.710811766357025e-25
+      }
+    }
+  }
+}
