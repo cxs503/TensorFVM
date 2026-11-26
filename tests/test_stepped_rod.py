@@ -1215,3 +1215,40 @@ def test_stage_directional_resistive_contact_heat(method, record_property):
     error = max(np.max(abs(forward-exact_forward)), np.max(abs(reverse-exact_reverse)))
     record_property("directional_error_J", error)
     assert error < 1e-13
+
+
+@pytest.mark.parametrize("method", ["theta", "sdirk2", "rannacher", "sdirk2_start", "positive_cn"])
+def test_resistive_contact_directional_heat_across_hidden_pulse(method, record_property):
+    """Equal endpoint powers and zero net transfer conceal two nonzero directions."""
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    start, stop = .18, .43
+    def power(t):
+        return -3. if start <= t < stop else 1.
+
+    # R=.5, traces (+q/4,-q/4) produce q W. Each half-cell conducts
+    # 4 W/K to its trace. Opposite volume loads cancel these exchanges,
+    # leaving the cells at zero on both sides of each instantaneous switch.
+    options = dict(
+        dx=[.5, .5], area=1., conductivity=1., volumetric_heat_capacity=1.,
+        end_temperatures=[0., 0.], initial_temperature=0., contact_resistance=.5,
+        source=lambda t: np.array([-2., 2.])*power(t),
+        trace_power=lambda t: (2*power(t), -2*power(t)),
+        load_jump_times=[start, stop], method=method, return_step_heat=True,
+        return_resistive_contact_heat=True, return_traces=True)
+    for times in ([0., 1.], [0., start, stop, 1.]):
+        cells, _, _, _, traces, ledger, parts = solve_transient_stepped_rod(time=times, **options)
+        # Intersect each requested interval with the negative pulse.
+        negative_time = np.maximum(0., np.minimum(times[1:], stop)-np.maximum(times[:-1], start))
+        exact_reverse = 3*negative_time
+        exact_forward = np.diff(times)-negative_time
+        forward = parts["rightward"][:, 0]
+        reverse = parts["leftward"][:, 0]
+        np.testing.assert_allclose(cells, 0., rtol=0., atol=1e-13)
+        np.testing.assert_allclose((traces[0]-traces[1])[:, 0]/.5, [power(t) for t in times],
+                                   rtol=0., atol=1e-13)
+        for label, error in (("forward", forward-exact_forward), ("reverse", reverse-exact_reverse),
+                             ("net", ledger["contact"][:, 0]-(exact_forward-exact_reverse))):
+            maximum = np.max(abs(error))
+            record_property(f"windows{len(times)-1}_{label}_error_J", maximum)
+            assert maximum < 1e-13
