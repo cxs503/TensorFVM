@@ -402,3 +402,67 @@ def test_cell_heat_static_source_and_monotone_sink():
         source=1.,heat_loss_coefficient=10.,monotone_theta=True,return_cell_heat=True)
     np.testing.assert_allclose(heat["source"][:,0,0], .125*np.array([.01,.99]))
     np.testing.assert_allclose(.125*np.diff(fields,axis=0),heat["source"]+heat["bulk"],atol=1e-15)
+
+
+@pytest.mark.parametrize("rannacher", [False, True])
+def test_switched_bulk_ambient_keeps_plate_heater_separate(rannacher, record_property):
+    dx, dy = np.array([.25,.75]), np.array([.5,1.])
+    volume = np.outer(dy,dx)
+    x = np.cumsum(dx)-dx/2
+    initial = 305.+x
+    capacity, loss = np.array([2.,3.]), np.array([1.,2.])
+    pattern = np.array([[1.,-.5],[-1.,.5]])
+    def excess(t):
+        return pattern*(1. if t < .125 else -2.)
+    fields, faces, cell = solve_transient_conduction(
+        dx,dy,1.,capacity,{"west":dict(type="dirichlet",values=lambda t: 305.+t),
+                            "east":dict(type="dirichlet",values=lambda t: 306.+t)},
+        [0.,.5],initial,heat_loss_coefficient=loss,source=lambda t: capacity-loss*excess(t),
+        bulk_ambient_temperature=lambda t: initial+t+excess(t),load_jump_times=[.125],
+        rannacher=rannacher,return_face_heat=True,return_cell_heat=True)
+    bulk = -.625*pattern*loss*volume
+    stored = .5*capacity*volume
+    west = faces["wall"]["west"][0]
+    east = faces["wall"]["east"][0]
+    cut = faces["interior"]["x"][0,:,0]
+    inward = np.column_stack((west-cut,cut+east))
+    errors = dict(final_K=np.max(abs(fields[-1]-initial-.5)),
+                  bulk_J=np.max(abs(cell["bulk"][0]-bulk)),
+                  source_J=np.max(abs(cell["source"][0]-(stored-bulk))),
+                  budget_J=np.max(abs(capacity*volume*(fields[-1]-fields[0])
+                                      -inward-cell["source"][0]-cell["bulk"][0])))
+    for name,error in errors.items():
+        record_property(name,float(error))
+        assert error < 2e-13
+
+
+def test_sub_ulp_heater_drives_wall_and_bulk_heat(record_property):
+    # One cell with unit capacity, west conductance 2, ambient conductance 3.
+    # A single CN step gives the exact discrete mean excess dt*P/(2+5*dt).
+    power, dt = 2.**-50, .25
+    _, face, cell = solve_transient_conduction(
+        [1.],[1.],1.,1.,{"west":dict(type="dirichlet",values=305.)},[0.,dt],305.,
+        source=power,heat_loss_coefficient=3.,bulk_ambient_temperature=305.,
+        return_face_heat=True,return_cell_heat=True)
+    mean = dt/(2+5*dt)
+    scaled = np.array([face["wall"]["west"].item(),cell["bulk"].item(),cell["source"].item()])/power
+    error = max(abs(scaled-dt*np.array([-2*mean,-3*mean,1.])))
+    record_property("heat_error_divided_by_heater_power_s",float(error))
+    assert error < 1e-15
+
+
+def test_bulk_reference_preserves_mixed_storing_wall_and_flux_values():
+    def run(base):
+        wall = dict(types=["robin","neumann"],values=lambda t: [base+t, .75],
+                    film_coefficient=2.,wall_areal_heat_capacity=[1.,0.],
+                    initial_wall_temperature=base+.25)
+        return solve_transient_conduction([.5,.5],[.5,.5],1.,1.,{"west":wall},[0.,.125,1.],base,
+            heat_loss_coefficient=1.,bulk_ambient_temperature=base+.5,monotone_theta=True,
+            return_wall_power=True,return_cell_heat=True)
+    absolute,wall,cell = run(305.)
+    relative,reference,expected = run(0.)
+    np.testing.assert_allclose(absolute-305.,relative,atol=3e-14,rtol=0)
+    for key in reference:
+        np.testing.assert_allclose(wall[key],reference[key],atol=1e-14)
+    for key in expected:
+        np.testing.assert_allclose(cell[key],expected[key],atol=1e-14)

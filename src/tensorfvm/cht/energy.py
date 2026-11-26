@@ -690,7 +690,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False,
                                wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False,
                                load_jump_times=(), return_face_heat=False, rannacher=False,
-                               monotone_theta=False, dirichlet_flux_order=1, return_cell_heat=False):
+                               monotone_theta=False, dirichlet_flux_order=1, return_cell_heat=False,
+                               bulk_ambient_temperature=None):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -701,8 +702,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     one value per face (temperature, inward flux or Robin ambient temperature).
     source may also be a function of time returning a scalar or a cell field.
     heat_loss_coefficient is a nonnegative scalar or cell field H in W/(m³ K).
-    The bulk sink H*T is implicit with the same theta as conduction. Include
-    H*Ta in source to exchange with a prescribed ambient temperature Ta.
+    The bulk sink H*T is implicit with the same theta as conduction. Supply
+    bulk_ambient_temperature (scalar, cell field, or callable of time) to apply
+    H*(Ta-T) directly, with source reserved for independent heating. Omitting
+    the ambient uses Ta=0 and retains the original -H*T formulation.
     List jumps of source or wall values in load_jump_times. A callable gives
     the new value at the jump; the preceding step samples its left limit.
     With rannacher=True replace the first Crank–Nicolson step at startup and
@@ -726,7 +729,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     heats in joules. Their leading index is the requested output interval.
     They integrate the theta-stage powers including internal steps at jumps.
     return_cell_heat appends a dict with "source" (prescribed volumetric
-    heating) and "bulk" (the signed contribution of -H*T). Both arrays have
+    heating) and "bulk" (the signed contribution of H*(Ta-T)). Both arrays have
     shape (nt-1,ny,nx) in joules per cell for unit depth. Positive heat
     enters the cell. Any H*Ta supplied in source is counted in "source".
     With periodic_y=True omit the north and south BCs. Those two face powers
@@ -782,6 +785,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     if not np.isfinite(initial).all():
         raise ValueError("temperature must be finite")
 
+    datum = float(initial[0,0]) if bulk_ambient_temperature is not None else 0.
+    if datum:
+        initial = initial-datum
+
     sides = {"west": ny, "east": ny, "south": nx, "north": nx}
     static_bc = dict(bc)
     signals = {}
@@ -796,6 +803,17 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             signals[side] = samples
             static_bc[side] = dict(spec, values=0.)
     _validate_conduction_bc(static_bc, sides, float)
+    if datum:
+        for side, spec in static_bc.items():
+            if spec is None:
+                continue
+            kinds, values = _bc_arrays(static_bc, side, sides[side])
+            thermal = np.isin(kinds, ("dirichlet", "robin"))
+            if side in signals:
+                signals[side][:,thermal] -= datum
+            else:
+                values[thermal] -= datum
+                static_bc[side] = dict(spec, values=values)
     wall_data = {}
     for side, spec in list(static_bc.items()):
         if not spec or "wall_areal_heat_capacity" not in spec:
@@ -830,6 +848,19 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         A, seam = _join_periodic_y(A, faces[1], bc)
     _, _, side_specs, types, values, _ = faces
     A = _bulk_loss_operator(A,heat_loss_coefficient,volume)
+    if bulk_ambient_temperature is not None:
+        bulk_conductance = volume*np.asarray(heat_loss_coefficient)
+        def relative_ambient(value):
+            if np.iscomplexobj(value):
+                raise ValueError("bulk ambient temperature must be real")
+            field = np.broadcast_to(np.asarray(value,dtype=float),shape)
+            if not np.isfinite(field).all():
+                raise ValueError("bulk ambient temperature must be finite")
+            return field-datum
+        if callable(bulk_ambient_temperature):
+            ambient_samples = np.stack([relative_ambient(bulk_ambient_temperature(float(t))) for t in sample_times])
+        else:
+            ambient_stage = relative_ambient(bulk_ambient_temperature)
     A, fixed_wall_links = _fixed_wall_operator(A,b,faces,dx,dy,k,conductivity_y,dirichlet_flux_order)
     varying_loads = []
     for side, cells, conductance, _, _, area in side_specs:
@@ -866,7 +897,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             spec = bc[side]
             init_wall = initial.ravel()[cells]
             if "initial_wall_temperature" in spec:
-                init_wall = np.broadcast_to(np.asarray(spec["initial_wall_temperature"], dtype=float), mask.shape)[mask]
+                init_wall = np.broadcast_to(np.asarray(spec["initial_wall_temperature"], dtype=float), mask.shape)[mask]-datum
             if not np.isfinite(init_wall).all():
                 raise ValueError("initial wall temperature must be finite")
             state = np.r_[state, init_wall]
@@ -886,6 +917,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             # conduction matrix is an M-matrix for this conservative stencil.
             explicit_limit = np.min(mass[active]/outgoing[active])
             stage_weights = np.maximum(stage_weights,1.-explicit_limit/np.diff(time))
+    if callable(bulk_ambient_temperature):
+        w = stage_weights[:,None,None]
+        ambient_stage = (1-w)*ambient_samples[:len(time)-1]+w*ambient_samples[end_samples]
     M = sp.diags(mass, format="csc")
     states = np.empty((len(time), len(mass)))
     states[0] = state
@@ -901,6 +935,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             previous_shift = shift
         state = states[step]
         rhs = mass * state + dt * ((1 - weight) * (A @ state) - b)
+        if bulk_ambient_temperature is not None:
+            ambient = ambient_stage[step] if callable(bulk_ambient_temperature) else ambient_stage
+            rhs[:cell_count] += dt*(bulk_conductance*ambient).ravel()
         if varying_source:
             next_power = source_power(sample_times[end_samples[step]])
             stage_power = (1-weight)*previous_power+weight*next_power
@@ -948,7 +985,14 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     if return_cell_heat:
         source_heat = (integrate(source_stages) if varying_source else
                        np.diff(requested)[:,None,None]*(volume*np.asarray(source,dtype=float)))
-        result.append({"source":source_heat, "bulk":-integrated_cells*(volume*heat_loss_coefficient)})
+        if bulk_ambient_temperature is None:
+            bulk_heat = -integrated_cells*(volume*heat_loss_coefficient)
+        else:
+            relative_stage = stage[:,:cell_count].reshape(-1,ny,nx)
+            bulk_heat = integrate((ambient_stage-relative_stage)*bulk_conductance)
+        result.append({"source":source_heat, "bulk":bulk_heat})
+    if datum:
+        result[0] = result[0]+datum
     return tuple(result) if len(result)>1 else result[0]
 
 
