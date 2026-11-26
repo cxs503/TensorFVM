@@ -180,3 +180,31 @@ def test_thin_gap_peak_speed_and_location(gap, record_property):
     assert ri < radius < ro
     assert radius_ulps <= 1
     assert speed_error < 2e-14
+
+
+@pytest.mark.parametrize("gap", [2.**-16, 2.**-28])
+def test_thin_annulus_cell_geometry(gap, record_property):
+    from decimal import Decimal, localcontext
+    from tensorfvm.annular import AnnularConfig, AnnularMesh
+
+    cfg = ao._mesh_config(4, 32)
+    cfg.annular_config = AnnularConfig(ntheta=32, nr=4, inner_radius_m=.75, outer_radius_m=.75+gap)
+    mesh = AnnularMesh(cfg)
+    vertices = mesh.vertices.numpy()
+    max_area_error = max_center_error = 0.
+    with localcontext() as ctx:
+        ctx.prec = 70
+        for j, i in np.ndindex(mesh.field_shape):
+            corners = vertices[[j, j+1, j+1, j], [i, i, i+1, i+1]]
+            polygon = [tuple(map(Decimal.from_float, row)) for row in corners]
+            edges = list(zip(polygon, polygon[1:] + polygon[:1]))
+            crosses = [x*v-y*u for (x,y), (u,v) in edges]
+            twice_area = sum(crosses)
+            center = [float(sum((a[d]+b[d])*c for (a,b), c in zip(edges, crosses))/(3*twice_area))
+                      for d in (0, 1)]
+            max_area_error = max(max_area_error, abs(float(mesh.volumes[j,i])/float(twice_area/2)-1))
+            max_center_error = max(max_center_error, np.linalg.norm(mesh.centers[j,i].numpy()-center))
+    record_property("max_relative_cell_area_error", max_area_error)
+    record_property("max_centroid_displacement_m", max_center_error)
+    assert max_area_error < 2e-15
+    assert max_center_error < 4e-16

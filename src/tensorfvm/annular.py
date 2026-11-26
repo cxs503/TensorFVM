@@ -41,8 +41,20 @@ class AnnularMesh:
         ac=c.annular_config;n,nr=ac.ntheta,ac.nr;self.field_shape=(nr,n)
         theta=torch.linspace(0,2*math.pi,n+1,dtype=torch.float64,device=c.device);radius=torch.linspace(ac.inner_radius_m,ac.outer_radius_m,nr+1,dtype=torch.float64,device=c.device)
         rr,tt=torch.meshgrid(radius,theta,indexing='ij');self.vertices=torch.stack((rr*torch.cos(tt),rr*torch.sin(tt)),-1)
-        v=self.vertices;poly=torch.stack((v[:-1,:-1],v[1:,:-1],v[1:,1:],v[:-1,1:]),-2);nxt=poly.roll(-1,-2)
-        cross=poly[...,0]*nxt[...,1]-nxt[...,0]*poly[...,1];self.volumes=.5*cross.sum(-1);self.centers=((poly+nxt)*cross[...,None]).sum(-2)/(6*self.volumes[...,None])
+        v = self.vertices
+        a, b, c_outer, d = v[:-1,:-1], v[1:,:-1], v[1:,1:], v[:-1,1:]
+        diagonal = c_outer-a
+        radial_start, radial_end_edge = b-a, c_outer-d
+        # Split along the diagonal. Each determinant uses a radial edge
+        # directly, so even a thin cell needs no subtraction of large areas.
+        twice_abc = radial_start[...,0]*diagonal[...,1] - radial_start[...,1]*diagonal[...,0]
+        twice_acd = radial_end_edge[...,0]*diagonal[...,1] - radial_end_edge[...,1]*diagonal[...,0]
+        twice_area = twice_abc + twice_acd
+        self.volumes = .5*twice_area
+        # Both triangles share vertices A and C. Weight their third vertices
+        # by area and accumulate the centroid displacement relative to A.
+        weight_d = (twice_acd/twice_area)[...,None]
+        self.centers = a + (diagonal + radial_start + weight_d*(d-b))/3
         j,i=torch.meshgrid(torch.arange(nr+1,device=c.device),torch.arange(n,device=c.device),indexing='ij');ro=((j-1).clamp_min(0)*n+i).flatten();rn=torch.where((j>0)&(j<nr),j*n+i,-1).flatten()
         ra=v[:,:-1].reshape(-1,2);rb=v[:,1:].reshape(-1,2);inner=(j==0).flatten();first=torch.where(inner[:,None],rb,ra);second=torch.where(inner[:,None],ra,rb)
         radial_end=torch.stack((first,second),1)
