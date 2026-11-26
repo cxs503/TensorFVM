@@ -730,3 +730,52 @@ def test_transient_orthotropic_annulus_mixed_mode_decay(method, record_property)
         if previous is not None:
             assert previous/error > 3.7
         previous = error
+
+
+@pytest.mark.parametrize("location", ["midpoint", "volume_centroid"])
+def test_generated_heat_partition_in_two_material_annulus(location, record_property):
+    from tensorfvm.cht.annulus import solve_annular_sheet
+
+    # Distinct bulk sources and a heated resistive sheet feed both convective walls.
+    radius, sheet_temperature, resistance, fraction = .7, 1.2, .3, .35
+    k = np.array([1.4, 2.3])
+    source = np.array([1.9, .8])
+    contact_flux = np.array([-.2, .6])
+    generation = contact_flux[1]-contact_flux[0]
+    traces = sheet_temperature + resistance*np.array([fraction, fraction-1])*contact_flux
+    edges = np.array([.3, .39, .58, radius, .73, .91, 1.15])
+    face = 3
+    films = np.array([2.1, 3.4])
+    # Integrate d(r*q)/dr = r*S, then integrate dT/dr = -q/k from the sheet.
+    def exact(side, r):
+        constant = radius*contact_flux[side] - source[side]*radius**2/2
+        flux = source[side]*r/2 + constant/r
+        temperature = traces[side] - (source[side]*(r**2-radius**2)/4
+                                      + constant*np.log(r/radius))/k[side]
+        return temperature, flux
+
+    ends = edges[[0, -1]]
+    surfaces, flux = exact(np.arange(2), ends)
+    ambient = surfaces + np.array([1., -1.])*flux/films
+    centers = (edges[:-1]+edges[1:])/2
+    if location == "volume_centroid":
+        centers = (2/3)*np.diff(edges**3)/np.diff(edges**2)
+    sides = (centers > radius).astype(int)
+    field, inner, outer, sheet, observed = solve_annular_sheet(
+        edges, k[sides], 1., ambient, 0., face, resistance=resistance,
+        inner_resistance_fraction=fraction, sheet_source=generation, source=source[sides],
+        film_coefficients=films, cell_location=location, distributed_source=True,
+        return_contact_temperatures=True)
+    field_error = np.max(abs(field-exact(sides, centers)[0]))
+    wall_heat = np.array([-inner[0], outer[-1]])
+    target = 2*np.pi*ends*flux*[-1, 1]
+    supplied = np.pi*np.diff(edges**2) @ source[sides] + 2*np.pi*radius*generation
+    balance = abs(wall_heat.sum()-supplied)
+    np.testing.assert_allclose(np.r_[sheet, observed], np.r_[sheet_temperature, traces], rtol=0, atol=2e-13)
+    np.testing.assert_allclose(wall_heat, target, rtol=0, atol=2e-12)
+    assert field_error < 2e-13 and balance < 2e-12
+    record_property("field_error_K", float(field_error))
+    record_property("wall_rate_error_W_per_m", float(max(abs(wall_heat-target))))
+    record_property("balance_W_per_m", float(balance))
+    for label, value in zip(("inner", "outer"), wall_heat):
+        record_property(f"{label}_outward_W_per_m", float(value.real))
