@@ -975,3 +975,32 @@ def test_annular_contact_flux_with_high_conductivity_contrast(driven, record_pro
     record_property("max_temperature_error_K", float(field_error))
     assert error < 2e-14
     assert field_error < 1e-12
+
+
+@pytest.mark.parametrize("source", [0., .75+.25j])
+@pytest.mark.parametrize("location", ["midpoint", "volume_centroid"])
+def test_flux_driven_contrasting_shells_with_mean(source, location, record_property):
+    r = np.array([1., 1.2, 1.6, 2., 2.4, 3., 4.])
+    k = np.where(r[:-1] < 2., 1.e14, 2.)
+    center = .5*(r[:-1]+r[1:])
+    if location == "volume_centroid":
+        center = (2/3)*np.diff(r**3)/np.diff(r**2)
+    # Radial flux is c/r + source*r/2, so each material has a log-quadratic
+    # temperature. Set the inner contact trace to zero before fixing the mean.
+    c = 1.5-.5j
+    def flux(x):
+        return c/x + source*x/2
+    reference = -(c*np.log(center/2) + source*(center**2-4)/4)/k
+    reference[center > 2] -= .2*flux(2)
+    reference += 300.-np.average(reference, weights=np.diff(r**2))
+    exact_rates = 2*np.pi*r*flux(r)
+    field, rates = solve_annular_conduction(
+        r, k, 1., [None, None], 0., source=source, mean_temperature=300.,
+        wall_fluxes=(flux(1), -flux(4)), distributed_source=True, cell_location=location,
+        contact_resistance=np.where(r[1:-1] == 2., .2, 0.))
+    field_error = float(np.max(abs(field-reference)))
+    rate_error = float(np.max(abs((rates-exact_rates)/exact_rates)))
+    record_property("max_temperature_error_K", field_error)
+    record_property("max_relative_face_rate_error", rate_error)
+    assert rate_error < 2e-14
+    assert field_error < 2e-13

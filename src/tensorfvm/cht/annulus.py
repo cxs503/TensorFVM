@@ -163,6 +163,28 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
             field = np.where(from_inner <= to_outer, walls[0] - rate*from_inner,
                              walls[-1] + rate*to_outer)
         return field, np.full(n+1, rate, dtype=complex)
+    if distributed_source:
+        # Integrating dQ/dr=2πr*g and dT/dr=-Q/(2πkr) gives these
+        # temperature-drop coefficients for unit net generation g.
+        dl, dr = .5*width+shift, .5*width-shift
+        factor_l = _half_shell_source_drop(dl, r[:-1], k)
+        factor_r = -_half_shell_source_drop(-dr, r[1:], k)
+    if needs_mean:
+        generation = density*volume
+        net = generation.sum()+inward.sum()
+        throughput = np.abs(generation).sum()+np.abs(inward).sum()
+        if abs(net) > 1e-12*throughput:
+            raise ValueError("incompatible wall inputs and volume generation for steady conduction")
+        # Starting at the bore, cell generation determines the change in
+        # throughflow. Recover temperature differences directly from each
+        # internal face rate, then impose the prescribed volume mean.
+        rates = np.r_[inward[0], inward[0]+np.cumsum(generation[:-1]), -inward[-1]]
+        drops = rates[1:-1]/conductance[1:-1]
+        if distributed_source:
+            drops += factor_r[:-1]*density[:-1] + factor_l[1:]*density[1:]
+        field = np.r_[0j, -np.cumsum(drops)]
+        field += mean_temperature - np.average(field, weights=volume)
+        return field, rates
     # Face power = offset + outward*T_inner - inward_coefficient*T_outer.
     outward = conductance[1:].astype(complex)
     inward_coefficient = conductance[:-1].astype(complex)
@@ -170,11 +192,6 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     offset[0] = conductance[0]*walls[0]+inward[0]
     offset[-1] = -conductance[-1]*walls[-1]-inward[-1]
     if distributed_source:
-        # Integrating dQ/dr=2πr*g and dT/dr=-Q/(2πkr) gives these
-        # temperature-drop coefficients for unit net generation g.
-        dl, dr = .5*width+shift, .5*width-shift
-        factor_l = _half_shell_source_drop(dl, r[:-1], k)
-        factor_r = -_half_shell_source_drop(-dr, r[1:], k)
         offset[:-1] -= conductance[:-1]*factor_l*density
         offset[1:] -= conductance[1:]*factor_r*density
         outward += conductance[1:]*factor_r*(sink/volume)
@@ -184,20 +201,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     bands[2,:-1] = -outward[:-1]
     bands[1] = outward+inward_coefficient+sink
     load = density*volume - np.diff(offset)
-    if needs_mean:
-        generation = density*volume
-        net = generation.sum()+inward.sum()
-        throughput = np.abs(generation).sum()+np.abs(inward).sum()
-        if abs(net) > 1e-12*throughput:
-            raise ValueError("incompatible wall inputs and volume generation for steady conduction")
-        # Pin the first cell temporarily. Compatibility supplies the omitted
-        # first balance equation; shifting the solution then fixes its mean.
-        bands[1,0], load[0] = 1., 0.
-        if n > 1:
-            bands[0,1] = 0.
     field = solve_banded((1,1), bands, load)
-    if needs_mean:
-        field += mean_temperature - volume @ field / volume.sum()
     rates = offset.copy()
     rates[1:] += outward*field
     rates[:-1] -= inward_coefficient*field
