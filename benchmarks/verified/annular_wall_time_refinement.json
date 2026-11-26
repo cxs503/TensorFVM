@@ -1,0 +1,65 @@
+{
+  "source_commit": "6a0f184904fcc7877be65572d35d1444f0936171",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/annular-wall-time.xml",
+  "reference": "Second cooling eigenmode of a separately assembled two-cell and one-sheet thermal network. Exact exponential decay integrated over fixed output windows [0, 0.035] and [0.035, 0.14] s. Both exterior films have zero ambient temperature. Mesh fixed to isolate temporal error.",
+  "steps_per_window": [
+    8,
+    16,
+    32,
+    64
+  ],
+  "passed": 149,
+  "runs": {
+    "test_interval_wall_cooling_mode_time_refinement[theta-0.5-2]": {
+      "errors": {
+        "inner_wall_mean_error_8_K": 0.0002661555223274492,
+        "outer_wall_mean_error_8_K": 0.00016543282539219217,
+        "inner_wall_mean_error_16_K": 6.645275395483763e-05,
+        "outer_wall_mean_error_16_K": 4.130467309385044e-05,
+        "inner_wall_mean_error_32_K": 1.6607816844926848e-05,
+        "outer_wall_mean_error_32_K": 1.0322829450376547e-05,
+        "inner_wall_mean_error_64_K": 4.151618658965184e-06,
+        "outer_wall_mean_error_64_K": 2.580498795229369e-06
+      },
+      "finest_orders": [
+        2.0001166003113866,
+        2.0001166003038064
+      ],
+      "finest_max_error_K": 4.151618658965184e-06
+    },
+    "test_interval_wall_cooling_mode_time_refinement[theta-1.0-1]": {
+      "errors": {
+        "inner_wall_mean_error_8_K": 0.012043746959894075,
+        "outer_wall_mean_error_8_K": 0.007485965613101664,
+        "inner_wall_mean_error_16_K": 0.006093437980120631,
+        "outer_wall_mean_error_16_K": 0.0037874647596508604,
+        "inner_wall_mean_error_32_K": 0.00306498125241339,
+        "outer_wall_mean_error_32_K": 0.0019050835538786948,
+        "inner_wall_mean_error_64_K": 0.0015371038099761813,
+        "outer_wall_mean_error_64_K": 0.0009554091682236199
+      },
+      "finest_orders": [
+        0.9956636471065055,
+        0.9956636471068206
+      ],
+      "finest_max_error_K": 0.0015371038099761813
+    },
+    "test_interval_wall_cooling_mode_time_refinement[sdirk2-0.5-2]": {
+      "errors": {
+        "inner_wall_mean_error_8_K": 0.00013059109165031169,
+        "outer_wall_mean_error_8_K": 8.117078719194204e-05,
+        "inner_wall_mean_error_16_K": 3.243285954968034e-05,
+        "outer_wall_mean_error_16_K": 2.015911428013273e-05,
+        "inner_wall_mean_error_32_K": 8.082901706840673e-06,
+        "outer_wall_mean_error_32_K": 5.024044795631788e-06,
+        "inner_wall_mean_error_64_K": 2.0176560043272396e-06,
+        "outer_wall_mean_error_64_K": 1.254103355302627e-06
+      },
+      "finest_orders": [
+        2.0021930772902903,
+        2.0021930768327625
+      ],
+      "finest_max_error_K": 2.0176560043272396e-06
+    }
+  }
+}
