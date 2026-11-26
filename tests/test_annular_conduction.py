@@ -822,3 +822,47 @@ def test_insulated_annulus_rejects_all_generated_heat_at_sheet(film, record_prop
     record_property("balance_error_W_per_m", float(abs(exchange-total)))
     record_property("sheet_temperature_K", float(sheet.real))
     record_property("sheet_temperature_error_K", float(abs(sheet-expected_sheet)))
+
+
+@pytest.mark.parametrize("method", ["theta", "sdirk2"])
+def test_insulated_annular_sheet_cooldown_after_steady_heating(method, record_property):
+    from scipy.linalg import expm
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+
+    edges = np.array([.3, .7, 1.15])
+    radius = edges[1]
+    area = 2*np.pi*radius
+    volumes = np.pi*np.diff(edges**2)
+    centers = (2/3)*np.diff(edges**3)/np.diff(edges**2)
+    # Two cell stores couple to the sheet through radial conduction and contact resistance.
+    conductance = 2*np.pi/(abs(np.log(centers/radius))/[1.4, 2.3] + .3*np.array([.35, .65])/radius)
+    film = 2.4
+    mass = np.r_[volumes*np.array([1.5, 2.]), area*.4]
+    operator = np.diag(np.r_[conductance, conductance.sum()+area*film])
+    operator[:2, 2] = operator[2, :2] = -conductance
+    # Start from the discrete steady state for two bulk heaters and a sheet heater.
+    # After shutoff the homogeneous three-store system decays toward ambient.
+    excess = np.linalg.solve(operator, np.r_[volumes*[1.9, .8], area*.8])
+    ambient, duration = .35, .6
+    exact = expm(-duration*operator/mass[:, None]) @ excess
+    reference_heat = mass @ (excess-exact)
+    previous = None
+    for steps in (12, 24, 48):
+        times = np.linspace(0., duration, steps+1)
+        field, sheet, inner, outer, reservoir = solve_transient_annular_sheet(
+            edges, [1.4, 2.3], [1.5, 2.], (None, None), times, ambient+excess[:2], 1,
+            initial_sheet_temperature=ambient+excess[2], sheet_capacity=.4,
+            resistance=.3, inner_resistance_fraction=.35, wall_fluxes=(0., 0.),
+            sheet_film=film, ambient=ambient, method=method)
+        state = np.column_stack((field, sheet))
+        stored = np.diff(state, axis=0)*mass
+        into_stores = np.column_stack((-inner[:, -1], outer[:, 0], inner[:, -1]-outer[:, 0]-reservoir))
+        residual = np.max(abs(stored-into_stores))
+        errors = np.array([max(abs(state[-1]-ambient-exact)), abs(reservoir.sum()-reference_heat)])
+        record_property(f"steps{steps}_temperature_error_K", float(errors[0]))
+        record_property(f"steps{steps}_reservoir_heat_error_J_per_m", float(errors[1]))
+        record_property(f"steps{steps}_local_balance_J_per_m", float(residual))
+        assert residual < 2e-13 and np.all(reservoir > 0)
+        if previous is not None:
+            assert np.all(previous/errors > 3.7)
+        previous = errors
