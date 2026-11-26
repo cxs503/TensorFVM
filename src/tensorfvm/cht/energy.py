@@ -1255,17 +1255,22 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
 
         weights = stage_weights[:,None]
         stage = (1-weights)*states[:-1]+weights*states[1:]
-    if return_face_heat or return_cell_heat:
-        integrated_cells = integrate(stage[:,:cell_count].reshape(-1,ny,nx))
     if return_face_heat or return_storing_wall_heat:
         stage_bc = {s:(1-weights)*v[:len(time)-1]+weights*v[end_samples] for s,v in signals.items()}
     if return_face_heat:
         walls = {s:integrate(v) for s,v in wall_powers(stage,stage_bc).items()}
-        result.append({"wall":walls,"interior":_interior_conduction_power(integrated_cells,faces)})
+        # Form face differences before time weighting to retain small contrasts
+        # on a shared temperature datum, including across internal substeps.
+        interior = _interior_conduction_power(history, faces)
+        face_weights = stage_weights[:, None, None]
+        for axis, power in interior.items():
+            interior[axis] = integrate((1-face_weights)*power[:-1] + face_weights*power[1:])
+        result.append({"wall":walls, "interior":interior})
     if return_cell_heat:
         source_heat = (integrate(source_stages) if varying_source else
                        np.diff(requested)[:,None,None]*(volume*np.asarray(source,dtype=float)))
         if bulk_ambient_temperature is None:
+            integrated_cells = integrate(stage[:,:cell_count].reshape(-1,ny,nx))
             bulk_heat = -integrated_cells*(volume*heat_loss_coefficient)
         else:
             relative_stage = stage[:,:cell_count].reshape(-1,ny,nx)

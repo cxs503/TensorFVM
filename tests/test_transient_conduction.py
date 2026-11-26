@@ -742,3 +742,27 @@ def test_equal_effusivity_layers_ramp_and_hold_interface_heat(record_property):
         assert np.all(coarse > 3*fine)
     assert np.all(errors[-1] < .015*abs(reference))
     assert np.all(abs(errors[-1]-errors[-2]) < .05*errors[-1])
+
+
+@pytest.mark.parametrize("axis", ["x", "y"])
+@pytest.mark.parametrize("rannacher", [False, True])
+def test_interval_interior_heat_preserves_small_contrast(axis, rannacher, record_property):
+    # Two unit volumes of unit heat capacity, separated by conductance g.
+    # Their initial contrast is exactly one ulp of the common temperature.
+    base = 2.**10
+    jump = np.spacing(base)
+    g = 2.**-60
+    duration = 1.5
+    exact = .5*jump*(-np.expm1(-2*g*duration))
+    widths = [1., 1.]
+    initial = np.array([[base+jump, base]])
+    dx, dy = widths, [1.]
+    if axis == "y":
+        dx, dy = dy, dx
+        initial = initial.T
+    _, ledger = solve_transient_conduction(
+        dx, dy, g, 1., {}, [0., duration], initial, rannacher=rannacher, return_face_heat=True)
+    measured = ledger["interior"][axis].item()
+    error = abs(measured/exact-1.)
+    record_property("relative_heat_error", error)
+    assert error < 1e-14
