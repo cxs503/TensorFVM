@@ -1,0 +1,26 @@
+{
+  "source_commit": "9bad27d19fa7ffde0b1c839cba4ae6249d406c82",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/fvm_annular_contrast.xml",
+  "reference": "Unit axial length. Layers r=1..2 and r=2..4, k=1e14 and 2 W/(m K), interface resistance 0.2 m2 K/W, films 4 and 8 W/(m2 K). Reference outward heat rate per length is 2*pi*5/(1/4+ln(2)/1e14+0.2/2+ln(2)/2+1/32).",
+  "before_max_relative_face_rate_error": {
+    "temperature": 1.9654200855538975,
+    "inner_flux": 1.0,
+    "outer_flux": 1.3156635445521403
+  },
+  "cases": {
+    "test_annular_contact_flux_with_high_conductivity_contrast[temperature]": {
+      "max_relative_face_rate_error": 3.2922776566678383e-16,
+      "max_temperature_error_K": 0.0
+    },
+    "test_annular_contact_flux_with_high_conductivity_contrast[inner_flux]": {
+      "max_relative_face_rate_error": 0.0,
+      "max_temperature_error_K": 0.0
+    },
+    "test_annular_contact_flux_with_high_conductivity_contrast[outer_flux]": {
+      "max_relative_face_rate_error": 0.0,
+      "max_temperature_error_K": 0.0
+    }
+  },
+  "passed": 121,
+  "failures": 0
+}
