@@ -1114,7 +1114,8 @@ def test_linear_face_directional_heat_endpoint_crossings_and_short_lobes():
 def test_contact_directional_heat_during_double_reversal(record_property):
     """Test signed contact transfer against separate positive and negative modal integrals."""
     from scipy.optimize import brentq
-    from tensorfvm.cht.rod import linear_face_directional_heat, solve_transient_stepped_rod
+    from tensorfvm.cht.rod import (linear_face_directional_duration, linear_face_directional_heat,
+                                   solve_transient_stepped_rod)
 
     first_wave = 1.5*np.pi
     resistance = 4/(3*first_wave)
@@ -1153,6 +1154,11 @@ def test_contact_directional_heat_during_double_reversal(record_property):
         power = (traces[0][:, cut]-traces[1][:, cut])/resistance
         forward, reverse = linear_face_directional_heat(times, power)
         assert np.count_nonzero((forward > 0) & (reverse > 0)) == 2
+        positive, negative, idle = linear_face_directional_duration(times, power)
+        np.testing.assert_allclose(positive+negative+idle, np.diff(times), atol=1e-16, rtol=0.)
+        assert np.all(idle == 0.)
+        duration_error = abs(negative.sum()-(roots[1]-roots[0]))
+        record_property(f"n{n}_reverse_duration_error_s", duration_error)
         balance = max(abs(forward-reverse-ledger["contact"][:, cut]))
         assert balance < 1e-12
         totals = np.array([forward.sum(), reverse.sum()])
@@ -1165,3 +1171,15 @@ def test_contact_directional_heat_during_double_reversal(record_property):
             assert np.all(previous > 3*errors)
         previous = errors
     assert np.all(errors < .005*reference)
+    assert duration_error < 1e-5
+
+
+def test_linear_face_directional_duration_short_lobes_and_idle_plateau():
+    from tensorfvm.cht.rod import linear_face_directional_duration
+
+    times = [0., 2., 5., 6.]
+    power = [[1., -1e-20, 0.], [-1e-20, 1., 0.], [0., 0., 4.], [0., -1., 2.]]
+    forward, reverse, idle = linear_face_directional_duration(times, power)
+    np.testing.assert_allclose(forward, [[2., 2., 0.], [0., 3., 3.], [0., 0., 1.]], atol=0.)
+    np.testing.assert_allclose(reverse, [[2e-20, 2e-20, 0.], [3., 0., 0.], [0., 1., 0.]], atol=0.)
+    np.testing.assert_array_equal(idle, [[0., 0., 2.], [0., 0., 0.], [1., 0., 0.]])

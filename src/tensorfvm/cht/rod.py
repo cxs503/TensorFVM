@@ -450,16 +450,7 @@ def reconstruct_interval_rod_field(dx, area, conductivity, temperatures, fractio
     return field,power
 
 
-def linear_face_directional_heat(time, face_power):
-    """Integrate positive and negative parts of piecewise-linear face power.
-
-    Supply times in s and real rightward powers in W, with time on the first
-    axis. Return (rightward, leftward) nonnegative heats in J for each
-    interval, preserving any trailing face dimensions. Their difference
-    equals the trapezoidal integral. This uses endpoint interpolation;
-    the transient solver's stage-integrated heat can differ for other
-    temporal quadratures or unresolved load jumps.
-    """
+def _linear_face_intervals(time, face_power):
     if np.iscomplexobj(time) or np.iscomplexobj(face_power):
         raise ValueError("time and face_power must be real")
     times = np.asarray(time, dtype=float)
@@ -481,11 +472,41 @@ def linear_face_directional_heat(time, face_power):
     a = np.where(crossing, abs(left), 0.)/scale
     b = np.where(crossing, abs(right), 0.)/scale
     total = np.where(crossing, a+b, 1.)
-    left_weight = .5*np.where(crossing, a/total, 1.)
-    right_weight = .5*np.where(crossing, b/total, 1.)
+    return dt, left, right, crossing, a/total, b/total
+
+
+def linear_face_directional_heat(time, face_power):
+    """Integrate positive and negative parts of piecewise-linear face power.
+
+    Supply times in s and real rightward powers in W, with time on the first
+    axis. Return (rightward, leftward) nonnegative heats in J for each
+    interval, preserving any trailing face dimensions. Their difference
+    equals the trapezoidal integral. This uses endpoint interpolation;
+    the transient solver's stage-integrated heat can differ for other
+    temporal quadratures or unresolved load jumps.
+    """
+    dt, left, right, crossing, left_fraction, right_fraction = _linear_face_intervals(time, face_power)
+    left_weight = .5*np.where(crossing, left_fraction, 1.)
+    right_weight = .5*np.where(crossing, right_fraction, 1.)
     forward = dt*(left_weight*np.maximum(left, 0.)+right_weight*np.maximum(right, 0.))
     reverse = dt*(left_weight*np.maximum(-left, 0.)+right_weight*np.maximum(-right, 0.))
     return forward, reverse
+
+
+def linear_face_directional_duration(time, face_power):
+    """Return (rightward, leftward, zero-power) durations in s per interval.
+
+    As in linear_face_directional_heat, the first power axis is time and
+    trailing axes identify faces. Power varies linearly between samples.
+    An isolated zero has zero duration. Two consecutive zero samples assign
+    the entire interval to zero power.
+    """
+    dt, left, right, crossing, left_fraction, right_fraction = _linear_face_intervals(time, face_power)
+    forward = np.where(crossing, np.where(left > 0, left_fraction, right_fraction),
+                       (left > 0) | (right > 0))
+    reverse = np.where(crossing, np.where(left < 0, left_fraction, right_fraction),
+                       (left < 0) | (right < 0))
+    return dt*forward, dt*reverse, dt*((left == 0) & (right == 0))
 
 
 def harmonic_face_cycle_heat(face_power, angular_frequency, *, steady_power=0.):
