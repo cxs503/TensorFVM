@@ -1,0 +1,67 @@
+{
+  "source_commit": "4a607fbf9b29b8cc73a62fcaaa1ac192d7116d06",
+  "baseline_commit": "39fc20ab67d545d0d2dc0953ee808a7c841f02c8",
+  "reference": "80-digit decimal evaluation of G*(K/r-2*r)/4 at both walls for K=(ro^2-ri^2)/ln(ro/ri). Check each traction sign and magnitude, and global balance against G*pi*(ro-ri)*(ro+ri).",
+  "command": "PYTHONPATH=src OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/thin-shear-after.xml",
+  "baseline_procedure": "Run the source commit test file with baseline src, selecting -k thin_gap_wall_traction.",
+  "before": {
+    "tests": 4,
+    "failures": 3,
+    "measurements": {
+      "test_thin_gap_wall_traction[0.2]": {
+        "reference_inner_Pa": 0.23249169956740146,
+        "reference_outer_Pa": -0.2187569170271652,
+        "max_relative_wall_error": 2.1094237467877974e-15,
+        "relative_force_imbalance": 0.0
+      },
+      "test_thin_gap_wall_traction[0.0001]": {
+        "reference_inner_Pa": 0.00011250187500007026,
+        "reference_outer_Pa": -0.00011249812518755275,
+        "max_relative_wall_error": 9.296016845183885e-09,
+        "relative_force_imbalance": 3.0753177782116836e-13
+      },
+      "test_thin_gap_wall_traction[1e-08]": {
+        "reference_inner_Pa": 1.124999995037845e-08,
+        "reference_outer_Pa": -1.1249999912878453e-08,
+        "max_relative_wall_error": 0.48686492085465927,
+        "relative_force_imbalance": 2.4343245197400165e-09
+      },
+      "test_thin_gap_wall_traction[9.094947017729282e-13]": {
+        "reference_inner_Pa": 1.0231815394946994e-12,
+        "reference_outer_Pa": -1.0231815394943892e-12,
+        "max_relative_wall_error": 0.5000000000002274,
+        "relative_force_imbalance": 2.2737367544323206e-13
+      }
+    }
+  },
+  "after": {
+    "tests": 184,
+    "failures": 0,
+    "measurements": {
+      "test_thin_gap_wall_traction[0.2]": {
+        "reference_inner_Pa": 0.23249169956740146,
+        "reference_outer_Pa": -0.2187569170271652,
+        "max_relative_wall_error": 1.1102230246251565e-16,
+        "relative_force_imbalance": 0.0
+      },
+      "test_thin_gap_wall_traction[0.0001]": {
+        "reference_inner_Pa": 0.00011250187500007026,
+        "reference_outer_Pa": -0.00011249812518755275,
+        "max_relative_wall_error": 2.220446049250313e-16,
+        "relative_force_imbalance": 0.0
+      },
+      "test_thin_gap_wall_traction[1e-08]": {
+        "reference_inner_Pa": 1.124999995037845e-08,
+        "reference_outer_Pa": -1.1249999912878453e-08,
+        "max_relative_wall_error": 2.220446049250313e-16,
+        "relative_force_imbalance": 2.220446049250313e-16
+      },
+      "test_thin_gap_wall_traction[9.094947017729282e-13]": {
+        "reference_inner_Pa": 1.0231815394946994e-12,
+        "reference_outer_Pa": -1.0231815394943892e-12,
+        "max_relative_wall_error": 0.0,
+        "relative_force_imbalance": 0.0
+      }
+    }
+  }
+}
