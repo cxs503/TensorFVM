@@ -1049,3 +1049,40 @@ def test_mixed_walls_with_generating_and_absorbing_shells(flux_wall, film, recor
     assert zero_error < 2e-13
     assert rate_error < 1e-12
     assert field_error < 2e-13
+
+
+@pytest.mark.parametrize("location", ["midpoint", "volume_centroid"])
+@pytest.mark.parametrize("omega", [0., 2.5])
+@pytest.mark.parametrize("generated", [False, True])
+def test_annular_contact_temperatures_across_multiple_layers(location, omega, generated, record_property):
+    r = np.array([.5, .65, 1., 1.3, 1.8, 2.])
+    k = np.array([.8, .8, 3., 2., 2.])
+    contact = np.array([0., .4, .7, 0.])
+    center = .5*(r[1:] + r[:-1])
+    if location == "volume_centroid":
+        center = (2/3)*np.diff(r**3)/np.diff(r**2)
+    # In every material q(r) = c/r + g*r/2. Integrate -q/k from the
+    # inner radius of each cell and impose the exact surface jump R*q.
+    c = .7 + .4j
+    g = -1.+.2j if generated else 0.
+    def primitive(x):
+        return c*np.log(x) + g*x*x/4
+    surface = 3.-.8j
+    exact = np.empty((2, len(contact)), dtype=complex)
+    cell = np.empty_like(k, dtype=complex)
+    for j, material in enumerate(k):
+        cell[j] = surface - (primitive(center[j])-primitive(r[j]))/material
+        edge = r[j+1]
+        surface -= (primitive(edge)-primitive(r[j]))/material
+        if j < len(contact):
+            exact[0, j] = surface
+            surface -= contact[j]*(c/edge + g*edge/2)
+            exact[1, j] = surface
+    # Match the solver's collocated storage at the declared cell radius.
+    _, _, traces = solve_annular_conduction(
+        r, k, 1., [3.-.8j, surface], omega, source=g+1j*omega*cell,
+        contact_resistance=contact, distributed_source=generated, cell_location=location,
+        return_contact_temperatures=True)
+    error = float(np.max(abs(traces-exact)))
+    record_property("max_surface_temperature_error_K", error)
+    assert error < 5e-14

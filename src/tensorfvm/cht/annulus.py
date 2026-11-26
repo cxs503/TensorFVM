@@ -61,7 +61,8 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
                              angular_frequency, *, contact_resistance=0., source=0., azimuthal_mode=0,
                              circumferential_conductivity=None, axial_conductivity=None,
                              axial_wavenumber=0., film_coefficients=(None, None), cell_location="midpoint",
-                             wall_fluxes=(None, None), distributed_source=False, mean_temperature=None):
+                             wall_fluxes=(None, None), distributed_source=False, mean_temperature=None,
+                             return_contact_temperatures=False):
     """Return cell phasors and radial face heat rates per unit axial length.
 
     conductivity is radial. Optional positive circumferential_conductivity and
@@ -87,6 +88,9 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     when relating cell temperatures to face power. For an unanchored axisymmetric
     problem with zero axial wavenumber and either zero frequency or all capacities zero, supply the volume-weighted mean
     cell temperature. Wall inputs and integrated generation must sum to zero.
+    With return_contact_temperatures=True, append an array of shape (2, n-1)
+    in K. Rows give the inner- and outer-material surface temperatures at
+    each internal face in order of increasing radius.
 
     """
     r = np.asarray(radii, dtype=float)
@@ -151,6 +155,19 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         dl, dr = .5*width+shift, .5*width-shift
         factor_l = _half_shell_source_drop(dl, r[:-1], k)
         factor_r = -_half_shell_source_drop(-dr, r[1:], k)
+
+    def result(field, rates):
+        if not return_contact_temperatures:
+            return field, rates
+        face_rates = rates[1:-1]
+        inner = field[:-1] - face_rates*right[:-1]
+        outer = field[1:] + face_rates*left[1:]
+        if distributed_source:
+            net = density - (sink/volume)*field
+            inner -= factor_r[:-1]*net[:-1]
+            outer += factor_l[1:]*net[1:]
+        return field, rates, np.stack((inner, outer))
+
     if not sink.any() and anchored.all():
         # Balance fixes differences between face rates. The total drop
         # between the two ambient temperatures fixes their common offset.
@@ -167,7 +184,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         to_outer = np.cumsum(resistance[:0:-1])[::-1]
         field = np.where(from_inner <= to_outer, walls[0] - np.cumsum(drops[:-1]),
                          walls[-1] + np.cumsum(drops[:0:-1])[::-1])
-        return field, rates
+        return result(field, rates)
     if needs_mean or (not sink.any() and anchored.sum() == 1):
         # A flux boundary fixes one face rate. March the energy balance
         # from that wall, including generation in each cell.
@@ -198,7 +215,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
             if distributed_source:
                 last_drop += factor_r[-1]*density[-1]
             field = walls[-1] + np.cumsum(np.r_[last_drop, drops[::-1]])[::-1]
-        return field, rates
+        return result(field, rates)
     # Face power = offset + outward*T_inner - inward_coefficient*T_outer.
     outward = conductance[1:].astype(complex)
     inward_coefficient = conductance[:-1].astype(complex)
@@ -219,7 +236,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     rates = offset.copy()
     rates[1:] += outward*field
     rates[:-1] -= inward_coefficient*field
-    return field, rates
+    return result(field, rates)
 
 
 def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temperatures, angular_frequency,
