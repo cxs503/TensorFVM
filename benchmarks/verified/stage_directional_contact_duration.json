@@ -1,0 +1,58 @@
+{
+  "source_commit": "70e2b5d0226625e6d80fc6d21061994ac7e0bf25",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_stepped_rod.py -o junit_family=legacy --junitxml=/tmp/fvm_stage_duration.xml",
+  "reference": "Balanced loads prescribe contact power of 0 W to 0.125 s, +1 W until 0.375 s, -2 W until 0.625 s and +1 W through 1 s. Compare directional and exact-zero residence times per reporting window and check both directional heats. Also test within-step reversal of the smooth power 0.3-t W.",
+  "windows_s": [
+    0,
+    0.5,
+    1
+  ],
+  "reference_right_left_idle_s": [
+    [
+      0.25,
+      0.125,
+      0.125
+    ],
+    [
+      0.375,
+      0.125,
+      0
+    ]
+  ],
+  "tests": 162,
+  "errors": 0,
+  "failures": 0,
+  "skipped": 0,
+  "cases": {
+    "test_stage_directional_resistive_contact_heat[sdirk2]": {
+      "ramp_duration_error_s": 6.938893903907228e-17
+    },
+    "test_stage_directional_resistive_contact_heat[theta]": {
+      "ramp_duration_error_s": 1.3877787807814457e-17
+    },
+    "test_stage_directional_resistive_contact_heat[sdirk2_start]": {
+      "ramp_duration_error_s": 0.0
+    },
+    "test_stage_directional_resistive_contact_heat[rannacher]": {
+      "ramp_duration_error_s": 1.3877787807814457e-17
+    },
+    "test_stage_directional_resistive_contact_heat[positive_cn]": {
+      "ramp_duration_error_s": 2.220446049250313e-16
+    },
+    "test_contact_duration_hidden_idle_and_pulse[theta]": {
+      "max_duration_error_s": 0.0
+    },
+    "test_contact_duration_hidden_idle_and_pulse[sdirk2]": {
+      "max_duration_error_s": 0.0
+    },
+    "test_contact_duration_hidden_idle_and_pulse[rannacher]": {
+      "max_duration_error_s": 0.0
+    },
+    "test_contact_duration_hidden_idle_and_pulse[sdirk2_start]": {
+      "max_duration_error_s": 0.0
+    },
+    "test_contact_duration_hidden_idle_and_pulse[positive_cn]": {
+      "max_duration_error_s": 0.0
+    }
+  }
+}
