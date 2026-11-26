@@ -497,8 +497,9 @@ def test_harmonic_flux_and_film_annulus_against_bessel_solution(mode, flux_side,
         assert all(a/b > 3.7 for a, b in zip(coarse, fine))
 
 
-@pytest.mark.parametrize("axial,sheet_k", [(0., 0.), (-1.25, .35)])
-def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k, record_property):
+@pytest.mark.parametrize("axial,sheet_k,axial_k", [(0., 0., None), (-1.25, .35, None),
+                                                  (-1.25, .35, 1.2), (-1.25, .35, 0.)])
+def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k, axial_k, record_property):
     from scipy.special import iv, ivp, kv, kvp
     from tensorfvm.cht.annulus import solve_annular_sheet
 
@@ -510,7 +511,7 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k,
     q = np.array([1.1-0.4j, -0.25+0.5j])  # Increasing-r heat flux on each side.
     resistance, fraction, surface_capacity = 0.25, 0.3, 0.4
     traces = sheet + resistance*np.array([fraction, -(1-fraction)])*q
-    surface_response = 1j*omega*surface_capacity + sheet_k*((mode/radius)**2 + axial**2)
+    surface_response = 1j*omega*surface_capacity + sheet_k*(mode/radius)**2 + (sheet_k if axial_k is None else axial_k)*axial**2
     generation = surface_response*sheet + q[1] - q[0]
 
     def basis(side, r):
@@ -531,7 +532,8 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k,
         field, inner, outer, bulk_sheet, observed = solve_annular_sheet(
             edges, np.repeat(k, n), np.repeat(capacity, n), walls, omega, n,
             azimuthal_mode=mode, resistance=resistance, inner_resistance_fraction=fraction,
-            axial_wavenumber=axial, sheet_conductivity=sheet_k, sheet_capacity=surface_capacity, sheet_source=generation, distributed_source=True,
+            axial_wavenumber=axial, sheet_conductivity=sheet_k, sheet_axial_conductivity=axial_k,
+            sheet_capacity=surface_capacity, sheet_source=generation, distributed_source=True,
             cell_location="volume_centroid", return_contact_temperatures=True)
         exact_field, exact_rates = [], []
         for side, r in enumerate(parts):
@@ -617,7 +619,8 @@ def test_axial_mode_with_insulated_walls_balances_source_without_reference():
 
 
 @pytest.mark.parametrize("method", ["theta", "sdirk2"])
-def test_axial_decay_across_storing_sheet(method, record_property):
+@pytest.mark.parametrize("circumferential, axial_k", [(.3, None), (1.8, .3)])
+def test_axial_decay_across_storing_sheet(method, circumferential, axial_k, record_property):
     from tensorfvm.cht.annulus import solve_transient_annular_sheet
 
     # Equal diffusivities give the same exponential decay throughout both
@@ -629,7 +632,8 @@ def test_axial_decay_across_storing_sheet(method, record_property):
         times = np.linspace(0., .5, steps + 1)
         field, sheet, inner, outer, _ = solve_transient_annular_sheet(
             [.3, .38, .5, .73, 1.], k, k/diffusivity, (None, None), times, 1., 2,
-            sheet_capacity=.5, sheet_conductivity=.5*diffusivity, axial_wavenumber=axial,
+            sheet_capacity=.5, sheet_conductivity=circumferential, sheet_axial_conductivity=axial_k,
+            axial_wavenumber=axial,
             initial_sheet_temperature=1., resistance=.4, wall_fluxes=(0., 0.), method=method)
         exact = np.exp(-diffusivity*axial**2*times)
         error = max(np.max(abs(field - exact[:, None])), np.max(abs(sheet - exact)))
