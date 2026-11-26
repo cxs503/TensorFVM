@@ -208,3 +208,33 @@ def test_thin_annulus_cell_geometry(gap, record_property):
     record_property("max_centroid_displacement_m", max_center_error)
     assert max_area_error < 2e-15
     assert max_center_error < 4e-16
+
+
+@pytest.mark.parametrize("sectors,gap", [(17, .25), (32, 2.**-28)])
+def test_annular_periodic_face_chains(sectors, gap, record_property):
+    from tensorfvm.annular import AnnularConfig, AnnularMesh
+
+    cfg = ao._mesh_config(4, sectors)
+    cfg.annular_config = AnnularConfig(ntheta=sectors, nr=4, inner_radius_m=.75, outer_radius_m=.75+gap)
+    mesh = AnnularMesh(cfg)
+    faces = mesh.face_vertices.numpy()
+    vectors = mesh.face_area_vectors.numpy()
+    owners, neighbors = mesh.owner.numpy(), mesh.neighbor.numpy()
+    open_cells = 0
+    max_defect = 0.
+    for cell in range(4*sectors):
+        outgoing, incoming = owners == cell, neighbors == cell
+        oriented = np.concatenate((faces[outgoing], faces[incoming, ::-1]))
+        starts = sorted(map(tuple, oriented[:, 0]))
+        ends = sorted(map(tuple, oriented[:, 1]))
+        open_cells += starts != ends
+        normal = np.concatenate((vectors[outgoing], -vectors[incoming]))
+        max_defect = max(max_defect, math.hypot(*(math.fsum(column) for column in normal.T)))
+    seam = mesh.vertices[:, -1].numpy() - mesh.vertices[:, 0].numpy()
+    mismatch = float(np.max(np.linalg.norm(seam, axis=1)))
+    record_property("max_seam_endpoint_mismatch_m", mismatch)
+    record_property("open_cell_chains", open_cells)
+    record_property("max_cell_normal_sum_m", max_defect)
+    assert mismatch == 0.
+    assert open_cells == 0
+    assert max_defect <= np.finfo(float).eps * cfg.annular_config.outer_radius_m

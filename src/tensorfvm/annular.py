@@ -41,6 +41,9 @@ class AnnularMesh:
         ac=c.annular_config;n,nr=ac.ntheta,ac.nr;self.field_shape=(nr,n)
         theta=torch.linspace(0,2*math.pi,n+1,dtype=torch.float64,device=c.device);radius=torch.linspace(ac.inner_radius_m,ac.outer_radius_m,nr+1,dtype=torch.float64,device=c.device)
         rr,tt=torch.meshgrid(radius,theta,indexing='ij');self.vertices=torch.stack((rr*torch.cos(tt),rr*torch.sin(tt)),-1)
+        # The periodic face is shared by sectors n-1 and 0. Its vertices
+        # must coincide exactly, including when sin(2*pi) rounds away from zero.
+        self.vertices[:, -1] = self.vertices[:, 0]
         v = self.vertices
         a, b, c_outer, d = v[:-1,:-1], v[1:,:-1], v[1:,1:], v[:-1,1:]
         diagonal = c_outer-a
