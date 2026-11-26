@@ -145,20 +145,29 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     lateral = _modal_conductance(r, kt, kz, volume, azimuthal_mode, axial_wavenumber)
     sink = lateral + 1j*angular_frequency*cv*volume
     anchored = conductance[[0, -1]] > 0
-    if not sink.any() and not density.any() and anchored.all():
-        resistance = 1/conductance
-        rate = (walls[0]-walls[-1])/resistance.sum()
-        from_inner = np.cumsum(resistance[:-1])
-        to_outer = np.cumsum(resistance[:0:-1])[::-1]
-        field = np.where(from_inner <= to_outer, walls[0] - rate*from_inner,
-                         walls[-1] + rate*to_outer)
-        return field, np.full(n+1, rate, dtype=complex)
     if distributed_source:
         # Integrating dQ/dr=2πr*g and dT/dr=-Q/(2πkr) gives these
         # temperature-drop coefficients for unit net generation g.
         dl, dr = .5*width+shift, .5*width-shift
         factor_l = _half_shell_source_drop(dl, r[:-1], k)
         factor_r = -_half_shell_source_drop(-dr, r[1:], k)
+    if not sink.any() and anchored.all():
+        # Balance fixes differences between face rates. The total drop
+        # between the two ambient temperatures fixes their common offset.
+        resistance = 1/conductance
+        added_rate = np.r_[0., np.cumsum(density*volume)]
+        source_drop = np.zeros_like(added_rate)
+        if distributed_source:
+            source_drop[:-1] += factor_l*density
+            source_drop[1:] += factor_r*density
+        first_rate = ((walls[0]-walls[-1]) - (added_rate @ resistance + source_drop.sum())) / resistance.sum()
+        rates = first_rate + added_rate
+        drops = rates*resistance + source_drop
+        from_inner = np.cumsum(resistance[:-1])
+        to_outer = np.cumsum(resistance[:0:-1])[::-1]
+        field = np.where(from_inner <= to_outer, walls[0] - np.cumsum(drops[:-1]),
+                         walls[-1] + np.cumsum(drops[:0:-1])[::-1])
+        return field, rates
     if needs_mean or (not sink.any() and anchored.sum() == 1):
         # A flux boundary fixes one face rate. March the energy balance
         # from that wall, including generation in each cell.

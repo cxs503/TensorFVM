@@ -1006,7 +1006,7 @@ def test_flux_driven_contrasting_shells_with_mean(source, location, record_prope
     assert field_error < 2e-13
 
 
-@pytest.mark.parametrize("flux_wall", [0, 1])
+@pytest.mark.parametrize("flux_wall", [0, 1, None])
 @pytest.mark.parametrize("film", [None, 3.])
 def test_mixed_walls_with_generating_and_absorbing_shells(flux_wall, film, record_property):
     r = np.array([1., 1.3, 1.7, 2., 2.5, 3., 4.])
@@ -1023,14 +1023,16 @@ def test_mixed_walls_with_generating_and_absorbing_shells(flux_wall, film, recor
     wall_r = r[[0, -1]]
     inward_flux = flux(wall_r)*[1, -1]
     walls = list(temperature(wall_r))
-    anchored = 1-flux_wall
+    anchored = [0, 1] if flux_wall is None else [1-flux_wall]
     films = [None, None]
-    films[anchored] = film
-    if film is not None:
-        walls[anchored] += inward_flux[anchored]/film
     fluxes = [None, None]
-    walls[flux_wall] = None
-    fluxes[flux_wall] = inward_flux[flux_wall]
+    for i in anchored:
+        films[i] = film
+        if film is not None:
+            walls[i] += inward_flux[i]/film
+    if flux_wall is not None:
+        walls[flux_wall] = None
+        fluxes[flux_wall] = inward_flux[flux_wall]
     field, rates = solve_annular_conduction(
         r, np.where(center < 2., 1e14, 2.), 1., walls, 0., film_coefficients=films,
         wall_fluxes=fluxes, source=np.where(center < 2., 1., -1.), distributed_source=True,
@@ -1040,5 +1042,10 @@ def test_mixed_walls_with_generating_and_absorbing_shells(flux_wall, film, recor
     field_error = float(np.max(abs(field-temperature(center))))
     record_property("max_face_rate_error_W_per_m", rate_error)
     record_property("max_temperature_error_K", field_error)
+    # In the absorbing layer the face rate is affine in squared radius.
+    zero_radius = np.sqrt(np.interp(0., rates.real[-2:][::-1], r[-2:][::-1]**2))
+    zero_error = float(abs(zero_radius-np.sqrt(10.)))
+    record_property("reversal_radius_error_m", zero_error)
+    assert zero_error < 2e-13
     assert rate_error < 1e-12
     assert field_error < 2e-13
