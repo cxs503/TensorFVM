@@ -566,3 +566,43 @@ def test_storing_wall_state_preserves_active_face_order_and_absolute_temperature
     for invalid in ({"west":[305.]},{"east":[305.]}):
         with pytest.raises(ValueError):
             solve_transient_conduction(time=[0.,.1],initial_temperature=305.,initial_storing_wall_state=invalid,**opts)
+
+
+@pytest.mark.parametrize("rannacher", [False, True])
+def test_storing_wall_heat_with_switched_reservoir(rannacher,record_property):
+    # Two independent wall faces: g=2 and h=4 per unit area, Cwall=3.
+    # Tcell rises then falls. Twall=Tcell+1/2, so material flux stays +1.
+    heights = np.array([.25,.75])
+    jump = .125
+    times = np.array([0.,.25,.5])
+    def rise(t):
+        return min(t,jump)-2*max(t-jump,0.)
+    def slope(t):
+        return 1. if t<jump else -2.
+    wall = dict(type="robin",wall_areal_heat_capacity=3.,film_coefficient=4.,
+                values=lambda t: 305.5+rise(t)+(3*slope(t)+1)/4,
+                initial_wall_temperature=305.5)
+    _,faces,ledger = solve_transient_conduction([1.],heights,1.,1.,{"west":wall},times,0.,
+        source=lambda t: slope(t)-1,cell_temperature_reference=305.,load_jump_times=[jump],
+        rannacher=rannacher,return_face_heat=True,return_storing_wall_heat=True)
+    storage = 3*heights*np.diff([rise(t) for t in times])[:,None]
+    transfer = heights*np.diff(times)[:,None]
+    wall_heat = ledger["west"]
+    errors = dict(ambient_J=np.max(abs(wall_heat["ambient"]-storage-transfer)),
+                  material_J=np.max(abs(wall_heat["material"]-transfer)),
+                  storage_J=np.max(abs(wall_heat["storage"]-storage)),
+                  wall_balance_J=np.max(abs(wall_heat["ambient"]-wall_heat["material"]-wall_heat["storage"])))
+    np.testing.assert_array_equal(wall_heat["material"],faces["wall"]["west"])
+    for name,error in errors.items():
+        record_property(name,float(error))
+        assert error < 5e-14
+
+
+def test_storing_wall_heat_static_mixed_face_with_second_order_flux():
+    west = dict(types=["neumann","robin"],values=[.5,2.],film_coefficient=1.,
+                wall_areal_heat_capacity=[0.,3.],initial_wall_temperature=.75)
+    _,heat = solve_transient_conduction([.25,.75],[.25,.75],2.,3.,{"west":west},[0.,.01,.125],
+        [0.,.25],wall_flux_order=2,return_storing_wall_heat=True)
+    wall = heat["west"]
+    assert set(heat)=={"west"} and wall["storage"].shape==(2,1)
+    np.testing.assert_allclose(wall["ambient"]-wall["material"],wall["storage"],rtol=0.,atol=2e-15)

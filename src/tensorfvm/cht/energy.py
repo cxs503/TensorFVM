@@ -692,7 +692,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                load_jump_times=(), return_face_heat=False, rannacher=False,
                                monotone_theta=False, dirichlet_flux_order=1, return_cell_heat=False,
                                bulk_ambient_temperature=None, cell_temperature_reference=None,
-                               initial_storing_wall_state=None, return_storing_wall_state=False):
+                               initial_storing_wall_state=None, return_storing_wall_state=False,
+                               return_storing_wall_heat=False):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -708,6 +709,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     initial_storing_wall_state along with the last cell field. Each supplied
     side overrides its BC initial_wall_temperature; omitted sides use the BC.
     Use the same storing faces and temperature reference across the restart.
+    return_storing_wall_heat appends a dict keyed by the same sides. Each
+    entry contains interval heat arrays "ambient" (film into wall), "material"
+    (wall into adjacent cells), and "storage" (wall energy increase), in J
+    for unit depth, shaped (nt-1, number of storing faces).
     Cell widths are in metres, conductivity in W/(m K), volumetric heat capacity
     in J/(m³ K), source in W/m³, and contact resistance in m² K/W. Fixed
     wall temperatures and prescribed inward flux use the steady BC format.
@@ -935,7 +940,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             b = np.r_[b, -film*values[side][mask]]
             if side in signals:
                 varying_loads.append((ids, signals[side][:,mask], film))
-            wall_links[side] = (mask, ids, cells, g, inner, correction)
+            wall_links[side] = (mask, ids, cells, g, inner, correction, film)
         A = A.tocsc()
     if monotone_theta:
         entries = A.tocoo()
@@ -979,6 +984,11 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         for cells, samples, weights in varying_loads:
             rhs[cells] += dt * weights * ((1-weight)*samples[step] + weight*samples[end_samples[step]])
         states[step + 1] = lu.solve(rhs)
+    def storing_wall_power(selected_states,link):
+        _, ids, cells, g, inner, correction, _ = link
+        return (g*(selected_states[:,ids]-selected_states[:,cells])
+                +correction*(selected_states[:,inner]-selected_states[:,cells]))
+
     def wall_powers(selected_states,boundary_values):
         state = selected_states[:,:cell_count]
         field = state.reshape(-1,ny,nx)
@@ -987,9 +997,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                   for side,cells,conductance,_,_,area in side_specs}
         for side,(mask,cells,inner,extra) in fixed_wall_links.items():
             powers[side][:,mask] += extra*(state[:,inner]-state[:,cells])
-        for side,(mask,ids,cells,g,inner,correction) in wall_links.items():
-            powers[side][:,mask] = (g*(selected_states[:,ids]-state[:,cells])
-                                     +correction*(state[:,inner]-state[:,cells]))
+        for side,link in wall_links.items():
+            powers[side][:,link[0]] = storing_wall_power(selected_states,link)
         if periodic_y:
             powers["south"] = seam*(field[:,-1]-field[:,0])
             powers["north"] = -powers["south"]
@@ -1000,7 +1009,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         result.append(wall_powers(states[outputs],{s:v[outputs] for s,v in signals.items()}))
     if return_interior_power:
         result.append(_interior_conduction_power(result[0],faces))
-    if return_face_heat or return_cell_heat:
+    if return_face_heat or return_cell_heat or return_storing_wall_heat:
         durations = np.diff(time)
         def integrate(power):
             step_heat = power*durations.reshape((-1,)+(1,)*(power.ndim-1))
@@ -1008,9 +1017,11 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
 
         weights = stage_weights[:,None]
         stage = (1-weights)*states[:-1]+weights*states[1:]
+    if return_face_heat or return_cell_heat:
         integrated_cells = integrate(stage[:,:cell_count].reshape(-1,ny,nx))
-    if return_face_heat:
+    if return_face_heat or return_storing_wall_heat:
         stage_bc = {s:(1-weights)*v[:len(time)-1]+weights*v[end_samples] for s,v in signals.items()}
+    if return_face_heat:
         walls = {s:integrate(v) for s,v in wall_powers(stage,stage_bc).items()}
         result.append({"wall":walls,"interior":_interior_conduction_power(integrated_cells,faces)})
     if return_cell_heat:
@@ -1030,6 +1041,17 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                 temperatures = temperatures+datum
             wall_state[side] = temperatures
         result.append(wall_state)
+    if return_storing_wall_heat:
+        wall_heat = {}
+        for side,link in wall_links.items():
+            mask, ids, _, _, _, _, film = link
+            ambient = stage_bc.get(side,values[side])[...,mask]
+            wall_heat[side] = {
+                "ambient": integrate(film*(ambient-stage[:,ids])),
+                "material": integrate(storing_wall_power(stage,link)),
+                "storage": mass[ids]*np.diff(states[:,ids][outputs],axis=0),
+            }
+        result.append(wall_heat)
     if cell_temperature_reference is None and datum:
         result[0] = result[0]+datum
     return tuple(result) if len(result)>1 else result[0]
