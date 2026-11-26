@@ -1,0 +1,24 @@
+{
+  "source_commit": "bc0837e7e05e6b3a7ef20411f94d9e531b0e20c1",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_annular_conduction.py -o junit_family=legacy --junitxml=/tmp/annular_heat_partition.xml",
+  "tests": 87,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Steady radial conduction with uniform volumetric generation in each material, a separately heated resistive interface, and unequal convective film coefficients. Integrate the cylindrical balance and Fourier law in each layer to obtain wall rates, temperatures and reservoir data. Compare both cell-location conventions on the same graded six-cell grid.",
+  "measurements": {
+    "test_generated_heat_partition_in_two_material_annulus[midpoint]": {
+      "field_error_K": 4.440892098500626e-16,
+      "wall_rate_error_W_per_m": 8.881784197001252e-16,
+      "balance_W_per_m": 1.7763568394002505e-15,
+      "inner_outward_W_per_m": 3.2672563597333837,
+      "outer_outward_W_per_m": 4.731238536306227
+    },
+    "test_generated_heat_partition_in_two_material_annulus[volume_centroid]": {
+      "field_error_K": 8.881784197001252e-16,
+      "wall_rate_error_W_per_m": 2.6645352591003757e-15,
+      "balance_W_per_m": 1.7763568394002505e-15,
+      "inner_outward_W_per_m": 3.2672563597333864,
+      "outer_outward_W_per_m": 4.7312385363062255
+    }
+  }
+}
