@@ -1285,3 +1285,48 @@ def test_contact_duration_hidden_idle_and_pulse(method, record_property):
     np.testing.assert_allclose(durations.sum(axis=1), .5, atol=1e-13, rtol=0.)
     np.testing.assert_allclose(parts["rightward"][:, 0], durations[:, 0], atol=1e-13, rtol=0.)
     np.testing.assert_allclose(parts["leftward"][:, 0], 2*durations[:, 1], atol=1e-13, rtol=0.)
+
+
+@pytest.mark.parametrize("method", ["theta", "sdirk2", "rannacher", "sdirk2_start", "positive_cn"])
+def test_two_resistive_contacts_with_independent_reversals(method, record_property):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    dx = .25
+    areas = np.array([1., 2., 2., .5])
+    resistance = np.array([.25, 0., .5])
+    conductance = np.minimum(areas[:-1], areas[1:])[[0, 2]]/resistance[[0, 2]]
+
+    def loads(t):
+        power = np.array([1. if t < .25 else -3., -2. if t < .75 else 2.])
+        # Prescribe +/- half the jump on the two sides of each resistive
+        # face. For zero cell temperatures, the heat into a cell from its
+        # adjacent trace equals trace temperature times half-cell conductance.
+        half_jump = power/(2*conductance)
+        to_cell = np.column_stack((half_jump, -half_jump)).ravel()*2*areas/dx
+        source = -to_cell/(areas*dx)
+        left_trace = np.zeros(3)
+        right_trace = np.zeros(3)
+        left_trace[[0, 2]] = power+to_cell[::2]
+        right_trace[[0, 2]] = -power+to_cell[1::2]
+        return source, (left_trace, right_trace)
+
+    times = [0., .5, 1.]
+    cells, _, _, _, ledger, parts = solve_transient_stepped_rod(
+        np.full(4, dx), areas, 1., 1., [0., 0.], times, 0.,
+        contact_resistance=resistance, source=lambda t: loads(t)[0],
+        trace_power=lambda t: loads(t)[1], load_jump_times=[.25, .75],
+        method=method, return_step_heat=True, return_resistive_contact_heat=True)
+    np.testing.assert_array_equal(parts["face_indices"], [0, 2])
+    np.testing.assert_allclose(cells, 0., atol=1e-13, rtol=0.)
+    # Rows are output windows. Columns are the two finite resistances.
+    expected = dict(rightward=[[.25, 0.], [0., .5]], leftward=[[.75, 1.], [1.5, .5]],
+                    rightward_duration=[[.25, 0.], [0., .25]],
+                    leftward_duration=[[.25, .5], [.5, .25]], idle_duration=np.zeros((2, 2)))
+    for key, values in expected.items():
+        assert parts[key].shape == (2, 2)
+        maximum = np.max(abs(parts[key]-values))
+        record_property(f"{key}_max_error", maximum)
+        assert maximum < 1e-13
+    np.testing.assert_allclose(ledger["contact"][:, [0, 2]], parts["rightward"]-parts["leftward"],
+                               atol=1e-13, rtol=0.)
+    np.testing.assert_allclose(ledger["contact"][:, 1], 0., atol=1e-13, rtol=0.)
