@@ -144,6 +144,25 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     volume = np.pi*width*(r[1:]+r[:-1])
     lateral = _modal_conductance(r, kt, kz, volume, azimuthal_mode, axial_wavenumber)
     sink = lateral + 1j*angular_frequency*cv*volume
+    if not sink.any() and not density.any() and conductance[[0, -1]].any():
+        # Every face carries the same rate. Using series resistances avoids
+        # recovering that rate from rounded, nearly equal cell temperatures.
+        if conductance[0] == 0:
+            rate = inward[0]
+            to_outer = np.cumsum(1/conductance[:0:-1])[::-1]
+            field = walls[-1] + rate*to_outer
+        elif conductance[-1] == 0:
+            rate = -inward[-1]
+            from_inner = np.cumsum(1/conductance[:-1])
+            field = walls[0] - rate*from_inner
+        else:
+            resistance = 1/conductance
+            rate = (walls[0]-walls[-1])/resistance.sum()
+            from_inner = np.cumsum(resistance[:-1])
+            to_outer = np.cumsum(resistance[:0:-1])[::-1]
+            field = np.where(from_inner <= to_outer, walls[0] - rate*from_inner,
+                             walls[-1] + rate*to_outer)
+        return field, np.full(n+1, rate, dtype=complex)
     # Face power = offset + outward*T_inner - inward_coefficient*T_outer.
     outward = conductance[1:].astype(complex)
     inward_coefficient = conductance[:-1].astype(complex)

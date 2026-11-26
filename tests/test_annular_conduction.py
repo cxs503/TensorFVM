@@ -946,3 +946,32 @@ def test_insulated_annular_cooldown_against_continuous_radial_mode(record_proper
             assert np.all(ratios[4:7] > 2.)
             assert ratios[7] > 3.5
         previous = errors
+
+
+@pytest.mark.parametrize("driven", ["temperature", "inner_flux", "outer_flux"])
+def test_annular_contact_flux_with_high_conductivity_contrast(driven, record_property):
+    r = np.array([1., 1.2, 1.6, 2., 2.4, 3., 4.])
+    k = np.where(r[:-1] < 2., 1.e14, 2.)
+    # Include inner and outer films as well as imperfect contact at r=2.
+    films = [4., 8.]
+    inner, outer = 305., 300.
+    resistance = (1/4 + np.log(2)/1.e14 + .2/2 + np.log(2)/2 + 1/32)/(2*np.pi)
+    expected = (inner-outer)/resistance
+    walls = [inner, outer]
+    fluxes = [None, None]
+    if driven != "temperature":
+        i = 0 if driven == "inner_flux" else 1
+        walls[i] = films[i] = None
+        fluxes[i] = (1 if i == 0 else -1)*expected/(2*np.pi*(r[0], r[-1])[i])
+    field, rates = solve_annular_conduction(
+        r, k, 1., walls, 0., film_coefficients=films, wall_fluxes=fluxes,
+        contact_resistance=np.where(r[1:-1] == 2., .2, 0.))
+    mid = (r[1:] + r[:-1])/2
+    exact = np.where(mid < 2., inner-expected*(1/4 + np.log(mid)/1.e14)/(2*np.pi),
+                     outer+expected*(1/32 + np.log(4./mid)/2)/(2*np.pi))
+    error = np.max(np.abs(rates-expected))/expected
+    field_error = np.max(np.abs(field-exact))
+    record_property("max_relative_face_rate_error", float(error))
+    record_property("max_temperature_error_K", float(field_error))
+    assert error < 2e-14
+    assert field_error < 1e-12
