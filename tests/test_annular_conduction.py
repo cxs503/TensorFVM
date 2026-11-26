@@ -904,16 +904,29 @@ def test_insulated_annular_cooldown_against_continuous_radial_mode(record_proper
         side = np.repeat(sides, n)
         initial = amplitude[side]*mode(side, centers)[0]
         times = np.linspace(0., duration, 8*n+1)
-        field, sheet, inner, outer, reservoir = solve_transient_annular_sheet(
+        field, sheet, inner, outer, reservoir, mean = solve_transient_annular_sheet(
             edges, conductivity[side], capacity[side], (None, None), times, initial, n,
             initial_sheet_temperature=1., sheet_capacity=sheet_capacity, resistance=.3,
-            inner_resistance_fraction=.35, wall_fluxes=(0., 0.), sheet_film=film, method="sdirk2")
+            inner_resistance_fraction=.35, wall_fluxes=(0., 0.), sheet_film=film, method="sdirk2",
+            return_interval_temperatures=True)
         final = np.r_[field[-1], sheet[-1]]
         temperature_error = max(abs(final-np.r_[initial, 1.]*np.exp(-decay*duration)))
         heat = np.array([inner[:, -1].sum(), outer[:, 0].sum(), reservoir.sum()])
         errors = np.r_[temperature_error, abs(heat-exact_heat)]
         for label, error in zip(("temperature_K", "inner_J_per_m", "outer_J_per_m", "reservoir_J_per_m"), errors):
             record_property(f"n{n}_{label}", float(error))
+        dt = np.diff(times)
+        mean_decay = np.exp(-decay*times[:-1])*(-np.expm1(-decay*dt))/(decay*dt)
+        exact_contact = mean_decay[:, None]*(amplitude*values)
+        trace_errors = np.max(abs(mean["contact"]-exact_contact), axis=0)
+        exact_jump = mean_decay*(amplitude[0]*values[0]-amplitude[1]*values[1])
+        jump_error = max(abs(mean["contact"][:, 0]-mean["contact"][:, 1]-exact_jump))
+        for label, error in zip(("inner_mean_K", "outer_mean_K", "mean_jump_K"), [*trace_errors, jump_error]):
+            record_property(f"n{n}_{label}", float(error))
+        errors = np.r_[errors, trace_errors, jump_error]
         if previous is not None:
-            assert np.all(previous/errors > 3.5)
+            ratios = previous/errors
+            assert np.all(ratios[:4] > 3.5)
+            # The maximum spans all intervals, including the shrinking first interval.
+            assert np.all(ratios[4:] > 2.)
         previous = errors
