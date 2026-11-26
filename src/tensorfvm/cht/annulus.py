@@ -29,12 +29,13 @@ def _half_shell_resistances(r,k,cell_location):
 
 def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
                              angular_frequency, *, contact_resistance=0., source=0., azimuthal_mode=0,
-                             film_coefficients=(None, None), cell_location="midpoint",
+                             axial_wavenumber=0., film_coefficients=(None, None), cell_location="midpoint",
                              wall_fluxes=(None, None), distributed_source=False, mean_temperature=None):
     """Return cell phasors and radial face heat rates per unit axial length.
 
     Boundary, temperature and volumetric source amplitudes multiply
-    cos(m*angle)*exp(i*omega*time). Face rates are 2πr times the local
+    cos(m*angle)*exp(i*(axial_wavenumber*z + omega*time)), with real axial
+    wavenumber in rad/m. Face rates are 2πr times the local
     radial flux amplitude, positive outward (W/m). For m=0 they are the
     circumferential integrals. Volumetric heat capacity may vanish in any cell;
     it then conducts without storing heat. Radii are cell faces in m, contact resistance
@@ -47,9 +48,9 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     integral(r² dr)/integral(r dr) and both half-cell resistances use that
     radius. The default "midpoint" uses the arithmetic radial midpoint.
     distributed_source=True integrates a uniform net generation density
-    (applied source minus storage and angular loss) across each half-shell
+    (applied source minus storage, angular loss and axial loss) across each half-shell
     when relating cell temperatures to face power. For an unanchored axisymmetric
-    problem with zero frequency or all capacities zero, supply the volume-weighted mean
+    problem with zero axial wavenumber and either zero frequency or all capacities zero, supply the volume-weighted mean
     cell temperature. Wall inputs and integrated generation must sum to zero.
 
     """
@@ -60,6 +61,8 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         raise ValueError("angular_frequency must be finite and nonnegative")
     if not isinstance(azimuthal_mode, (int, np.integer)) or azimuthal_mode < 0:
         raise ValueError("azimuthal_mode must be a nonnegative integer")
+    if np.ndim(axial_wavenumber) != 0 or not np.isrealobj(axial_wavenumber) or not np.isfinite(axial_wavenumber):
+        raise ValueError("axial_wavenumber must be a finite real scalar")
     n = len(r)-1
     k, cv = (np.broadcast_to(np.asarray(v, dtype=float), (n,)) for v in
              (conductivity, volumetric_heat_capacity))
@@ -96,7 +99,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
             raise ValueError("film coefficients must be finite and nonnegative")
         conductance[index] = (0. if h == 0 else
                               1/(1/conductance[index] + 1/(2*np.pi*r[index]*h)))
-    needs_mean = (angular_frequency == 0 or not cv.any()) and azimuthal_mode == 0 and not conductance[[0,-1]].any()
+    needs_mean = (angular_frequency == 0 or not cv.any()) and azimuthal_mode == 0 and axial_wavenumber == 0 and not conductance[[0,-1]].any()
     if needs_mean and mean_temperature is None:
         raise ValueError("a steady axisymmetric flux-driven annulus needs a temperature reference")
     if mean_temperature is not None:
@@ -104,7 +107,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
             raise ValueError("a finite mean temperature applies only to an unanchored steady axisymmetric mode")
     volume = np.pi*width*(r[1:]+r[:-1])
     lateral = 2*np.pi*k*azimuthal_mode**2*np.log1p(width/r[:-1])
-    sink = lateral + 1j*angular_frequency*cv*volume
+    sink = lateral + k*axial_wavenumber**2*volume + 1j*angular_frequency*cv*volume
     # Face power = offset + outward*T_inner - inward_coefficient*T_outer.
     outward = conductance[1:].astype(complex)
     inward_coefficient = conductance[:-1].astype(complex)

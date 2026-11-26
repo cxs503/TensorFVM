@@ -574,3 +574,40 @@ def test_mixed_cell_storage_in_unanchored_material():
         wall_fluxes=(0., 0.), source=8j*cv*exact, distributed_source=True)
     np.testing.assert_allclose(field, exact, atol=1e-13)
     np.testing.assert_allclose(rates, 0., atol=1e-13)
+
+
+@pytest.mark.parametrize("wave,mode,omega", [(1.75, 0, 0.), (-1.75, 2, 3.)])
+def test_axial_fourier_mode_matches_bessel_field_and_face_rates(wave, mode, omega, record_property):
+    from scipy.special import iv, ivp
+
+    k, capacity = 2., 1.5
+    decay = np.sqrt(wave**2 + 1j * omega * capacity / k)
+    previous = None
+    for cells in (16, 32, 64):
+        r = np.linspace(.4, 1., cells + 1)
+        centers = .5 * (r[1:] + r[:-1])
+        expected_rate = -2 * np.pi * r * k * decay * ivp(mode, decay * r)
+        # Prescribe the inner inward flux and outer temperature independently.
+        field, rate = solve_annular_conduction(
+            r, k, capacity, (None, iv(mode, decay * r[-1])), omega,
+            wall_fluxes=(expected_rate[0] / (2 * np.pi * r[0]), None),
+            axial_wavenumber=wave, azimuthal_mode=mode, distributed_source=True)
+        errors = np.array([max(abs(field - iv(mode, decay * centers))), max(abs(rate - expected_rate))])
+        for quantity, error in zip(("temperature_K", "rate_W_per_m"), errors):
+            record_property(f"n{cells}_{quantity}", float(error))
+        if previous is not None:
+            assert np.all(np.log2(previous / errors) > 1.8)
+        previous = errors
+
+
+def test_axial_mode_with_insulated_walls_balances_source_without_reference():
+    r = [.3, .45, .8, 1.]
+    k = np.array([1., 3., 2.])
+    field, rate = solve_annular_conduction(
+        r, k, 0., (None, None), 0., wall_fluxes=(0., 0.), axial_wavenumber=2.,
+        source=k * 4 * (1 + .5j), contact_resistance=.2)
+    np.testing.assert_allclose(field, 1 + .5j, atol=1e-14, rtol=0)
+    np.testing.assert_allclose(rate, 0., atol=1e-13)
+    for invalid in (np.inf, 1j, [1.]):
+        with pytest.raises(ValueError, match="axial_wavenumber"):
+            solve_annular_conduction(r, k, 1., (0., 0.), 0., axial_wavenumber=invalid)
