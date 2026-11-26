@@ -1237,3 +1237,36 @@ def test_weak_film_leak_with_fixed_opposite_wall(film_side, record_property):
         record_property(f"computed_film_rate_{cells}_cells_W_per_m", float(leak.real))
         np.testing.assert_allclose(np.diff(rates), np.pi*np.diff(faces**2), rtol=1e-13)
         assert relative_error < 1e-12
+
+
+@pytest.mark.parametrize("side", [0, 1])
+@pytest.mark.parametrize("solver", ["steady", "transient"])
+def test_strong_film_surface_matches_series_resistance(solver, side, record_property):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+
+    radii = np.array([1., 1.4, 2.])
+    radius = radii[[0, -1]][side]
+    h = 1e18
+    films = [None, None]
+    films[side] = h
+    walls = [1., 1.]
+    walls[side] = 0.
+    film_resistance = 1 / (2*np.pi*radius*h)
+    power = 1 / (np.log(2.)/(2*np.pi) + film_resistance)
+    exact = power * film_resistance
+    if solver == "steady":
+        _, _, surfaces = solve_annular_conduction(radii, 1., 1., walls, 0.,
+                film_coefficients=films, return_wall_temperatures=True)
+        traces = surfaces[side]
+    else:
+        center = (2/3)*np.diff(radii**3)/np.diff(radii**2)
+        def profile(r):
+            return exact + power * abs(np.log(r/radius)) / (2*np.pi)
+        result = solve_transient_annular_sheet(radii, 1., 1., walls, [0., .01, .1],
+                profile(center), 1, sheet_capacity=1., initial_sheet_temperature=profile(radii[1]),
+                film_coefficients=films, return_wall_temperatures=True, return_interval_temperatures=True)
+        traces = np.r_[result[-2][:, side], result[-1]["wall"][:, side]]
+    error = float(np.max(abs(traces / exact - 1)))
+    record_property("analytic_surface_temperature_K", float(exact))
+    record_property("max_relative_surface_error", error)
+    assert error < 1e-13

@@ -171,9 +171,16 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
             at_right -= factor_r*net
         if return_wall_temperatures:
             surfaces = np.array([at_left[0], at_right[-1]])
-            for side in (0, 1):
-                if wall_fluxes[side] is None and film_coefficients[side] is None:
+            for side, index, half_resistance in ((0, 0, left[0]), (1, -1, right[-1])):
+                h = film_coefficients[side]
+                if wall_fluxes[side] is None and h is None:
                     surfaces[side] = walls[side]
+                elif h is not None and h > 0:
+                    film_resistance = 1/(2*np.pi*r[index]*h)
+                    if film_resistance < half_resistance:
+                        # Approach the surface from the lower-resistance side.
+                        inward_rate = rates[index] if side == 0 else -rates[index]
+                        surfaces[side] = walls[side] - inward_rate*film_resistance
             values += (surfaces,)
         if return_contact_temperatures:
             values += (np.stack((at_right[:-1], at_left[1:])),)
@@ -579,6 +586,12 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                 continue
             else:
                 inward = g[index]*(data-states[:,index])
+                h = film_coefficients[column]
+                if h > 0:
+                    film_resistance = 1/(2*np.pi*r[index]*h)
+                    if film_resistance < links[index]:
+                        surfaces[:,column] = data - inward*film_resistance
+                        continue
             surfaces[:,column] = states[:,index]+links[index]*inward
         return surfaces
 
