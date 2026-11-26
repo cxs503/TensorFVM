@@ -313,6 +313,26 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
     options = dict(axial_wavenumber=axial_wavenumber,azimuthal_mode=azimuthal_mode,cell_location=cell_location,distributed_source=distributed_source)
     ri,ro = resistance*inner_resistance_fraction,resistance*(1-inner_resistance_fraction)
 
+    if angular_frequency == 0 and azimuthal_mode == 0 and axial_wavenumber == 0 and not sheet_film and not sheet_source:
+        # A passive steady sheet carries one continuous face power. Solve
+        # for it directly, even when the contact dominates both bulk paths.
+        contacts = np.zeros(n-1)
+        contacts[j-1] = resistance
+        bulk = solve_annular_conduction(
+            edges, k, c, wall_temperatures, angular_frequency, source=p, contact_resistance=contacts,
+            wall_fluxes=wall_fluxes, film_coefficients=film_coefficients, mean_temperature=mean_temperature,
+            circumferential_conductivity=kt, axial_conductivity=kz, return_contact_temperatures=True,
+            return_wall_temperatures=return_wall_temperatures, **options)
+        field, rates = bulk[:2]
+        traces = bulk[-1][:, j-1].copy()
+        sheet = (1-inner_resistance_fraction)*traces[0] + inner_resistance_fraction*traces[1]
+        values = (field, rates[:j+1].copy(), rates[j:].copy(), sheet)
+        if return_wall_temperatures:
+            values += (bulk[2],)
+        if return_contact_temperatures:
+            values += (traces,)
+        return values
+
     def result(field, inner_rates, outer_rates, sheet):
         values = (field, inner_rates, outer_rates, sheet)
         if return_wall_temperatures:

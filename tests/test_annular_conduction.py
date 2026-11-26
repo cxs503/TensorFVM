@@ -1301,3 +1301,29 @@ def test_transient_one_sided_contact_insulating_limit(cold_side, record_property
     record_property("analytic_cold_contact_temperature_K", float(exact))
     record_property("relative_contact_error", float(error))
     assert error < 1e-13
+
+
+@pytest.mark.parametrize("cold_side", [0, 1])
+@pytest.mark.parametrize("fraction", [0., .25, 1.])
+def test_steady_passive_sheet_insulating_limit(cold_side, fraction, record_property):
+    from tensorfvm.cht.annulus import solve_annular_sheet
+
+    r = np.array([1., 1.2, 1.5, 1.8, 2.])
+    contact = 1e18
+    walls = [1., 1.]
+    walls[cold_side] = 0.
+    power = 2*np.pi*(walls[0]-walls[1]) / (np.log(2.) + contact/r[2])
+    inner_trace = walls[0] - power*np.log(r[2]/r[0])/(2*np.pi)
+    outer_trace = walls[1] + power*np.log(r[-1]/r[2])/(2*np.pi)
+    exact_sheet = (1-fraction)*inner_trace + fraction*outer_trace
+    _, inner, outer, sheet, surfaces, traces = solve_annular_sheet(
+        r, 1., 1., walls, 0., 2, resistance=contact, inner_resistance_fraction=fraction,
+        return_wall_temperatures=True, return_contact_temperatures=True)
+    flux_error = float(np.max(abs(np.r_[inner, outer]/power - 1)))
+    trace_error = float(np.max(abs(traces/[inner_trace, outer_trace] - 1)))
+    sheet_error = float(abs(sheet/exact_sheet - 1))
+    record_property("max_relative_face_rate_error", flux_error)
+    record_property("max_relative_material_trace_error", trace_error)
+    record_property("relative_sheet_error", sheet_error)
+    np.testing.assert_array_equal(surfaces, walls)
+    assert max(flux_error, trace_error, sheet_error) < 1e-13
