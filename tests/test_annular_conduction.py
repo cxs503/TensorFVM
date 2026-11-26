@@ -155,7 +155,15 @@ def test_floating_annular_sheet_generation_and_compatibility():
     from tensorfvm.cht.annulus import solve_annular_sheet
     edges = np.array([.3,.4,.6,.8,1.])
     opts = dict(wall_fluxes=(0.,-.6),mean_temperature=1.8,sheet_source=1.,resistance=.3)
-    u,qi,qo,s = solve_annular_sheet(edges,1.,1.,(None,None),0.,2,**opts)
+    u,qi,qo,s,surfaces = solve_annular_sheet(edges,1.,1.,(None,None),0.,2,
+                                          return_wall_temperatures=True, **opts)
+    # The inner shell is isothermal. Unit outward flux at the sheet
+    # gives the outer material a 0.15 K jump and a logarithmic drop.
+    centers = (edges[1:] + edges[:-1])/2
+    drops = np.where(centers > .6, .15 + .6*np.log(centers/.6), 0.)
+    inner_wall = 1.8 + np.average(drops, weights=np.diff(edges**2))
+    np.testing.assert_allclose(surfaces, [inner_wall, inner_wall-.15-.6*np.log(1/.6)],
+                               atol=1e-14, rtol=0.)
     np.testing.assert_allclose(qi,0.,atol=1e-14)
     np.testing.assert_allclose(qo,2*np.pi*.6,atol=1e-14)
     np.testing.assert_allclose(s,u[0],atol=1e-14)
@@ -544,6 +552,7 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(
              for i in range(2)]
     ends = (0.5, 1.2)
     walls = [basis(i, r) @ coeff[i] for i, r in enumerate(ends)]
+    exact_walls = np.array(walls)
     fluxes, films = [None, None], [None, None]
     if flux_side is not None:
         inward = [(1-2*i)*(flux_basis(i, r) @ coeff[i]) for i, r in enumerate(ends)]
@@ -556,7 +565,7 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(
     for n in (12, 24, 48):
         parts = (np.geomspace(0.5, radius, n+1), np.geomspace(radius, 1.2, n+1))
         edges = np.r_[parts[0], parts[1][1:]]
-        field, inner, outer, bulk_sheet, observed = solve_annular_sheet(
+        field, inner, outer, bulk_sheet, surfaces, observed = solve_annular_sheet(
             edges, np.repeat(k, n), np.repeat(capacity, n), walls, omega, n,
             wall_fluxes=fluxes, film_coefficients=films,
             circumferential_conductivity=np.repeat(kt, n) if orthotropic else None,
@@ -565,7 +574,7 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(
             axial_wavenumber=axial, sheet_conductivity=sheet_k, sheet_axial_conductivity=axial_k,
             sheet_capacity=surface_capacity, sheet_source=generation, sheet_film=reservoir_film,
             ambient=ambient, distributed_source=True,
-            cell_location="volume_centroid", return_contact_temperatures=True)
+            cell_location="volume_centroid", return_contact_temperatures=True, return_wall_temperatures=True)
         exact_field, exact_rates = [], []
         for side, r in enumerate(parts):
             centers = (2/3)*np.diff(r**3)/np.diff(r**2)
@@ -575,6 +584,13 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(
                max(abs(observed-traces)), abs(bulk_sheet-sheet)]
         for name, error in zip(("field_K", "radial_rate_W_per_m", "trace_K", "sheet_K"), row):
             record_property(f"max_error_{n}_{name}", float(error))
+        wall_errors = abs(surfaces-exact_walls)
+        for side, error in zip(("inner", "outer"), wall_errors):
+            record_property(f"exterior_{side}_{n}_K", float(error))
+        if flux_side is None:
+            np.testing.assert_array_equal(surfaces, exact_walls)
+        else:
+            row.extend(wall_errors)
         interface_error = abs(np.array([inner[-1], outer[0]])/(2*np.pi*radius)-q)
         for side, error in zip(("inner", "outer"), interface_error):
             record_property(f"contact_{side}_{n}_W_per_m2", float(error))

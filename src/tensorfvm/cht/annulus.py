@@ -256,7 +256,7 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
                         circumferential_conductivity=None, axial_conductivity=None,
                         source=0., azimuthal_mode=0, axial_wavenumber=0., wall_fluxes=(None,None), film_coefficients=(None,None),
                         cell_location="midpoint", distributed_source=False, mean_temperature=None,
-                        return_contact_temperatures=False):
+                        return_contact_temperatures=False, return_wall_temperatures=False):
     """Harmonic conduction with one storing sheet at internal face index sheet_face.
 
     Bulk circumferential_conductivity and axial_conductivity follow
@@ -264,7 +264,8 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
 
     Return cell temperatures, radial rates on the inner and outer domains
     (each including its two boundary faces, outward positive, W/m), and sheet
-    temperature. With return_contact_temperatures, append the two material-side
+    temperature. With return_wall_temperatures, append the two exterior material
+    surface temperatures in radial order. With return_contact_temperatures, append the two material-side
     temperature phasors (inner, outer) at the contact radius. The sheet has areal heat capacity (J/m²/K), circumferential
     conductivity times thickness (W/K), reservoir film (W/m²/K) and applied
     generation (W/m²). sheet_axial_conductivity (W/K) defaults to sheet_conductivity.
@@ -300,6 +301,8 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
 
     def result(field, inner_rates, outer_rates, sheet):
         values = (field, inner_rates, outer_rates, sheet)
+        if return_wall_temperatures:
+            values += (base_walls + unit_walls*sheet,)
         if return_contact_temperatures:
             traces = sheet + np.array([ri*inner_rates[-1], -ro*outer_rates[0]])/circum
             return (*values, traces)
@@ -309,18 +312,19 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
         # Unit sheet-temperature response uses homogeneous exterior and body loads.
         w = tuple(0. if unit and v is not None else v for v in wall_temperatures)
         q = tuple(0. if unit and v is not None else v for v in wall_fluxes)
-        inner,qi = solve_annular_conduction(edges[:j+1],k[:j],c[:j],(w[0],float(unit)),angular_frequency,
+        inner = solve_annular_conduction(edges[:j+1],k[:j],c[:j],(w[0],float(unit)),angular_frequency,
                 wall_fluxes=(q[0],None),film_coefficients=(film_coefficients[0],1/ri if ri else None),
                 circumferential_conductivity=kt[:j], axial_conductivity=kz[:j],
-                source=0. if unit else p[:j],**options)
-        outer,qo = solve_annular_conduction(edges[j:],k[j:],c[j:],(float(unit),w[1]),angular_frequency,
+                source=0. if unit else p[:j],return_wall_temperatures=return_wall_temperatures, **options)
+        outer = solve_annular_conduction(edges[j:],k[j:],c[j:],(float(unit),w[1]),angular_frequency,
                 wall_fluxes=(None,q[1]),film_coefficients=(1/ro if ro else None,film_coefficients[1]),
                 circumferential_conductivity=kt[j:], axial_conductivity=kz[j:],
-                source=0. if unit else p[j:],**options)
-        return np.r_[inner,outer],qi,qo
+                source=0. if unit else p[j:],return_wall_temperatures=return_wall_temperatures, **options)
+        surfaces = np.array([inner[2][0], outer[2][-1]]) if return_wall_temperatures else None
+        return np.r_[inner[0], outer[0]], inner[1], outer[1], surfaces
 
-    base,bi,bo = response(False)
-    unit,ui,uo = response(True)
+    base,bi,bo,base_walls = response(False)
+    unit,ui,uo,unit_walls = response(True)
     closed = ((not angular_frequency or (not c.any() and not sheet_capacity))
               and not azimuthal_mode and not axial_wavenumber and not sheet_film and
               all(q is not None or h==0 for q,h in zip(wall_fluxes,film_coefficients)))
