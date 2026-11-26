@@ -1,0 +1,39 @@
+{
+  "source_commit": "1f827fe6298f3511ddbc108e08278ea80910f71c",
+  "baseline_commit": "7a03dad171f1a4cb901dc0a9227e69385538a9e6",
+  "reference": "Independent 90-digit mpmath quadrature of 2*pi*r*u(r) with ordinary and three-ulp annuli. Compare the reported closed form at a one-sided default bound, reversed partial and full intervals, and coincident bounds.",
+  "command": "PYTHONPATH=src OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/partial-q-after.xml",
+  "baseline_procedure": "Use source commit tests against baseline src, selecting -k partial_flow_audit_uses_requested_bounds.",
+  "before": {
+    "tests": 2,
+    "failures": 2,
+    "measurements": {
+      "test_partial_flow_audit_uses_requested_bounds[0.25]": {
+        "max_reference_error_nonzero_intervals": 3.0800434234160594,
+        "zero_interval_reference_m3_s": 0.17204213004076083,
+        "max_reported_relative_difference": 2.000000000000009
+      },
+      "test_partial_flow_audit_uses_requested_bounds[3.3306690738754696e-16]": {
+        "max_reference_error_nonzero_intervals": 2.8571428571428568,
+        "zero_interval_reference_m3_s": 3.482295174236034e-46,
+        "max_reported_relative_difference": 2.0
+      }
+    }
+  },
+  "after": {
+    "tests": 197,
+    "failures": 0,
+    "measurements": {
+      "test_partial_flow_audit_uses_requested_bounds[0.25]": {
+        "max_reference_error_nonzero_intervals": 1.1657341758564144e-14,
+        "zero_interval_reference_m3_s": 0.0,
+        "max_reported_relative_difference": 8.550495784258234e-15
+      },
+      "test_partial_flow_audit_uses_requested_bounds[3.3306690738754696e-16]": {
+        "max_reference_error_nonzero_intervals": 1.1102230246251565e-16,
+        "zero_interval_reference_m3_s": 0.0,
+        "max_reported_relative_difference": 1.116902604190206e-16
+      }
+    }
+  }
+}
