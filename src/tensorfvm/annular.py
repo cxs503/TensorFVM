@@ -64,9 +64,45 @@ def _factory(c):return AnnularMesh(c)
 register_backend(SolverBackend(name='annular',solver_factory=BodyFittedSolver,mesh_factory=_factory,structured=True,min_nx=8,min_ny=2,forbids_cylinder=True,reference_length='height'))
 
 
-def analytic_velocity(r,c):
-    ri,ro=c.inner_radius_m,c.outer_radius_m;K=(ro*ro-ri*ri)/math.log(ro/ri)
-    return c.pressure_gradient_pa_m/(4*c.viscosity_pa_s)*(ro*ro-r*r-K*np.log(ro/r))
+def annular_velocity_profile(r, ri, ro, gradient, viscosity):
+    """Axial no-slip Poiseuille velocity for scalar or array radii."""
+    r = np.asarray(r, dtype=float)
+    gap = ro-ri
+    if gap <= .25*ri:
+        # Write the bracket in the closed form as
+        # 4*r²*t*s*(s*phi(2s)+t*phi(-2t))/log(ro/ri), where
+        # t=log(r/ri), s=log(ro/r), phi(z)=(exp(z)-1-z)/z².
+        # At physical radii both terms have the same sign and each wall
+        # distance is formed directly, including at the last interior float.
+        inside = (ri <= r) & (r <= ro)
+        interior = r[inside]
+        t = np.log1p((interior-ri)/ri)
+        s = np.log1p((ro-interior)/interior)
+
+        def phi(z):
+            # |z| <= 2*log(1.25). The Taylor tail is below binary64 precision.
+            value = 1/math.factorial(17)
+            for n in range(16, 1, -1):
+                value = 1/math.factorial(n) + z*value
+            return value
+
+        velocity = np.empty_like(r)
+        velocity[inside] = (gradient/viscosity * interior**2*t*s
+                            * (s*phi(2*s)+t*phi(-2*t))/math.log1p(gap/ri))
+        if inside.all():
+            return velocity[()]
+        # Polygonal cell centers can lie outside the circular domain.
+        outside = r[~inside]
+        k = gap*(ro+ri)/math.log1p(gap/ri)
+        velocity[~inside] = gradient/(4*viscosity)*((ro-outside)*(ro+outside)-k*np.log(ro/outside))
+        return velocity[()]
+    k = (ro*ro-ri*ri)/math.log(ro/ri)
+    return gradient/(4*viscosity)*(ro*ro-r*r-k*np.log(ro/r))
+
+
+def analytic_velocity(r, c):
+    return annular_velocity_profile(r, c.inner_radius_m, c.outer_radius_m,
+                                    c.pressure_gradient_pa_m, c.viscosity_pa_s)
 
 
 def annular_flow_rate(ri, ro, gradient, viscosity):

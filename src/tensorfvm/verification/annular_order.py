@@ -54,9 +54,8 @@ def _annular_config(nr, ntheta=None):
 # --------------------------------------------------------------------------- #
 def analytic_velocity(r, ri=RI, ro=RO, G=DP_DZ, mu=MU):
     """Exact axial velocity of annular Poiseuille flow at radius ``r``."""
-    r = np.asarray(r, dtype=float)
-    K = (ro * ro - ri * ri) / math.log(ro / ri)
-    return G / (4.0 * mu) * (ro * ro - r * r - K * np.log(ro / r))
+    from ..annular import annular_velocity_profile
+    return annular_velocity_profile(r, ri, ro, G, mu)
 
 
 def analytic_flow_rate(ri=RI, ro=RO, G=DP_DZ, mu=MU):

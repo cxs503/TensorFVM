@@ -110,3 +110,27 @@ def test_closed_form_flow_across_thin_annuli(gap_ratio, record_property):
     record_property("reference_flow_m3_s", expected)
     record_property("max_relative_flow_error", error)
     assert error < 2e-14
+
+
+@pytest.mark.parametrize("gap_ratio", [0.2, 1e-4, 1e-8, 2.**-40])
+def test_thin_gap_velocity_profile(gap_ratio, record_property):
+    from decimal import Decimal, localcontext
+    from tensorfvm.annular import AnnularConfig, analytic_velocity
+
+    ri, ro = .75, .75*(1+gap_ratio)
+    cfg = AnnularConfig(inner_radius_m=ri, outer_radius_m=ro,
+                        pressure_gradient_pa_m=3., viscosity_pa_s=.125)
+    radii = np.r_[ri, np.nextafter(ri, ro), ri + (ro-ri)*np.array([.125, .5, .875]),
+                  np.nextafter(ro, ri), ro]
+    with localcontext() as ctx:
+        ctx.prec = 80
+        a, b = map(Decimal.from_float, (ri, ro))
+        k = (b*b-a*a)/(b/a).ln()
+        exact = [float(6*(b*b-r*r-k*(b/r).ln())) for r in map(Decimal.from_float, radii)]
+    profiles = np.array([analytic_velocity(radii, cfg), ao.analytic_velocity(radii, ri, ro, 3., .125)])
+    wall_error = float(np.max(abs(profiles[:, [0, -1]])))
+    interior_error = float(np.max(abs(profiles[:, 1:-1]/exact[1:-1]-1)))
+    record_property("max_wall_speed_m_s", wall_error)
+    record_property("max_relative_interior_error", interior_error)
+    assert wall_error == 0.
+    assert interior_error < 2e-14
