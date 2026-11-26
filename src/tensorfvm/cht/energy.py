@@ -713,6 +713,11 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     entry contains interval heat arrays "ambient" (film into wall), "material"
     (wall into adjacent cells), and "storage" (wall energy increase), in J
     for unit depth, shaped (nt-1, number of storing faces).
+    On a storing side, wall_heater_flux prescribes additional power density
+    (W/m², positive into the wall) as a scalar, a vector in storing-face
+    order, or a callable of time returning either. Declare discontinuities
+    in load_jump_times. On that side the heat dict also contains "heater";
+    wall storage equals ambient plus heater minus material heat.
     Cell widths are in metres, conductivity in W/(m K), volumetric heat capacity
     in J/(m³ K), source in W/m³, and contact resistance in m² K/W. Fixed
     wall temperatures and prescribed inward flux use the steady BC format.
@@ -858,6 +863,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             spec["types"] = np.where(active, "adiabatic", types_on_side)
             wall_data[side] = (active, cw[active], h)
         static_bc[side] = spec
+    for side,spec in static_bc.items():
+        if spec and "wall_heater_flux" in spec and side not in wall_data:
+            raise ValueError("wall_heater_flux requires a side with storing faces")
     restart_walls = {} if initial_storing_wall_state is None else initial_storing_wall_state
     if not isinstance(restart_walls, dict) or not restart_walls.keys() <= wall_data.keys():
         raise ValueError("initial_storing_wall_state must map storing sides to face temperatures")
@@ -953,6 +961,29 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             # conduction matrix is an M-matrix for this conservative stencil.
             explicit_limit = np.min(mass[active]/outgoing[active])
             stage_weights = np.maximum(stage_weights,1.-explicit_limit/np.diff(time))
+    def heater_power(value,area):
+        raw = np.asarray(value)
+        if not np.isrealobj(raw) or raw.shape not in ((),area.shape):
+            raise ValueError("wall_heater_flux requires a real scalar or one value per storing face")
+        power = np.asarray(raw,dtype=float)*area
+        if not np.isfinite(power).all():
+            raise ValueError("wall_heater_flux must be finite")
+        return power
+
+    heater_stages = {}
+    for side,link in wall_links.items():
+        if "wall_heater_flux" not in bc[side]:
+            continue
+        flux = bc[side]["wall_heater_flux"]
+        mask,ids = link[:2]
+        area = (dy if side in ("west","east") else dx)[mask]
+        if callable(flux):
+            samples = np.stack([heater_power(flux(float(t)),area) for t in sample_times])
+            w = stage_weights[:,None]
+            power = (1-w)*samples[:len(time)-1]+w*samples[end_samples]
+        else:
+            power = np.broadcast_to(heater_power(flux,area),(len(time)-1,len(ids)))
+        heater_stages[side] = (ids,power)
     if callable(bulk_ambient_temperature):
         w = stage_weights[:,None,None]
         ambient_stage = (1-w)*ambient_samples[:len(time)-1]+w*ambient_samples[end_samples]
@@ -983,6 +1014,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             previous_power = source_power(time[step+1]) if end_samples[step]!=step+1 else next_power
         for cells, samples, weights in varying_loads:
             rhs[cells] += dt * weights * ((1-weight)*samples[step] + weight*samples[end_samples[step]])
+        for ids,power in heater_stages.values():
+            rhs[ids] += dt*power[step]
         states[step + 1] = lu.solve(rhs)
     def storing_wall_power(selected_states,link):
         _, ids, cells, g, inner, correction, _ = link
@@ -1051,6 +1084,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                 "material": integrate(storing_wall_power(stage,link)),
                 "storage": mass[ids]*np.diff(states[:,ids][outputs],axis=0),
             }
+            if side in heater_stages:
+                wall_heat[side]["heater"] = integrate(heater_stages[side][1])
         result.append(wall_heat)
     if cell_temperature_reference is None and datum:
         result[0] = result[0]+datum

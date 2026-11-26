@@ -606,3 +606,56 @@ def test_storing_wall_heat_static_mixed_face_with_second_order_flux():
     wall = heat["west"]
     assert set(heat)=={"west"} and wall["storage"].shape==(2,1)
     np.testing.assert_allclose(wall["ambient"]-wall["material"],wall["storage"],rtol=0.,atol=2e-15)
+
+
+@pytest.mark.parametrize("rannacher", [False, True])
+def test_applied_wall_heater_switches_independently_of_film(rannacher,record_property):
+    heights = np.array([.25,.75])
+    film_flux = np.array([.5,-.75])
+    jump = .125
+    times = np.array([0.,.25,.5])
+    def rise(t):
+        return min(t,jump)-2*max(t-jump,0.)
+    def slope(t):
+        return 1. if t<jump else -2.
+    # Material receives 1 W/m² from the warmer wall. Signed film flux
+    # differs by row. The independent heater supplies the remaining power.
+    wall = dict(type="robin",wall_areal_heat_capacity=3.,film_coefficient=4.,
+                values=lambda t: 305.5+rise(t)+film_flux/4,initial_wall_temperature=305.5,
+                wall_heater_flux=lambda t: 3*slope(t)+1-film_flux)
+    fields,ledger = solve_transient_conduction([1.],heights,1.,1.,{"west":wall},times,0.,
+        source=lambda t: slope(t)-1,cell_temperature_reference=305.,load_jump_times=[jump],
+        rannacher=rannacher,return_storing_wall_heat=True)
+    trajectory = np.array([rise(t) for t in times])
+    transfer = heights*np.diff(times)[:,None]
+    storage = 3*heights*np.diff(trajectory)[:,None]
+    film = transfer*film_flux
+    wall_heat = ledger["west"]
+    expected = dict(heater=storage+transfer-film,ambient=film,storage=storage,material=transfer)
+    errors = {name+"_J":np.max(abs(wall_heat[name]-value)) for name,value in expected.items()}
+    errors["wall_balance_J"] = np.max(abs(wall_heat["heater"]+wall_heat["ambient"]
+                                          -wall_heat["material"]-wall_heat["storage"]))
+    errors["temperature_K"] = np.max(abs(fields-trajectory[:,None,None]))
+    for name,error in errors.items():
+        record_property(name,float(error))
+        assert error < 5e-14
+
+
+def test_static_wall_heater_on_mixed_north_faces_without_film():
+    wall = dict(types=["robin","neumann","robin"],values=0.,film_coefficient=0.,
+                wall_areal_heat_capacity=[1.,0.,2.],wall_heater_flux=[3.,-1.])
+    fields,ledger = solve_transient_conduction([.25,.25,.5],[.25],1.,2.,{"north":wall},
+        [0.,.25],0.,return_storing_wall_heat=True)
+    heat = ledger["north"]
+    np.testing.assert_allclose(heat["heater"],[[.25*.25*3,-.25*.5]])
+    np.testing.assert_array_equal(heat["ambient"],0.)
+    np.testing.assert_allclose(heat["storage"]+heat["material"],heat["heater"],atol=2e-15)
+    np.testing.assert_allclose((fields[-1]*np.array([.25,.25,.5])*.25*2).sum(),heat["material"].sum())
+
+
+@pytest.mark.parametrize("spec", [dict(type="neumann",values=0.,wall_heater_flux=1.),
+                                  dict(type="robin",values=0.,film_coefficient=0.,
+                                       wall_areal_heat_capacity=1.,wall_heater_flux=lambda t: np.nan)])
+def test_invalid_storing_wall_heater(spec):
+    with pytest.raises(ValueError,match="wall_heater_flux"):
+        solve_transient_conduction([1.],[1.],1.,1.,{"west":spec},[0.,1.],0.)
