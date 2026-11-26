@@ -562,15 +562,42 @@ def _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,angular_fre
     A = _bulk_loss_operator(A,heat_loss_coefficient,volume)
     mass = (capacity*volume).ravel()
     A, fixed_wall_links = _fixed_wall_operator(A,b,faces,dx,dy,k,conductivity_y,dirichlet_flux_order)
-    return A,b,faces,mass,seam,fixed_wall_links
+    heater_power = {}
+    heater_surface_energy = 0j
+    for side,cells,_,_,_,area in faces[2]:
+        spec = bc.get(side) or {}
+        if "wall_heater_flux" not in spec:
+            continue
+        cw = np.broadcast_to(spec.get("wall_areal_heat_capacity",0.),area.shape)
+        storing = cw > 0
+        if not storing.any():
+            raise ValueError("wall_heater_flux requires storing faces")
+        flux = np.asarray(spec["wall_heater_flux"],dtype=complex)
+        if flux.shape not in ((),(int(storing.sum()),)) or not np.isfinite(flux).all():
+            raise ValueError("wall_heater_flux requires a finite phasor per storing face or a scalar")
+        h = np.broadcast_to(spec["film_coefficient"],area.shape)[storing]
+        horizontal = side in ("west","east")
+        widths = dx if horizontal else dy
+        material = k if horizontal or conductivity_y is None else np.broadcast_to(conductivity_y,k.shape)
+        half_r = .5*widths[0 if side in ("west","south") else -1]/material.ravel()[cells[storing]]
+        # Eliminate the surface node. Its independent heater transmits through
+        # the half cell even at DC when the ambient film is fully insulated.
+        delivered = area[storing]*flux/(1+half_r*(h+1j*angular_frequency*cw[storing]))
+        b[cells[storing]] -= delivered
+        heater_power[side] = np.zeros(area.shape,dtype=complex)
+        heater_power[side][storing] = delivered
+        heater_surface_energy += np.sum(cw[storing]*half_r*delivered)
+    return A,b,faces,mass,seam,fixed_wall_links,heater_power,heater_surface_energy
 
 
-def _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links):
+def _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links,heater_power):
     _, _, side_specs, types, values, _ = faces
     powers = {side: _conductive_wall_power(types[side], values[side], conductance, area, state[cells])
               for side, cells, conductance, _, _, area in side_specs}
     for side,(mask,cells,inner,extra) in fixed_wall_links.items():
         powers[side][mask] += extra*(state[inner]-state[cells])
+    for side,delivered in heater_power.items():
+        powers[side] += delivered
     temperature = state.reshape(faces[0].shape[0],-1)
     if seam is not None:
         powers["south"] = seam*(temperature[-1]-temperature[0])
@@ -593,7 +620,9 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     heat_loss_coefficient adds a nonnegative bulk sink H*T in W/m³, with H
     broadcast to the cell grid. For an ambient phasor Ta include H*Ta in source.
     Robin specs may include wall_areal_heat_capacity (J/(m² K)), scalar or
-    per face. The returned wall power enters the material after wall storage.
+    per face. wall_heater_flux adds an independent complex heat-flux phasor
+    (W/m², positive into the wall), scalar or one value per storing face in
+    face order. The returned wall power enters the material after wall storage.
     With return_interior_power=True also return a third item, a dictionary
     of interior face powers (W). Its x and y arrays have shapes (ny,nx-1)
     and (ny-1,nx), positive toward increasing coordinates. periodic_y joins
@@ -604,10 +633,10 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     """
     if not np.isfinite(angular_frequency) or angular_frequency <= 0:
         raise ValueError("angular_frequency must be finite and positive")
-    A,b,faces,mass,seam,fixed_wall_links = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,
+    A,b,faces,mass,seam,fixed_wall_links,heater_power,_ = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,
         angular_frequency,source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order)
     state = spla.spsolve(sp.diags(1j*angular_frequency*mass, format="csc") - A, -b)
-    return _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links)
+    return _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links,heater_power)
 
 
 def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc, *,
@@ -623,7 +652,7 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
     orders, including any heat capacity on insulated Robin surfaces.
     dirichlet_flux_order selects the same fixed-wall reconstruction as in the harmonic solve.
     """
-    A,b,faces,mass,seam,fixed_wall_links = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,0.,
+    A,b,faces,mass,seam,fixed_wall_links,heater_power,heater_surface_energy = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,0.,
         source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order)
     _,_,sides,types,_,_ = faces
     anchored = any(np.any((g.real>0)&np.isin(types[side],["dirichlet","robin"]))
@@ -642,8 +671,8 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
     factor = spla.splu(matrix)
     state = factor.solve(-b)
     if closed:
-        state -= (energy_weight@state)/energy_weight.sum()
-    steady = _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links)
+        state -= (energy_weight@state+heater_surface_energy)/energy_weight.sum()
+    steady = _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links,heater_power)
     rhs = -mass*state
     correction = {}
     dx,dy = np.asarray(dx),np.asarray(dy)

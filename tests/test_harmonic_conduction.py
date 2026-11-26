@@ -173,3 +173,35 @@ def test_wall_flux_lag_matches_integrated_storage_across_contact():
     np.testing.assert_allclose(dc[0],1.,atol=2e-14)
     np.testing.assert_allclose([lag[1]["west"].item(),lag[2]["x"].item(),-lag[1]["east"].item()],
                                q0-edges,rtol=0.,atol=2e-14)
+
+
+@pytest.mark.parametrize("omega", [.03125, 1., 32.])
+@pytest.mark.parametrize("film", [0., 3.])
+def test_wall_heater_phasor_matches_two_capacity_balance(omega,film,record_property):
+    heater,ambient = 1.+.75j, -.5+.25j
+    wall = dict(type="robin",values=ambient,film_coefficient=film,
+                wall_areal_heat_capacity=2.,wall_heater_flux=heater)
+    t,power = solve_harmonic_conduction([1.],[.5],1.,1.,{"west":wall},omega)
+    # Per unit area: s*T=2*(Tw-T), 2*s*Tw=P+h*(Ta-Tw)-2*(Tw-T).
+    s = 1j*omega
+    expected = (heater+film*ambient)/(s+(2*s+film)*(1+s/2))
+    exact_power = .5*s*expected
+    errors = dict(cell_phasor_K=abs(t.item()-expected),
+                  material_power_phasor_W=abs(power["west"].item()-exact_power))
+    for name,error in errors.items():
+        record_property(name,float(error))
+        assert error < 1e-13
+
+
+def test_balanced_insulated_wall_heater_low_frequency_coefficients():
+    from tensorfvm.cht.energy import solve_low_frequency_conduction
+
+    heater = 1.+.5j
+    bc = {"west":dict(type="robin",values=0.,film_coefficient=0.,wall_areal_heat_capacity=2.,
+                      wall_heater_flux=heater)}
+    dc,lag = solve_low_frequency_conduction([1.],[1.],1.,1.,bc,source=-heater)
+    # Zero total stored energy fixes Tcell=-P/(3+s); Qwest=P+s*Tcell.
+    np.testing.assert_allclose(dc[0],-heater/3)
+    np.testing.assert_allclose(lag[0],heater/9)
+    np.testing.assert_allclose(dc[1]["west"],heater)
+    np.testing.assert_allclose(lag[1]["west"],-heater/3)
