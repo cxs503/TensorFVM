@@ -789,3 +789,36 @@ def test_generated_heat_partition_in_two_material_annulus(location, insulated, r
     record_property("balance_W_per_m", float(balance))
     for label, value in zip(("inner", "outer"), wall_heat):
         record_property(f"{label}_outward_W_per_m", float(value.real))
+
+
+@pytest.mark.parametrize("film", [.4, 3.5])
+def test_insulated_annulus_rejects_all_generated_heat_at_sheet(film, record_property):
+    from tensorfvm.cht.annulus import solve_annular_sheet
+
+    radius, ambient, resistance, fraction = .7, .35, .3, .35
+    edges = np.array([.3, .39, .58, radius, .73, .91, 1.15])
+    face = 3
+    source = np.array([1.9, .8])
+    sheet_source = .8
+    circumference = 2*np.pi*radius
+    # Each insulated layer must deliver its entire generation to the sheet.
+    layer_heat = np.pi*np.diff(edges[[0, face, -1]]**2)*source
+    expected_rate = layer_heat*np.array([1., -1.])
+    total = layer_heat.sum() + circumference*sheet_source
+    expected_sheet = ambient + total/(circumference*film)
+    expected_traces = expected_sheet + resistance*np.array([fraction, fraction-1])*expected_rate/circumference
+    _, inner, outer, sheet, traces = solve_annular_sheet(
+        edges, np.repeat([1.4, 2.3], 3), 1., (None, None), 0., face,
+        wall_fluxes=(0., 0.), resistance=resistance, inner_resistance_fraction=fraction,
+        sheet_source=sheet_source, source=np.repeat(source, 3), sheet_film=film,
+        ambient=ambient, distributed_source=True, return_contact_temperatures=True)
+    exchange = circumference*film*(sheet-ambient)
+    rate_error = max(abs(np.array([inner[-1], outer[0]])-expected_rate))
+    np.testing.assert_allclose([inner[0], outer[-1]], 0., rtol=0, atol=1e-13)
+    np.testing.assert_allclose(traces, expected_traces, rtol=0, atol=2e-13)
+    assert rate_error < 2e-12 and abs(exchange-total) < 2e-12 and abs(sheet-expected_sheet) < 2e-13
+    record_property("contact_rate_error_W_per_m", float(rate_error))
+    record_property("reservoir_rate_W_per_m", float(exchange.real))
+    record_property("balance_error_W_per_m", float(abs(exchange-total)))
+    record_property("sheet_temperature_K", float(sheet.real))
+    record_property("sheet_temperature_error_K", float(abs(sheet-expected_sheet)))
