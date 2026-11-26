@@ -1,0 +1,26 @@
+{
+  "source_commit": "23f7362c4233392572b52ab79eb97be484b498a6",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/fvm_mixed_source.xml",
+  "reference": "Inner layer r=1..2 with k=1e14 and source +1, outer layer r=2..4 with k=2 and source -1. Flux is 1/r+r/2 inside and 5/r-r/2 outside. Contact resistance 0.2 at r=2; integrate the flux in each layer for temperature.",
+  "before_worst_face_rate_error_W_per_m": 246.57522203923062,
+  "cases": {
+    "test_mixed_walls_with_generating_and_absorbing_shells[None-0]": {
+      "max_face_rate_error_W_per_m": 1.7763568394002505e-15,
+      "max_temperature_error_K": 0.0
+    },
+    "test_mixed_walls_with_generating_and_absorbing_shells[None-1]": {
+      "max_face_rate_error_W_per_m": 1.7763568394002505e-15,
+      "max_temperature_error_K": 0.0
+    },
+    "test_mixed_walls_with_generating_and_absorbing_shells[3.0-0]": {
+      "max_face_rate_error_W_per_m": 1.7763568394002505e-15,
+      "max_temperature_error_K": 0.0
+    },
+    "test_mixed_walls_with_generating_and_absorbing_shells[3.0-1]": {
+      "max_face_rate_error_W_per_m": 1.7763568394002505e-15,
+      "max_temperature_error_K": 0.0
+    }
+  },
+  "passed": 129,
+  "failures": 0
+}
