@@ -183,16 +183,23 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         # Balance fixes differences between face rates. The total drop
         # between the two ambient temperatures fixes their common offset.
         resistance = 1/conductance
-        added_rate = np.r_[0., np.cumsum(density*volume)]
-        source_drop = np.zeros_like(added_rate)
+        generation = density*volume
+        source_drop = np.zeros(n+1, dtype=complex)
         if distributed_source:
             source_drop[:-1] += factor_l*density
             source_drop[1:] += factor_r*density
-        first_rate = ((walls[0]-walls[-1]) - (added_rate @ resistance + source_drop.sum())) / resistance.sum()
-        rates = first_rate + added_rate
-        drops = rates*resistance + source_drop
         from_inner = np.cumsum(resistance[:-1])
         to_outer = np.cumsum(resistance[:0:-1])[::-1]
+        total_resistance = resistance.sum()
+        # Each source sends heat to both walls in inverse proportion to the
+        # two path resistances. Sum its signed contribution at each face
+        # directly to retain leakage far below the total generated power.
+        toward_outer = generation * (from_inner / total_resistance)
+        toward_inner = generation * (to_outer / total_resistance)
+        through = (walls[0] - walls[-1] - source_drop.sum()) / total_resistance
+        rates = (through + np.r_[0., np.cumsum(toward_outer)]
+                 - np.r_[np.cumsum(toward_inner[::-1])[::-1], 0.])
+        drops = rates*resistance + source_drop
         field = np.where(from_inner <= to_outer, walls[0] - np.cumsum(drops[:-1]),
                          walls[-1] + np.cumsum(drops[:0:-1])[::-1])
         return result(field, rates)

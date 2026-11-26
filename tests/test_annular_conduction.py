@@ -1215,3 +1215,25 @@ def test_interval_wall_cooling_mode_time_refinement(method, theta, order, sheet_
         if previous is not None:
             assert np.all(previous/errors > .94*2**order)
         previous = errors
+
+
+@pytest.mark.parametrize("film_side", [0, 1])
+def test_weak_film_leak_with_fixed_opposite_wall(film_side, record_property):
+    # Uniform generation g=1, k=1, 1 <= r <= 2. Integrate
+    # Q(r)=Q(1)+pi*(r^2-1) against dr/(2*pi*r) to close the film law.
+    h = 1e-18
+    films = [None, None]
+    films[film_side] = h
+    resistance = (np.log(2.) + 1. / ((1., 2.)[film_side] * h)) / (2*np.pi)
+    drive = ((1.5 - np.log(2.)), (4*np.log(2.) - 1.5))[film_side] / 2
+    expected = (-1., 1.)[film_side] * drive / resistance
+    for cells in (1, 12):
+        faces = np.linspace(1., 2., cells + 1)
+        _, rates = solve_annular_conduction(faces, 1., 0., [0., 0.], 0., source=1.,
+                                            distributed_source=True, film_coefficients=films)
+        leak = rates[(0, -1)[film_side]]
+        relative_error = abs(leak / expected - 1)
+        record_property(f"relative_film_rate_error_{cells}_cells", float(relative_error))
+        record_property(f"computed_film_rate_{cells}_cells_W_per_m", float(leak.real))
+        np.testing.assert_allclose(np.diff(rates), np.pi*np.diff(faces**2), rtol=1e-13)
+        assert relative_error < 1e-12
