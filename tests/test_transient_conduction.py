@@ -766,3 +766,29 @@ def test_interval_interior_heat_preserves_small_contrast(axis, rannacher, record
     error = abs(measured/exact-1.)
     record_property("relative_heat_error", error)
     assert error < 1e-14
+
+
+@pytest.mark.parametrize("direction", [-1, 1])
+@pytest.mark.parametrize("theta", [.5, .75])
+def test_periodic_seam_heat_for_a_ramping_small_contrast(direction, theta, record_property):
+    # Manufacture an exactly linear two-cell solution. Both faces carry
+    # g*jump*t; the sources supply storage plus the heat lost by each row.
+    base, g = 1024., 1.
+    jump = direction*np.spacing(base)
+    # Keep the matrix coupling small relative to storage while retaining
+    # unit face conductance. Both endpoint temperatures are representable.
+    capacity = 2.**60
+    def source(t):
+        transfer = 2*g*jump*t
+        return [[-transfer], [capacity*jump+transfer]]
+    temp, face = solve_transient_conduction(
+        [1.], [1., 1.], g, capacity, {}, [0., 1.], base, source=source,
+        theta=theta, periodic_y=True, return_face_heat=True)
+    assert temp[-1, 1, 0]-temp[-1, 0, 0] == jump
+    # The theta rule applied to the linear instantaneous power on [0,1].
+    expected = theta*g*jump
+    interior = face["interior"]["y"].item()
+    south, north = (face["wall"][s].item() for s in ("south", "north"))
+    record_property("relative_stage_heat_error", abs(south/expected-1))
+    assert interior == -expected
+    assert south == expected and north == -expected

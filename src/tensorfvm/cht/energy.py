@@ -1229,7 +1229,6 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
 
     def wall_powers(selected_states,boundary_values):
         state = selected_states[:,:cell_count]
-        field = state.reshape(-1,ny,nx)
         powers = {side: _conductive_wall_power(types[side], boundary_values.get(side,values[side]),
                                                conductance,area,state[:,cells])
                   for side,cells,conductance,_,_,area in side_specs}
@@ -1237,14 +1236,18 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             powers[side][:,mask] += extra*(state[:,inner]-state[:,cells])
         for side,link in wall_links.items():
             powers[side][:,link[0]] = storing_wall_power(selected_states,link)
-        if periodic_y:
-            powers["south"] = seam*(field[:,-1]-field[:,0])
-            powers["north"] = -powers["south"]
         return powers
+
+    def periodic_power(field):
+        return seam*(field[:, -1] - field[:, 0])
 
     result = [history[outputs]]
     if return_wall_power:
-        result.append(wall_powers(states[outputs],{s:v[outputs] for s,v in signals.items()}))
+        walls = wall_powers(states[outputs],{s:v[outputs] for s,v in signals.items()})
+        if periodic_y:
+            south = periodic_power(result[0])
+            walls.update(south=south, north=-south)
+        result.append(walls)
     if return_interior_power:
         result.append(_interior_conduction_power(result[0],faces))
     if return_face_heat or return_cell_heat or return_storing_wall_heat:
@@ -1261,6 +1264,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         walls = {s:integrate(v) for s,v in wall_powers(stage,stage_bc).items()}
         # Form face differences before time weighting to retain small contrasts
         # on a shared temperature datum, including across internal substeps.
+        if periodic_y:
+            power = periodic_power(history)
+            south = integrate((1-weights)*power[:-1] + weights*power[1:])
+            walls.update(south=south, north=-south)
         interior = _interior_conduction_power(history, faces)
         face_weights = stage_weights[:, None, None]
         for axis, power in interior.items():
