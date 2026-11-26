@@ -497,10 +497,11 @@ def test_harmonic_flux_and_film_annulus_against_bessel_solution(mode, flux_side,
         assert all(a/b > 3.7 for a, b in zip(coarse, fine))
 
 
+@pytest.mark.parametrize("flux_side", [None, 0, 1], ids=["fixed-walls", "inner-flux", "outer-flux"])
 @pytest.mark.parametrize("axial,sheet_k,axial_k,orthotropic", [(0., 0., None, False), (-1.25, .35, None, False),
                                                   (-1.25, .35, 1.2, False), (-1.25, .35, 0., False),
                                                   (-1.25, .35, 1.2, True)])
-def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k, axial_k, orthotropic, record_property):
+def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k, axial_k, orthotropic, flux_side, record_property):
     from scipy.special import iv, ivp, kv, kvp
     from tensorfvm.cht.annulus import solve_annular_sheet
 
@@ -528,13 +529,23 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k,
 
     coeff = [np.linalg.solve([basis(i, radius), flux_basis(i, radius)], [traces[i], q[i]])
              for i in range(2)]
-    walls = [basis(i, r) @ coeff[i] for i, r in enumerate((0.5, 1.2))]
+    ends = (0.5, 1.2)
+    walls = [basis(i, r) @ coeff[i] for i, r in enumerate(ends)]
+    fluxes, films = [None, None], [None, None]
+    if flux_side is not None:
+        inward = [(1-2*i)*(flux_basis(i, r) @ coeff[i]) for i, r in enumerate(ends)]
+        film_side = 1-flux_side
+        fluxes[flux_side] = inward[flux_side]
+        walls[flux_side] = None
+        films[film_side] = 2.7
+        walls[film_side] += inward[film_side]/films[film_side]
     errors = []
     for n in (12, 24, 48):
         parts = (np.geomspace(0.5, radius, n+1), np.geomspace(radius, 1.2, n+1))
         edges = np.r_[parts[0], parts[1][1:]]
         field, inner, outer, bulk_sheet, observed = solve_annular_sheet(
             edges, np.repeat(k, n), np.repeat(capacity, n), walls, omega, n,
+            wall_fluxes=fluxes, film_coefficients=films,
             circumferential_conductivity=np.repeat(kt, n) if orthotropic else None,
             axial_conductivity=np.repeat(kz, n) if orthotropic else None,
             azimuthal_mode=mode, resistance=resistance, inner_resistance_fraction=fraction,
@@ -550,6 +561,10 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k,
                max(abs(observed-traces)), abs(bulk_sheet-sheet)]
         for name, error in zip(("field_K", "radial_rate_W_per_m", "trace_K", "sheet_K"), row):
             record_property(f"max_error_{n}_{name}", float(error))
+        interface_error = abs(np.array([inner[-1], outer[0]])/(2*np.pi*radius)-q)
+        for side, error in zip(("inner", "outer"), interface_error):
+            record_property(f"contact_{side}_{n}_W_per_m2", float(error))
+        row.extend(interface_error)
         residual = inner[-1]-outer[0]+2*np.pi*radius*(generation-surface_response*bulk_sheet)
         record_property(f"balance_{n}_W_per_m", float(abs(residual)))
         assert abs(residual) < 1e-11
