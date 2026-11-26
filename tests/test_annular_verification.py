@@ -5,7 +5,7 @@ itself: the assembled production sparse solve existed, the analytic reference
 was stored in ``fields['reference_axial_velocity_m_s']``, and no check ever
 compared them.  The gates below are external to the backend's own algebra: the
 governing ODE and the no-slip conditions are proven on an independently
-re-derived profile in 30-digit arithmetic, and the volumetric flow rate is
+re-derived profile in 80-digit arithmetic, and the volumetric flow rate is
 independently quadratured from the closed form.
 """
 
@@ -28,7 +28,7 @@ def config():
 
 def test_stored_closed_form_solves_the_governing_ode(config):
     audit = ode_and_bc_audit(config)
-    # (1/r) d/dr (r du/dr) + G/mu = 0 to 30-digit rounding.
+    # (1/r) d/dr (r du/dr) + G/mu = 0 to high-precision rounding.
     assert audit['max_relative_ode_residual'] < 1e-25
     # No-slip on both circular walls.
     assert audit['wall_residual_over_peak'] < 1e-14
@@ -124,3 +124,30 @@ def test_partial_flow_audit_uses_requested_bounds(gap, record_property):
     assert max(errors[:-1]) < 2e-14
     assert errors[-1] == 0.
     assert max(differences) < 1e-13
+
+
+@pytest.mark.parametrize("ulps", [1, 3, 1024])
+def test_thin_gap_ode_audit_at_reported_radii(ulps, record_property):
+    import math
+    import mpmath as mp
+
+    ri, ro = .75, .75 + ulps*math.ulp(.75)
+    cfg = AnnularConfig(inner_radius_m=ri, outer_radius_m=ro, pressure_gradient_pa_m=3., viscosity_pa_s=.125)
+    with mp.workdps(90):
+        report = ode_and_bc_audit(cfg)
+        precision_after_audit = mp.mp.dps
+    with mp.workdps(90):
+        a, b = mp.mpf(ri), mp.mpf(ro)
+        k = (b*b-a*a)/mp.log(b/a)
+        expected_peak = max(abs(6*(b*b-r*r-k*mp.log(b/r))) for r in map(mp.mpf, report["sample_radii"]))
+    peak = report["peak_velocity_m_s"]
+    peak_error = abs(peak/float(expected_peak)-1) if expected_peak else abs(peak)
+    record_property("sample_peak_error", peak_error)
+    record_property("stored_profile_error", report["stored_vs_independent_max_relative"])
+    record_property("relative_ode_residual", report["max_relative_ode_residual"])
+    assert precision_after_audit == 90
+    assert peak_error < 1e-13
+    assert report["stored_vs_independent_max_relative"] < 1e-13
+    assert report["max_relative_ode_residual"] < 1e-25
+    assert report["wall_residual_over_peak"] < 1e-13
+    assert report["perturbation_control_min_residual"] == pytest.approx(.05)

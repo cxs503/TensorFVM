@@ -9,7 +9,7 @@ importing any of the solver's own reference formulas as ground truth:
 
 1. the closed form stored in the backend is treated as a black box and checked
    against the governing ODE ``(1/r) d/dr (r du/dr) + G/mu = 0`` and both
-   no-slip conditions with 30-digit arithmetic (mpmath, numerical
+   no-slip conditions with 80-digit arithmetic (mpmath, numerical
    differentiation of the black box, so a transcription error in the formula
    cannot hide behind the same formula);
 2. the volumetric flow rate closed form is checked against independent adaptive
@@ -43,14 +43,8 @@ def _black_box(r, c):
     return np.asarray(analytic_velocity(np.asarray(r, float), c), float)
 
 
-def _independent_profile(r, mu, g, ri, ro):
-    """Closed form re-derived here from (1/r) d/dr (r du/dr) = -G/mu, u(ri)=u(ro)=0."""
-    import mpmath as mp
-    return g / (4 * mu) * ((ro ** 2 - r ** 2) - (ro ** 2 - ri ** 2) * mp.log(ro / r) / mp.log(ro / ri))
-
-
 def ode_and_bc_audit(c, radii=None):
-    """Check the ODE, both no-slip conditions and the stored closed form in 30-digit arithmetic.
+    """Check the ODE, both no-slip conditions and the stored closed form in 80-digit arithmetic.
 
     The residual is taken on the independently re-derived profile (so the ODE
     identity is proven, not assumed); the backend's stored profile is then
@@ -58,29 +52,37 @@ def ode_and_bc_audit(c, radii=None):
     negative control so the residual indicator itself is falsifiable.
     """
     import mpmath as mp
-    mp.mp.dps = 30
-    mu, g = mp.mpf(c.viscosity_pa_s), mp.mpf(c.pressure_gradient_pa_m)
-    ri, ro = mp.mpf(c.inner_radius_m), mp.mpf(c.outer_radius_m)
+    ctx = mp.mp.clone()
+    ctx.dps = 80
+    mu, g = ctx.mpf(c.viscosity_pa_s), ctx.mpf(c.pressure_gradient_pa_m)
+    ri, ro = ctx.mpf(c.inner_radius_m), ctx.mpf(c.outer_radius_m)
     if radii is None:
-        radii = [ri + (ro - ri) * mp.mpf(f) for f in (0.05, 0.2, 0.35, 0.5, 0.65, 0.8, 0.97)]
-    profile = lambda r: _independent_profile(r, mu, g, ri, ro)
-    black = lambda r: mp.mpf(float(_black_box(float(r), c)))
+        radii = [ri + (ro-ri)*f for f in (0.05, 0.2, 0.35, 0.5, 0.65, 0.8, 0.97)]
+    # The backend accepts binary64 coordinates. Compare both profiles at
+    # those exact inputs, including when several samples round to a wall.
+    radii = [ctx.mpf(float(r)) for r in radii]
+    k = (ro**2-ri**2)/ctx.log(ro/ri)
+    def profile(r):
+        return g/(4*mu)*(ro**2-r**2-k*ctx.log(ro/r))
+    black = lambda r: ctx.mpf(float(_black_box(float(r), c)))
     residuals = []
     perturbed = []
     for r in radii:
-        first, second = mp.diff(profile, r, 1), mp.diff(profile, r, 2)
+        first, second = ctx.diff(profile, r, 1), ctx.diff(profile, r, 2)
         scale = g / mu * r
         residuals.append(abs(r * second + first + scale) / scale)
-        first, second = mp.diff(lambda x: profile(x) * mp.mpf("1.05"), r, 1), mp.diff(lambda x: profile(x) * mp.mpf("1.05"), r, 2)
+        first, second = ctx.diff(lambda x: profile(x) * ctx.mpf("1.05"), r, 1), ctx.diff(lambda x: profile(x) * ctx.mpf("1.05"), r, 2)
         perturbed.append(abs(r * second + first + scale) / scale)
     wall = [abs(profile(ri)), abs(profile(ro))]
     peak = max(abs(profile(r)) for r in radii)
-    mismatch = max(abs(black(r) - profile(r)) for r in radii) / float(peak)
-    return dict(precision_digits=30, sample_radii=[float(r) for r in radii],
+    # If only walls were sampled, use the continuous maximum as the scale.
+    scale = peak or abs(profile(ctx.sqrt(k/2)))
+    mismatch = max(abs(black(r) - profile(r)) for r in radii) / scale
+    return dict(precision_digits=ctx.dps, sample_radii=[float(r) for r in radii],
                 max_relative_ode_residual=float(max(residuals)),
                 perturbation_control_min_residual=float(min(perturbed)),
                 inner_wall_velocity=float(wall[0]), outer_wall_velocity=float(wall[1]),
-                wall_residual_over_peak=float(max(wall) / max(peak, 1e-300)),
+                wall_residual_over_peak=float(max(wall) / scale),
                 stored_vs_independent_max_relative=float(mismatch),
                 peak_velocity_m_s=float(peak))
 
