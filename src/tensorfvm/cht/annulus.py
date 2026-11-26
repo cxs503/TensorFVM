@@ -41,16 +41,32 @@ def _sheet_modal_conductance(radius, mode, wave, sheet_conductivity, axial_condu
     return sheet_conductivity*(mode/radius)**2 + axial_conductivity*wave**2
 
 
-def _modal_conductance(radii, conductivity, volume, mode, axial_wavenumber):
-    angular = 2*np.pi*conductivity*mode**2*np.log1p(np.diff(radii)/radii[:-1])
-    return angular + conductivity*volume*axial_wavenumber**2
+def _directional_profile(value, radial, name):
+    if value is None:
+        return radial
+    if not np.isrealobj(value):
+        raise ValueError(f"{name} must be real")
+    profile = np.broadcast_to(np.asarray(value, dtype=float), radial.shape)
+    if not np.isfinite(profile).all() or (profile <= 0).any():
+        raise ValueError(f"{name} must be finite and positive")
+    return profile
+
+
+def _modal_conductance(radii, circumferential, axial, volume, mode, axial_wavenumber):
+    angular = 2*np.pi*circumferential*mode**2*np.log1p(np.diff(radii)/radii[:-1])
+    return angular + axial*volume*axial_wavenumber**2
 
 
 def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
                              angular_frequency, *, contact_resistance=0., source=0., azimuthal_mode=0,
+                             circumferential_conductivity=None, axial_conductivity=None,
                              axial_wavenumber=0., film_coefficients=(None, None), cell_location="midpoint",
                              wall_fluxes=(None, None), distributed_source=False, mean_temperature=None):
     """Return cell phasors and radial face heat rates per unit axial length.
+
+    conductivity is radial. Optional positive circumferential_conductivity and
+    axial_conductivity (W/m/K) accept scalar or per-cell values, each defaulting
+    to conductivity. The material axes follow cylindrical coordinates.
 
     Boundary, temperature and volumetric source amplitudes multiply
     cos(m*angle)*exp(i*(axial_wavenumber*z + omega*time)), with real axial
@@ -86,6 +102,8 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
              (conductivity, volumetric_heat_capacity))
     if not np.isfinite(k).all() or np.any(k <= 0) or not np.isfinite(cv).all() or np.any(cv < 0):
         raise ValueError("conductivity must be positive and volumetric capacity nonnegative, both finite")
+    kt = _directional_profile(circumferential_conductivity, k, "circumferential_conductivity")
+    kz = _directional_profile(axial_conductivity, k, "axial_conductivity")
     contact = np.broadcast_to(np.asarray(contact_resistance, dtype=float), (n-1,))
     if len(wall_temperatures) != 2 or len(wall_fluxes) != 2:
         raise ValueError("supply one boundary condition per wall")
@@ -124,7 +142,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         if not needs_mean or np.ndim(mean_temperature) != 0 or not np.isfinite(mean_temperature):
             raise ValueError("a finite mean temperature applies only to an unanchored steady axisymmetric mode")
     volume = np.pi*width*(r[1:]+r[:-1])
-    lateral = _modal_conductance(r, k, volume, azimuthal_mode, axial_wavenumber)
+    lateral = _modal_conductance(r, kt, kz, volume, azimuthal_mode, axial_wavenumber)
     sink = lateral + 1j*angular_frequency*cv*volume
     # Face power = offset + outward*T_inner - inward_coefficient*T_outer.
     outward = conductance[1:].astype(complex)
@@ -170,10 +188,14 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
 def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temperatures, angular_frequency,
                         sheet_face, *, resistance=0., inner_resistance_fraction=.5, sheet_capacity=0.,
                         sheet_conductivity=0., sheet_axial_conductivity=None, sheet_film=0., ambient=0., sheet_source=0.,
+                        circumferential_conductivity=None, axial_conductivity=None,
                         source=0., azimuthal_mode=0, axial_wavenumber=0., wall_fluxes=(None,None), film_coefficients=(None,None),
                         cell_location="midpoint", distributed_source=False, mean_temperature=None,
                         return_contact_temperatures=False):
     """Harmonic conduction with one storing sheet at internal face index sheet_face.
+
+    Bulk circumferential_conductivity and axial_conductivity follow
+    solve_annular_conduction, independently of the sheet properties.
 
     Return cell temperatures, radial rates on the inner and outer domains
     (each including its two boundary faces, outward positive, W/m), and sheet
@@ -196,6 +218,8 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
         raise ValueError("sheet load and ambient must be finite")
     n = edges.size-1
     k,c,p = (np.broadcast_to(np.asarray(x),(n,)) for x in (conductivity,volumetric_heat_capacity,source))
+    kt = _directional_profile(circumferential_conductivity, k, "circumferential_conductivity")
+    kz = _directional_profile(axial_conductivity, k, "axial_conductivity")
     if any(len(pair)!=2 for pair in (wall_temperatures,film_coefficients,wall_fluxes)):
         raise ValueError("supply one boundary condition per wall")
     j = sheet_face
@@ -222,9 +246,11 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
         q = tuple(0. if unit and v is not None else v for v in wall_fluxes)
         inner,qi = solve_annular_conduction(edges[:j+1],k[:j],c[:j],(w[0],float(unit)),angular_frequency,
                 wall_fluxes=(q[0],None),film_coefficients=(film_coefficients[0],1/ri if ri else None),
+                circumferential_conductivity=kt[:j], axial_conductivity=kz[:j],
                 source=0. if unit else p[:j],**options)
         outer,qo = solve_annular_conduction(edges[j:],k[j:],c[j:],(float(unit),w[1]),angular_frequency,
                 wall_fluxes=(None,q[1]),film_coefficients=(1/ro if ro else None,film_coefficients[1]),
+                circumferential_conductivity=kt[j:], axial_conductivity=kz[j:],
                 source=0. if unit else p[j:],**options)
         return np.r_[inner,outer],qi,qo
 
@@ -247,7 +273,7 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
     # Integrate the two bulk balances to evaluate their net response.
     # This preserves the small storage admittance near zero frequency under
     # insulated end conditions, where differences of radial rates cancel.
-    sink = 1j*angular_frequency*c*volume + _modal_conductance(edges, k, volume, azimuthal_mode, axial_wavenumber)
+    sink = 1j*angular_frequency*c*volume + _modal_conductance(edges, kt, kz, volume, azimuthal_mode, axial_wavenumber)
     forcing = circum*load+bi[0]-bo[-1]+np.sum(volume*p-sink*base)
     admittance = circum*impedance+uo[-1]-ui[0]+sink@unit
     sheet = forcing/admittance
@@ -268,11 +294,15 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                                   times, initial_temperature, sheet_face, *, initial_sheet_temperature=None,
                                   sheet_capacity, resistance=0., inner_resistance_fraction=.5,
                                   sheet_conductivity=0., sheet_axial_conductivity=None, azimuthal_mode=0, axial_wavenumber=0., sheet_film=0., ambient=0.,
+                                  circumferential_conductivity=None, axial_conductivity=None,
                                   sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.,
                                   film_coefficients=(None,None), return_wall_temperatures=False,
                                   return_contact_temperatures=False, method="theta", return_interval_temperatures=False,
                                   source_times=None, wall_times=None):
     """Advance a real circumferential and axial Fourier mode with a storing sheet.
+
+    Bulk circumferential_conductivity and axial_conductivity follow
+    solve_annular_conduction, independently of the sheet properties.
 
     axial_wavenumber is in rad/m. The sheet conductivity times thickness
     (W/K) applies circumferentially. sheet_axial_conductivity (W/K) defaults
@@ -331,6 +361,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         raise ValueError("use theta or sdirk2; sdirk2 does not accept a theta override")
     n = len(r)-1
     k,c,u = (np.broadcast_to(np.asarray(v,dtype=float),(n,)) for v in (conductivity,volumetric_heat_capacity,initial_temperature))
+    kt = _directional_profile(circumferential_conductivity, k, "circumferential_conductivity")
+    kz = _directional_profile(axial_conductivity, k, "axial_conductivity")
     if np.any(k<=0) or np.any(c<=0) or not all(np.isfinite(v).all() for v in (k,c,u)):
         raise ValueError("material properties must be positive and initial temperatures finite")
     if any(len(pair)!=2 for pair in (wall_temperatures,wall_fluxes,film_coefficients)):
@@ -408,7 +440,7 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     capacity = np.insert(c*volume,j,circum*sheet_capacity)
     sheet_loss = _sheet_modal_conductance(r[j], azimuthal_mode, axial_wavenumber,
                                          sheet_conductivity, sheet_axial_conductivity)
-    sink = np.insert(_modal_conductance(r, k, volume, azimuthal_mode, axial_wavenumber),j,
+    sink = np.insert(_modal_conductance(r, kt, kz, volume, azimuthal_mode, axial_wavenumber),j,
                      circum*(sheet_film + sheet_loss))
     diagonal = g[:-1]+g[1:]+sink
     state = np.empty((len(t),n+1))

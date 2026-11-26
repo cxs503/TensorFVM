@@ -497,16 +497,20 @@ def test_harmonic_flux_and_film_annulus_against_bessel_solution(mode, flux_side,
         assert all(a/b > 3.7 for a, b in zip(coarse, fine))
 
 
-@pytest.mark.parametrize("axial,sheet_k,axial_k", [(0., 0., None), (-1.25, .35, None),
-                                                  (-1.25, .35, 1.2), (-1.25, .35, 0.)])
-def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k, axial_k, record_property):
+@pytest.mark.parametrize("axial,sheet_k,axial_k,orthotropic", [(0., 0., None, False), (-1.25, .35, None, False),
+                                                  (-1.25, .35, 1.2, False), (-1.25, .35, 0., False),
+                                                  (-1.25, .35, 1.2, True)])
+def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k, axial_k, orthotropic, record_property):
     from scipy.special import iv, ivp, kv, kvp
     from tensorfvm.cht.annulus import solve_annular_sheet
 
     radius, omega, mode = 0.8, 3.2, 2
     k = np.array([1.4, 2.3])
     capacity = np.array([1.8, 1.1])
-    wave = np.sqrt(axial**2 + 1j*omega*capacity/k)
+    kt = np.array([.75, 3.8]) if orthotropic else k
+    kz = np.array([2.9, 1.6]) if orthotropic else k
+    order = mode*np.sqrt(kt/k)
+    wave = np.sqrt((kz*axial**2 + 1j*omega*capacity)/k)
     sheet = 0.65 + 0.2j
     q = np.array([1.1-0.4j, -0.25+0.5j])  # Increasing-r heat flux on each side.
     resistance, fraction, surface_capacity = 0.25, 0.3, 0.4
@@ -516,11 +520,11 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k,
 
     def basis(side, r):
         z = wave[side]*r
-        return np.stack((iv(mode, z), kv(mode, z)), axis=-1)
+        return np.stack((iv(order[side], z), kv(order[side], z)), axis=-1)
 
     def flux_basis(side, r):
         z = wave[side]*r
-        return -k[side]*wave[side]*np.stack((ivp(mode, z), kvp(mode, z)), axis=-1)
+        return -k[side]*wave[side]*np.stack((ivp(order[side], z), kvp(order[side], z)), axis=-1)
 
     coeff = [np.linalg.solve([basis(i, radius), flux_basis(i, radius)], [traces[i], q[i]])
              for i in range(2)]
@@ -531,6 +535,8 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k,
         edges = np.r_[parts[0], parts[1][1:]]
         field, inner, outer, bulk_sheet, observed = solve_annular_sheet(
             edges, np.repeat(k, n), np.repeat(capacity, n), walls, omega, n,
+            circumferential_conductivity=np.repeat(kt, n) if orthotropic else None,
+            axial_conductivity=np.repeat(kz, n) if orthotropic else None,
             azimuthal_mode=mode, resistance=resistance, inner_resistance_fraction=fraction,
             axial_wavenumber=axial, sheet_conductivity=sheet_k, sheet_axial_conductivity=axial_k,
             sheet_capacity=surface_capacity, sheet_source=generation, distributed_source=True,
@@ -655,3 +661,34 @@ def test_axial_sheet_steady_mode_between_insulated_walls():
         sheet_source=sheet_k*axial**2*amplitude)
     np.testing.assert_allclose(np.r_[field, sheet], amplitude, atol=1e-13, rtol=0)
     np.testing.assert_allclose(np.r_[inner, outer], 0., atol=1e-13)
+
+
+@pytest.mark.parametrize("method", ["theta", "sdirk2"])
+def test_transient_orthotropic_annulus_mixed_mode_decay(method, record_property):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+
+    # Choose per-cell heat capacities so the shell-integrated angular and
+    # axial losses give the same decay rate everywhere, including the sheet.
+    edges = np.array([.3, .42, .55, .8, 1.])
+    radius = edges[2]
+    kt, kz = np.array([.4, .8, .6, 1.]), np.array([1.7, 1.2, 2., .9])
+    mode, axial, decay = 2, -1.5, 3.
+    mean_inverse_r2 = 2*np.log(edges[1:]/edges[:-1])/np.diff(edges**2)
+    capacity = (kt*mode**2*mean_inverse_r2 + kz*axial**2)/decay
+    sheet_capacity = (.35*(mode/radius)**2 + .8*axial**2)/decay
+    previous = None
+    for steps in (10, 20, 40):
+        times = np.linspace(0., .5, steps+1)
+        field, sheet, inner, outer, _ = solve_transient_annular_sheet(
+            edges, [1., 1., 3., 3.], capacity, (None, None), times, 1., 2,
+            circumferential_conductivity=kt, axial_conductivity=kz,
+            sheet_conductivity=.35, sheet_axial_conductivity=.8, sheet_capacity=sheet_capacity,
+            azimuthal_mode=mode, axial_wavenumber=axial, initial_sheet_temperature=1.,
+            wall_fluxes=(0., 0.), method=method)
+        exact = np.exp(-decay*times)
+        error = max(np.max(abs(field-exact[:, None])), np.max(abs(sheet-exact)))
+        record_property(f"steps{steps}_max_temperature_error_K", float(error))
+        assert max(np.max(abs(inner)), np.max(abs(outer))) < 1e-13
+        if previous is not None:
+            assert previous/error > 3.7
+        previous = error
