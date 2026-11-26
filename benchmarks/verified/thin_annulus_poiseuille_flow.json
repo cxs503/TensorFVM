@@ -1,0 +1,51 @@
+{
+  "source_commit": "90677a1048b999edcfd80b90b7c22d989cba192d",
+  "baseline_commit": "1d3fd3ce782a5a83b183a7b97a0e3bb073f9e7e1",
+  "reference": "Direct annular Poiseuille integral formula computed in 80-decimal-digit arithmetic at the exact binary64 input radii. Check backend and convergence-report volumetric flow rates for four ratios of gap to inner radius.",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/fvm-thin-flow-after.xml",
+  "baseline_procedure": "Use the source commit test file with baseline src, selecting -k closed_form_flow_across_thin_annuli.",
+  "before": {
+    "tests": 4,
+    "failures": 4,
+    "measurements": {
+      "test_closed_form_flow_across_thin_annuli[0.2]": {
+        "reference_flow_m3_s": 0.03500885003857529,
+        "max_relative_flow_error": 5.440092820663267e-14
+      },
+      "test_closed_form_flow_across_thin_annuli[0.0001]": {
+        "reference_flow_m3_s": 3.976277006779854e-12,
+        "max_relative_flow_error": 0.00040118529763211175
+      },
+      "test_closed_form_flow_across_thin_annuli[1e-08]": {
+        "reference_flow_m3_s": 3.976078149586474e-24,
+        "max_relative_flow_error": 314477496.1290288
+      },
+      "test_closed_form_flow_across_thin_annuli[9.094947017729282e-13]": {
+        "reference_flow_m3_s": 2.9912687776738375e-36,
+        "max_relative_flow_error": 1649267441664.25
+      }
+    }
+  },
+  "after": {
+    "tests": 176,
+    "failures": 0,
+    "measurements": {
+      "test_closed_form_flow_across_thin_annuli[0.2]": {
+        "reference_flow_m3_s": 0.03500885003857529,
+        "max_relative_flow_error": 0.0
+      },
+      "test_closed_form_flow_across_thin_annuli[0.0001]": {
+        "reference_flow_m3_s": 3.976277006779854e-12,
+        "max_relative_flow_error": 0.0
+      },
+      "test_closed_form_flow_across_thin_annuli[1e-08]": {
+        "reference_flow_m3_s": 3.976078149586474e-24,
+        "max_relative_flow_error": 3.3306690738754696e-16
+      },
+      "test_closed_form_flow_across_thin_annuli[9.094947017729282e-13]": {
+        "reference_flow_m3_s": 2.9912687776738375e-36,
+        "max_relative_flow_error": 1.1102230246251565e-16
+      }
+    }
+  }
+}
