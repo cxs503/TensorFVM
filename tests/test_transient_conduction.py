@@ -357,3 +357,48 @@ def test_fixed_temperature_quadratic_flux_uses_graded_cell_means_on_each_side():
         conductivity_y=3.,dirichlet_flux_order=2,return_wall_power=True)
     for side,exact in (("west",-2*dy),("east",6*dy),("south",-6*dx),("north",12*dx)):
         np.testing.assert_allclose(power[side][0],exact,atol=2e-14)
+
+
+@pytest.mark.parametrize("rannacher", [False, True])
+def test_layered_plate_cell_heat_at_switched_heating_rate(rannacher, record_property):
+    dx, dy = np.array([.25,.75]), np.array([.25,.5])
+    k, capacity, loss = np.array([1.,3.]), np.array([2.,4.]), np.array([.5,2.])
+    volume = np.outer(dy,dx)
+    jump, stop = .125, .5
+    # A unit negative flux requires a positive temperature jump at the contact.
+    initial = np.array([.125,.5])
+    def rise(t):
+        return min(t,jump)-2*max(t-jump,0.)
+    def source(t):
+        return capacity*(1. if t < jump else -2.)+loss*(initial+rise(t))
+    bc = {"west":dict(type="dirichlet",values=rise),
+          "east":dict(type="dirichlet",values=lambda t: .625+rise(t))}
+    fields, faces, cell = solve_transient_conduction(
+        dx,dy,k,capacity,bc,[0.,stop],initial,source=source,contact_resistance_x=.125,
+        heat_loss_coefficient=loss,load_jump_times=[jump],rannacher=rannacher,
+        return_face_heat=True,return_cell_heat=True)
+    # Crank-Nicolson integrates piecewise linear T exactly. Rannacher uses
+    # two right-endpoint half steps on each segment of this output interval.
+    area = jump**2/2 + jump*(stop-jump)-(stop-jump)**2
+    if rannacher:
+        area += (jump**2-2*(stop-jump)**2)/4
+    expected_bulk = -volume*loss*(stop*initial+area)
+    storage = volume*capacity*rise(stop)
+    cut = faces["interior"]["x"][0,:,0]
+    face_input = np.column_stack((faces["wall"]["west"][0]-cut,cut+faces["wall"]["east"][0]))
+    errors = dict(final_K=np.max(abs(fields[-1]-initial-rise(stop))),
+                  interface_J=np.max(abs(cut+dy*stop)),
+                  bulk_J=np.max(abs(cell["bulk"][0]-expected_bulk)),
+                  source_J=np.max(abs(cell["source"][0]-(storage-expected_bulk))),
+                  budget_J=np.max(abs(volume*capacity*(fields[-1]-fields[0])
+                                      -face_input-cell["source"][0]-cell["bulk"][0])))
+    for name,error in errors.items():
+        record_property(name,float(error))
+        assert error < 1e-13
+
+
+def test_cell_heat_static_source_and_monotone_sink():
+    fields, heat = solve_transient_conduction([.5],[.25],1.,1.,{},[0.,.01,1.],2.,
+        source=1.,heat_loss_coefficient=10.,monotone_theta=True,return_cell_heat=True)
+    np.testing.assert_allclose(heat["source"][:,0,0], .125*np.array([.01,.99]))
+    np.testing.assert_allclose(.125*np.diff(fields,axis=0),heat["source"]+heat["bulk"],atol=1e-15)

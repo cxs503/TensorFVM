@@ -690,7 +690,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False,
                                wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False,
                                load_jump_times=(), return_face_heat=False, rannacher=False,
-                               monotone_theta=False, dirichlet_flux_order=1):
+                               monotone_theta=False, dirichlet_flux_order=1, return_cell_heat=False):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -725,6 +725,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     return_face_heat appends a dict containing "wall" and "interior" face
     heats in joules. Their leading index is the requested output interval.
     They integrate the theta-stage powers including internal steps at jumps.
+    return_cell_heat appends a dict with "source" (prescribed volumetric
+    heating) and "bulk" (the signed contribution of -H*T). Both arrays have
+    shape (nt-1,ny,nx) in joules per cell for unit depth. Positive heat
+    enters the cell. Any H*Ta supplied in source is counted in "source".
     With periodic_y=True omit the north and south BCs. Those two face powers
     then report opposite inward transfers across a perfectly conducting contact
     between the last and first rows. Interior contact resistances are unchanged.
@@ -886,6 +890,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     states = np.empty((len(time), len(mass)))
     states[0] = state
     history = states[:, :cell_count].reshape(len(time), ny, nx)
+    if return_cell_heat and varying_source:
+        source_stages = np.empty((len(time)-1,ny,nx))
     previous_shift = None
     for step, dt in enumerate(np.diff(time)):
         weight = stage_weights[step]
@@ -897,7 +903,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         rhs = mass * state + dt * ((1 - weight) * (A @ state) - b)
         if varying_source:
             next_power = source_power(sample_times[end_samples[step]])
-            rhs[:cell_count] += dt*((1-weight)*previous_power+weight*next_power)
+            stage_power = (1-weight)*previous_power+weight*next_power
+            rhs[:cell_count] += dt*stage_power
+            if return_cell_heat:
+                source_stages[step] = stage_power.reshape(shape)
             previous_power = source_power(time[step+1]) if end_samples[step]!=step+1 else next_power
         for cells, samples, weights in varying_loads:
             rhs[cells] += dt * weights * ((1-weight)*samples[step] + weight*samples[end_samples[step]])
@@ -923,7 +932,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         result.append(wall_powers(states[outputs],{s:v[outputs] for s,v in signals.items()}))
     if return_interior_power:
         result.append(_interior_conduction_power(result[0],faces))
-    if return_face_heat:
+    if return_face_heat or return_cell_heat:
         durations = np.diff(time)
         def integrate(power):
             step_heat = power*durations.reshape((-1,)+(1,)*(power.ndim-1))
@@ -931,10 +940,15 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
 
         weights = stage_weights[:,None]
         stage = (1-weights)*states[:-1]+weights*states[1:]
+        integrated_cells = integrate(stage[:,:cell_count].reshape(-1,ny,nx))
+    if return_face_heat:
         stage_bc = {s:(1-weights)*v[:len(time)-1]+weights*v[end_samples] for s,v in signals.items()}
         walls = {s:integrate(v) for s,v in wall_powers(stage,stage_bc).items()}
-        integrated_cells = integrate(stage[:,:cell_count].reshape(-1,ny,nx))
         result.append({"wall":walls,"interior":_interior_conduction_power(integrated_cells,faces)})
+    if return_cell_heat:
+        source_heat = (integrate(source_stages) if varying_source else
+                       np.diff(requested)[:,None,None]*(volume*np.asarray(source,dtype=float)))
+        result.append({"source":source_heat, "bulk":-integrated_cells*(volume*heat_loss_coefficient)})
     return tuple(result) if len(result)>1 else result[0]
 
 
