@@ -1,0 +1,51 @@
+{
+  "source_commit": "6450cec6c543b0f3be475f0b1baabc788d3de70e",
+  "baseline_commit": "4708208a1957c37366307e83c39b4fff5aa3f9d1",
+  "reference": "Unit temperature difference across r=1..2 m at unit conductivity. Q = 1 / (ln(2)/(2*pi) + Rfilm), Rfilm=1/(2*pi*r*h). Compare the strong-film surface offset Q*Rfilm on either wall, h=1e18 W/(m^2 K). The transient solver starts at the exact stationary logarithmic field; compare both endpoint and interval mean wall traces.",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/strong-film-after.xml",
+  "baseline_procedure": "Run source commit tests against baseline src with -k strong_film_surface.",
+  "before": {
+    "tests": 4,
+    "failures": 4,
+    "measurements": {
+      "test_strong_film_surface_matches_series_resistance[steady-0]": {
+        "analytic_surface_temperature_K": 1.4426950408889631e-18,
+        "max_relative_surface_error": 1.0
+      },
+      "test_strong_film_surface_matches_series_resistance[steady-1]": {
+        "analytic_surface_temperature_K": 7.213475204444816e-19,
+        "max_relative_surface_error": 1.0
+      },
+      "test_strong_film_surface_matches_series_resistance[transient-0]": {
+        "analytic_surface_temperature_K": 1.4426950408889631e-18,
+        "max_relative_surface_error": 37.47739796558311
+      },
+      "test_strong_film_surface_matches_series_resistance[transient-1]": {
+        "analytic_surface_temperature_K": 7.213475204444816e-19,
+        "max_relative_surface_error": 37.47739796558311
+      }
+    }
+  },
+  "after": {
+    "tests": 158,
+    "failures": 0,
+    "measurements": {
+      "test_strong_film_surface_matches_series_resistance[steady-0]": {
+        "analytic_surface_temperature_K": 1.4426950408889631e-18,
+        "max_relative_surface_error": 0.0
+      },
+      "test_strong_film_surface_matches_series_resistance[steady-1]": {
+        "analytic_surface_temperature_K": 7.213475204444816e-19,
+        "max_relative_surface_error": 0.0
+      },
+      "test_strong_film_surface_matches_series_resistance[transient-0]": {
+        "analytic_surface_temperature_K": 1.4426950408889631e-18,
+        "max_relative_surface_error": 1.2212453270876722e-15
+      },
+      "test_strong_film_surface_matches_series_resistance[transient-1]": {
+        "analytic_surface_temperature_K": 7.213475204444816e-19,
+        "max_relative_surface_error": 2.220446049250313e-16
+      }
+    }
+  }
+}
