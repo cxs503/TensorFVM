@@ -91,3 +91,22 @@ def test_order_estimator_negative_control():
     assert np.isnan(ao.analytic_velocity(-1.0))
     with pytest.raises(ValueError):
         ao._annular_config(0)
+
+@pytest.mark.parametrize("gap_ratio", [0.2, 1e-4, 1e-8, 2.**-40])
+def test_closed_form_flow_across_thin_annuli(gap_ratio, record_property):
+    from decimal import Decimal, localcontext
+    from tensorfvm.annular import AnnularConfig, analytic_flow
+
+    cfg = AnnularConfig(inner_radius_m=0.75, outer_radius_m=0.75*(1+gap_ratio),
+                        pressure_gradient_pa_m=3., viscosity_pa_s=0.125)
+    with localcontext() as ctx:
+        ctx.prec = 80
+        ri, ro = map(Decimal.from_float, (cfg.inner_radius_m, cfg.outer_radius_m))
+        bracket = ro**4 - ri**4 - (ro**2 - ri**2)**2/(ro/ri).ln()
+        expected = math.pi*3*float(bracket)/(8*.125)
+    production = analytic_flow(cfg)
+    report = ao.analytic_flow_rate(cfg.inner_radius_m, cfg.outer_radius_m, 3., .125)
+    error = max(abs(production/expected-1), abs(report/expected-1))
+    record_property("reference_flow_m3_s", expected)
+    record_property("max_relative_flow_error", error)
+    assert error < 2e-14

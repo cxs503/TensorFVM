@@ -69,9 +69,24 @@ def analytic_velocity(r,c):
     return c.pressure_gradient_pa_m/(4*c.viscosity_pa_s)*(ro*ro-r*r-K*np.log(ro/r))
 
 
+def annular_flow_rate(ri, ro, gradient, viscosity):
+    """Volumetric Poiseuille flow through a no-slip concentric annulus."""
+    half_gap = (ro-ri)/2
+    midpoint = ri + half_gap
+    x = half_gap/midpoint
+    if x <= 0.125:
+        # Factoring midpoint*half_gap**3 out of the exact flow leaves
+        # 1 + (atanh(x)-x)/(x**2*atanh(x)). Evaluate the small remainder
+        # by its even series; the omitted tail is below binary64 precision.
+        tail = sum(x**(2*j)/(2*j+3) for j in range(10))
+        shape = 1 + tail/(1 + x*x*tail)
+        return math.pi*gradient/viscosity * midpoint * half_gap**3 * shape
+    return math.pi*gradient/(8*viscosity)*(ro**4-ri**4-(ro*ro-ri*ri)**2/math.log(ro/ri))
+
+
 def analytic_flow(c):
-    ri,ro=c.inner_radius_m,c.outer_radius_m
-    return math.pi*c.pressure_gradient_pa_m/(8*c.viscosity_pa_s)*(ro**4-ri**4-(ro*ro-ri*ri)**2/math.log(ro/ri))
+    return annular_flow_rate(c.inner_radius_m, c.outer_radius_m,
+                             c.pressure_gradient_pa_m, c.viscosity_pa_s)
 
 
 def _array(x):return x.detach().cpu().numpy()

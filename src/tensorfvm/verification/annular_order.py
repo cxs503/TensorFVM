@@ -61,8 +61,8 @@ def analytic_velocity(r, ri=RI, ro=RO, G=DP_DZ, mu=MU):
 
 def analytic_flow_rate(ri=RI, ro=RO, G=DP_DZ, mu=MU):
     """Closed-form volumetric flow rate ``Q = integral u dA``."""
-    return math.pi * G / (8.0 * mu) * (
-        ro ** 4 - ri ** 4 - (ro ** 2 - ri ** 2) ** 2 / math.log(ro / ri))
+    from ..annular import annular_flow_rate
+    return annular_flow_rate(ri, ro, G, mu)
 
 
 def quadrature_flow_rate(ri=RI, ro=RO, G=DP_DZ, mu=MU):
