@@ -904,11 +904,13 @@ def test_insulated_annular_cooldown_against_continuous_radial_mode(record_proper
         side = np.repeat(sides, n)
         initial = amplitude[side]*mode(side, centers)[0]
         times = np.linspace(0., duration, 8*n+1)
-        field, sheet, inner, outer, reservoir, mean = solve_transient_annular_sheet(
-            edges, conductivity[side], capacity[side], (None, None), times, initial, n,
+        options = dict(
             initial_sheet_temperature=1., sheet_capacity=sheet_capacity, resistance=.3,
             inner_resistance_fraction=.35, wall_fluxes=(0., 0.), sheet_film=film, method="sdirk2",
             return_interval_temperatures=True)
+        inputs = (edges, conductivity[side], capacity[side], (None, None))
+        field, sheet, inner, outer, reservoir, mean = solve_transient_annular_sheet(
+            *inputs, times, initial, n, **options)
         final = np.r_[field[-1], sheet[-1]]
         temperature_error = max(abs(final-np.r_[initial, 1.]*np.exp(-decay*duration)))
         heat = np.array([inner[:, -1].sum(), outer[:, 0].sum(), reservoir.sum()])
@@ -920,13 +922,27 @@ def test_insulated_annular_cooldown_against_continuous_radial_mode(record_proper
         exact_contact = mean_decay[:, None]*(amplitude*values)
         trace_errors = np.max(abs(mean["contact"]-exact_contact), axis=0)
         exact_jump = mean_decay*(amplitude[0]*values[0]-amplitude[1]*values[1])
-        jump_error = max(abs(mean["contact"][:, 0]-mean["contact"][:, 1]-exact_jump))
+        jump_errors = abs(mean["contact"][:, 0]-mean["contact"][:, 1]-exact_jump)
+        peak = np.argmax(jump_errors)
+        jump_error = jump_errors[peak]
+        record_property(f"n{n}_peak_start_s", float(times[peak]))
+        record_property(f"n{n}_peak_end_s", float(times[peak+1]))
         for label, error in zip(("inner_mean_K", "outer_mean_K", "mean_jump_K"), [*trace_errors, jump_error]):
             record_property(f"n{n}_{label}", float(error))
-        errors = np.r_[errors, trace_errors, jump_error]
+        # Hold the output window fixed while refining the internal integration grid.
+        window_times = times[[0, 2*n, 6*n, 8*n]]
+        *_, window_mean = solve_transient_annular_sheet(
+            *inputs, window_times, initial, n, source_times=times, **options)
+        start, end = window_times[1:3]
+        average_decay = np.exp(-decay*start)*(-np.expm1(-decay*(end-start)))/(decay*(end-start))
+        window_errors = window_mean["contact"][1] - average_decay*amplitude*values
+        window_jump_error = abs(window_errors[0]-window_errors[1])
+        record_property(f"n{n}_window_jump_error_K", float(window_jump_error))
+        errors = np.r_[errors, trace_errors, jump_error, window_jump_error]
         if previous is not None:
             ratios = previous/errors
             assert np.all(ratios[:4] > 3.5)
             # The maximum spans all intervals, including the shrinking first interval.
-            assert np.all(ratios[4:] > 2.)
+            assert np.all(ratios[4:7] > 2.)
+            assert ratios[7] > 3.5
         previous = errors
