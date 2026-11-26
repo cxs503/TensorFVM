@@ -1,0 +1,69 @@
+{
+  "source_commit": "21963066eeade3edf217d9f3eaecc281bed71a27",
+  "baseline_commit": "842ebc25279191b545d5ad36c0f4680c71ce1b90",
+  "reference": "90-digit decimal stationary radius sqrt(K/2) for K=(ro^2-ri^2)/ln(ro/ri), followed by direct logarithmic profile evaluation at the high-precision radius. Five gap widths down to three binary64 spacings at the inner wall.",
+  "command": "PYTHONPATH=src OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/thin-peak-after.xml",
+  "baseline_procedure": "Use source commit tests with baseline src, selecting -k thin_gap_peak_speed_and_location.",
+  "before": {
+    "tests": 5,
+    "failures": 4,
+    "measurements": {
+      "test_thin_gap_peak_speed_and_location[0.15]": {
+        "reference_peak_speed_m_s": 0.06756224669814188,
+        "relative_speed_error": 0.0,
+        "radius_error_ulps": 1.0
+      },
+      "test_thin_gap_peak_speed_and_location[7.5e-05]": {
+        "reference_peak_speed_m_s": 1.6875000004708293e-08,
+        "relative_speed_error": 2.220446049250313e-16,
+        "radius_error_ulps": 3140.0
+      },
+      "test_thin_gap_peak_speed_and_location[7.5e-09]": {
+        "reference_peak_speed_m_s": 1.6874999794885355e-16,
+        "relative_speed_error": 0.23703745261067133,
+        "radius_error_ulps": 16444835.0
+      },
+      "test_thin_gap_peak_speed_and_location[6.821210263296962e-13]": {
+        "reference_peak_speed_m_s": 1.3958672836832342e-24,
+        "relative_speed_error": 0.24999999999994316,
+        "radius_error_ulps": 1536.0
+      },
+      "test_thin_gap_peak_speed_and_location[3.3306690738754696e-16]": {
+        "reference_peak_speed_m_s": 3.3280069439011436e-31,
+        "relative_speed_error": 5.831796622421025e+28,
+        "radius_error_ulps": 365416804932434.0
+      }
+    }
+  },
+  "after": {
+    "tests": 189,
+    "failures": 0,
+    "measurements": {
+      "test_thin_gap_peak_speed_and_location[0.15]": {
+        "reference_peak_speed_m_s": 0.06756224669814188,
+        "relative_speed_error": 0.0,
+        "radius_error_ulps": 0.0
+      },
+      "test_thin_gap_peak_speed_and_location[7.5e-05]": {
+        "reference_peak_speed_m_s": 1.6875000004708293e-08,
+        "relative_speed_error": 2.220446049250313e-16,
+        "radius_error_ulps": 0.0
+      },
+      "test_thin_gap_peak_speed_and_location[7.5e-09]": {
+        "reference_peak_speed_m_s": 1.6874999794885355e-16,
+        "relative_speed_error": 1.1102230246251565e-16,
+        "radius_error_ulps": 0.0
+      },
+      "test_thin_gap_peak_speed_and_location[6.821210263296962e-13]": {
+        "reference_peak_speed_m_s": 1.3958672836832342e-24,
+        "relative_speed_error": 0.0,
+        "radius_error_ulps": 0.0
+      },
+      "test_thin_gap_peak_speed_and_location[3.3306690738754696e-16]": {
+        "reference_peak_speed_m_s": 3.3280069439011436e-31,
+        "relative_speed_error": 1.1102230246251565e-16,
+        "radius_error_ulps": 0.0
+      }
+    }
+  }
+}
