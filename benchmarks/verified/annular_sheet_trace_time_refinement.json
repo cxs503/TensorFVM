@@ -1,0 +1,205 @@
+{
+  "source_commit": "aad7e202aca8d7a7b4a68ba74e653245065ccbd0",
+  "reference": "Independent cooling eigenmode of a fixed two-cell annular network. For zero sheet capacity the two contact links carry equal power and are combined in series before solving the two-temperature eigenproblem. For positive capacity the sheet is a third dynamical state. Each amplitude is integrated exactly over both output windows.",
+  "steps_per_window": [
+    8,
+    16,
+    32,
+    64
+  ],
+  "output_times_s": [
+    0,
+    0.035,
+    0.14
+  ],
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/fvm-sheet-trace-order.xml",
+  "passed": 152,
+  "runs": {
+    "test_interval_wall_cooling_mode_time_refinement[0.0-theta-0.5-2]": {
+      "errors": {
+        "inner_wall_mean_error_8_K": 0.0002777536809934755,
+        "outer_wall_mean_error_8_K": 0.000109149999034025,
+        "sheet_mean_error_8_K": 0.00013257471310748614,
+        "inner_contact_mean_error_8_K": 0.0002167269895772539,
+        "outer_contact_mean_error_8_K": 6.378059865522201e-05,
+        "inner_wall_mean_error_16_K": 6.933503215122983e-05,
+        "outer_wall_mean_error_16_K": 2.724687091545941e-05,
+        "sheet_mean_error_16_K": 3.309433006573603e-05,
+        "inner_contact_mean_error_16_K": 5.410107522846319e-05,
+        "outer_contact_mean_error_16_K": 1.5921408647256996e-05,
+        "inner_wall_mean_error_32_K": 1.7327311956194524e-05,
+        "outer_wall_mean_error_32_K": 6.809184585898631e-06,
+        "sheet_mean_error_32_K": 8.27050573487531e-06,
+        "inner_contact_mean_error_32_K": 1.3520239027342562e-05,
+        "outer_contact_mean_error_32_K": 3.978871947585283e-06,
+        "inner_wall_mean_error_64_K": 4.331425353387708e-06,
+        "outer_wall_mean_error_64_K": 1.7021379210002685e-06,
+        "sheet_mean_error_64_K": 2.0674342515458743e-06,
+        "inner_contact_mean_error_64_K": 3.3797455863404657e-06,
+        "outer_contact_mean_error_64_K": 9.946255296322537e-07
+      },
+      "finest_orders": {
+        "inner_wall": 2.000134102155104,
+        "outer_wall": 2.000134102234253,
+        "sheet": 2.000134102151901,
+        "inner_contact": 2.0001341021501946,
+        "outer_contact": 2.0001341021652133
+      }
+    },
+    "test_interval_wall_cooling_mode_time_refinement[0.0-theta-1.0-1]": {
+      "errors": {
+        "inner_wall_mean_error_8_K": 0.012708577273148669,
+        "outer_wall_mean_error_8_K": 0.0049941415434193726,
+        "sheet_mean_error_8_K": 0.00606593575993547,
+        "inner_contact_mean_error_8_K": 0.009916310323474176,
+        "outer_contact_mean_error_8_K": 0.002918271554988222,
+        "inner_wall_mean_error_16_K": 0.006435342527994492,
+        "outer_wall_mean_error_16_K": 0.002528922850639992,
+        "sheet_mean_error_16_K": 0.0030716557431232916,
+        "inner_contact_mean_error_16_K": 0.005021400285323163,
+        "outer_contact_mean_error_16_K": 0.001477748188676492,
+        "inner_wall_mean_error_32_K": 0.003238387185435121,
+        "outer_wall_mean_error_32_K": 0.0012726022456210906,
+        "sheet_mean_error_32_K": 0.0015457157957524115,
+        "inner_contact_mean_error_32_K": 0.0025268644623331893,
+        "outer_contact_mean_error_32_K": 0.0007436310929359868,
+        "inner_wall_mean_error_64_K": 0.0016244307412615067,
+        "outer_wall_mean_error_64_K": 0.0006383591864748683,
+        "sheet_mean_error_64_K": 0.0007753576432018017,
+        "inner_contact_mean_error_64_K": 0.0012675186988376774,
+        "outer_contact_mean_error_64_K": 0.00037301815328180665
+      },
+      "finest_orders": {
+        "inner_wall": 0.9953412516244577,
+        "outer_wall": 0.9953412516246837,
+        "sheet": 0.9953412516243532,
+        "inner_contact": 0.9953412516244325,
+        "outer_contact": 0.9953412516252138
+      }
+    },
+    "test_interval_wall_cooling_mode_time_refinement[0.0-sdirk2-0.5-2]": {
+      "errors": {
+        "inner_wall_mean_error_8_K": 0.00013642050154222263,
+        "outer_wall_mean_error_8_K": 5.36097219605014e-05,
+        "sheet_mean_error_8_K": 6.511492049091072e-05,
+        "inner_contact_mean_error_8_K": 0.00010644685071364846,
+        "outer_contact_mean_error_8_K": 3.132625002877365e-05,
+        "inner_wall_mean_error_16_K": 3.3857766864375805e-05,
+        "outer_wall_mean_error_16_K": 1.3305225001258858e-05,
+        "sheet_mean_error_16_K": 1.6160663334763292e-05,
+        "inner_contact_mean_error_16_K": 2.641870257164003e-05,
+        "outer_contact_mean_error_16_K": 7.774761551365694e-06,
+        "inner_wall_mean_error_32_K": 8.435401843309709e-06,
+        "outer_wall_mean_error_32_K": 3.314894332889784e-06,
+        "sheet_mean_error_32_K": 4.026304801202363e-06,
+        "inner_contact_mean_error_32_K": 6.582016270184621e-06,
+        "outer_contact_mean_error_32_K": 1.9370219597469873e-06,
+        "inner_wall_mean_error_64_K": 2.1053350348632094e-06,
+        "outer_wall_mean_error_64_K": 8.273421120696955e-07,
+        "sheet_mean_error_64_K": 1.0048982511112747e-06,
+        "inner_contact_mean_error_64_K": 1.6427610340374876e-06,
+        "outer_contact_mean_error_64_K": 4.834482425219999e-07
+      },
+      "finest_orders": {
+        "inner_wall": 2.0024069603897545,
+        "outer_wall": 2.002406960121413,
+        "sheet": 2.0024069602615184,
+        "inner_contact": 2.0024069602879515,
+        "outer_contact": 2.00240696005007
+      }
+    },
+    "test_interval_wall_cooling_mode_time_refinement[0.31-theta-0.5-2]": {
+      "errors": {
+        "inner_wall_mean_error_8_K": 0.0002661555223274492,
+        "outer_wall_mean_error_8_K": 0.00016543282539219217,
+        "sheet_mean_error_8_K": 0.00014762499676562735,
+        "inner_contact_mean_error_8_K": 0.00021970125801007434,
+        "outer_contact_mean_error_8_K": 0.00011156830727626632,
+        "inner_wall_mean_error_16_K": 6.645275395483763e-05,
+        "outer_wall_mean_error_16_K": 4.130467309385044e-05,
+        "sheet_mean_error_16_K": 3.685847846351953e-05,
+        "inner_contact_mean_error_16_K": 5.48542202485347e-05,
+        "outer_contact_mean_error_16_K": 2.7855973859958194e-05,
+        "inner_wall_mean_error_32_K": 1.6607816844926848e-05,
+        "outer_wall_mean_error_32_K": 1.0322829450376547e-05,
+        "sheet_mean_error_32_K": 9.211640196543636e-06,
+        "inner_contact_mean_error_32_K": 1.370912097448107e-05,
+        "outer_contact_mean_error_32_K": 6.961741754601958e-06,
+        "inner_wall_mean_error_64_K": 4.151618658965184e-06,
+        "outer_wall_mean_error_64_K": 2.580498795229369e-06,
+        "sheet_mean_error_64_K": 2.3027239328121674e-06,
+        "inner_contact_mean_error_64_K": 3.42700325811629e-06,
+        "outer_contact_mean_error_64_K": 1.7402947804501245e-06
+      },
+      "finest_orders": {
+        "inner_wall": 2.0001166003113866,
+        "outer_wall": 2.0001166003038064,
+        "sheet": 2.000116600276309,
+        "inner_contact": 2.000116600258248,
+        "outer_contact": 2.000116600181838
+      }
+    },
+    "test_interval_wall_cooling_mode_time_refinement[0.31-theta-1.0-1]": {
+      "errors": {
+        "inner_wall_mean_error_8_K": 0.012043746959894075,
+        "outer_wall_mean_error_8_K": 0.007485965613101664,
+        "sheet_mean_error_8_K": 0.006680147345631715,
+        "inner_contact_mean_error_8_K": 0.009941654920794463,
+        "outer_contact_mean_error_8_K": 0.005048553754679608,
+        "inner_wall_mean_error_16_K": 0.006093437980120631,
+        "outer_wall_mean_error_16_K": 0.0037874647596508604,
+        "sheet_mean_error_16_K": 0.003379767416587409,
+        "inner_contact_mean_error_16_K": 0.005029901232676992,
+        "outer_contact_mean_error_16_K": 0.002554275616706958,
+        "inner_wall_mean_error_32_K": 0.00306498125241339,
+        "outer_wall_mean_error_32_K": 0.0019050835538786948,
+        "sheet_mean_error_32_K": 0.0017000129981062373,
+        "inner_contact_mean_error_32_K": 0.002530025419138271,
+        "outer_contact_mean_error_32_K": 0.0012847930682556297,
+        "inner_wall_mean_error_64_K": 0.0015371038099761813,
+        "outer_wall_mean_error_64_K": 0.0009554091682236199,
+        "sheet_mean_error_64_K": 0.000852565233258884,
+        "inner_contact_mean_error_64_K": 0.0012688207172659727,
+        "outer_contact_mean_error_64_K": 0.0006443303099133435
+      },
+      "finest_orders": {
+        "inner_wall": 0.9956636471065055,
+        "outer_wall": 0.9956636471068206,
+        "sheet": 0.9956636471066157,
+        "inner_contact": 0.9956636471065442,
+        "outer_contact": 0.9956636471069503
+      }
+    },
+    "test_interval_wall_cooling_mode_time_refinement[0.31-sdirk2-0.5-2]": {
+      "errors": {
+        "inner_wall_mean_error_8_K": 0.00013059109165031169,
+        "outer_wall_mean_error_8_K": 8.117078719194204e-05,
+        "sheet_mean_error_8_K": 7.243324998071343e-05,
+        "inner_contact_mean_error_8_K": 0.00010779797792503931,
+        "outer_contact_mean_error_8_K": 5.474177996925289e-05,
+        "inner_wall_mean_error_16_K": 3.243285954968034e-05,
+        "outer_wall_mean_error_16_K": 2.015911428013273e-05,
+        "sheet_mean_error_16_K": 1.7989109315719176e-05,
+        "inner_contact_mean_error_16_K": 2.6772091676452447e-05,
+        "outer_contact_mean_error_16_K": 1.359535661155098e-05,
+        "inner_wall_mean_error_32_K": 8.082901706840673e-06,
+        "outer_wall_mean_error_32_K": 5.024044795631788e-06,
+        "sheet_mean_error_32_K": 4.483237198510404e-06,
+        "inner_contact_mean_error_32_K": 6.672127851437004e-06,
+        "outer_contact_mean_error_32_K": 3.3882282565456112e-06,
+        "inner_wall_mean_error_64_K": 2.0176560043272396e-06,
+        "outer_wall_mean_error_64_K": 1.254103355302627e-06,
+        "sheet_mean_error_64_K": 1.1191068232663248e-06,
+        "inner_contact_mean_error_64_K": 1.6654982714636724e-06,
+        "outer_contact_mean_error_64_K": 8.457704098185914e-07
+      },
+      "finest_orders": {
+        "inner_wall": 2.0021930772902903,
+        "outer_wall": 2.0021930768327625,
+        "sheet": 2.0021930773670578,
+        "inner_contact": 2.0021930772835352,
+        "outer_contact": 2.0021930766007205
+      }
+    }
+  }
+}
