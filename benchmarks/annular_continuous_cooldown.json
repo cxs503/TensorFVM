@@ -1,0 +1,22 @@
+{
+  "source_commit": "d3070c23e0fd2f5ee050bb9161b2ca1f50511482",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_annular_conduction.py -o junit_family=legacy --junitxml=/tmp/annular_continuous_decay.xml",
+  "tests": 96,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Piecewise J0/Y0 radial eigenfunctions with insulated end walls, a finite contact resistance and a storing sheet. Choose the sheet film coefficient from the continuous energy jump to obtain exp(-0.8 t) decay. Compare temperatures at 0.6 s and integrated signed sheet-side and reservoir heat. SDIRK2 with 8n time steps and n geometric cells per material; space and time are refined together.",
+  "measurements": {
+    "n8_temperature_K": 0.00030168457423451756,
+    "n8_inner_J_per_m": 0.0001724988752185297,
+    "n8_outer_J_per_m": 0.0006584221668153312,
+    "n8_reservoir_J_per_m": 0.0007103027815267282,
+    "n16_temperature_K": 7.860096009881801e-05,
+    "n16_inner_J_per_m": 4.337683891963984e-05,
+    "n16_outer_J_per_m": 0.0001648433006660177,
+    "n16_reservoir_J_per_m": 0.00017801432176867138,
+    "n32_temperature_K": 2.0059403961436573e-05,
+    "n32_inner_J_per_m": 1.0860022329861607e-05,
+    "n32_outer_J_per_m": 4.122574501952414e-05,
+    "n32_reservoir_J_per_m": 4.4531122157742686e-05
+  }
+}
