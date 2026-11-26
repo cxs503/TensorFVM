@@ -647,8 +647,14 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     result = _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links,heater_power)
     if not return_storing_wall_response:
         return result
+    response = _storing_wall_response(result,faces[2],bc,dx,dy,conductivity,conductivity_y,angular_frequency)
+    return (*result,response)
+
+
+def _storing_wall_response(result,sides,bc,dx,dy,conductivity,conductivity_y,angular_frequency,steady_wall=None):
     response = {}
-    for side,cells,_,_,_,area in faces[2]:
+    state = result[0].ravel()
+    for side,cells,_,_,_,area in sides:
         spec = bc.get(side) or {}
         cw = np.broadcast_to(spec.get("wall_areal_heat_capacity",0.),area.shape)
         active = cw > 0
@@ -660,17 +666,26 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
         heater_flux = np.asarray(spec.get("wall_heater_flux",0.),dtype=complex)
         half_r = _wall_half_resistance(side,dx,dy,conductivity,conductivity_y,result[0].shape,cells)
         storage_rate = 1j*angular_frequency*cw
-        surface = (state[cells]+half_r*(heater_flux+h*ambient))/(1+half_r*(h+storage_rate))
+        storage_drive = 0.
+        if steady_wall is not None:
+            # Differentiate C*s*Tw about s=0 with frequency-independent loads.
+            heater_flux = 0j
+            ambient = 0j
+            storage_drive = cw*steady_wall[side]["temperature"]
+        denominator = 1+half_r*(h+storage_rate)
+        surface = (state[cells]+half_r*(heater_flux+h*ambient-storage_drive))/denominator
+        # Evaluate the small film drop directly for strongly coupled reservoirs.
+        film_drop = ((ambient-state[cells])+half_r*(storage_rate*ambient-heater_flux+storage_drive))/denominator
         response[side] = dict(temperature=surface, heater=area*heater_flux,
-                              ambient=area*h*(ambient-surface), material=result[1][side][active],
-                              storage=area*storage_rate*surface)
-    return (*result,response)
+                              ambient=area*h*film_drop, material=result[1][side][active],
+                              storage=area*(storage_rate*surface+storage_drive))
+    return response
 
 
 def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc, *,
                                    source=0., conductivity_y=None, contact_resistance_x=0.,
                                    contact_resistance_y=0., periodic_y=False, heat_loss_coefficient=0.,
-                                   return_interior_power=False, dirichlet_flux_order=1):
+                                   return_interior_power=False, dirichlet_flux_order=1, return_storing_wall_response=False):
     """Return steady and first-order coefficients for the exp(+i*omega*t) response.
 
     Both outputs follow solve_harmonic_conduction's temperature and face-power
@@ -678,6 +693,9 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
     are independent of frequency. An unanchored lossless body requires zero
     net power. The harmonic limit then has zero total stored energy at both
     orders, including any heat capacity on insulated Robin surfaces.
+    return_storing_wall_response appends the same surface quantities as the
+    harmonic solver to each output. The second dictionary gives coefficients
+    of i*omega, with surface temperature in K s and powers in W s.
     dirichlet_flux_order selects the same fixed-wall reconstruction as in the harmonic solve.
     """
     A,b,faces,mass,seam,fixed_wall_links,heater_power,heater_surface_energy = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,0.,
@@ -713,13 +731,18 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
         # At DC Tw = Tcell + Q/G, where G is the half-cell conductance.
         # Eliminating the wall's first-order unknown transmits a fraction
         # G/(G+h*area) of its storage load to the cell equation.
-        horizontal = side in ("west","east")
-        widths = dx if horizontal else dy
-        material = conductivity if horizontal or conductivity_y is None else conductivity_y
-        half_resistance = .5*widths[0 if side in ("west","south") else -1]/(
-            area*np.broadcast_to(material,shape).ravel()[cells])
-        wall = state[cells]+steady[1][side]*half_resistance
-        correction[side] = -np.asarray(spec["wall_areal_heat_capacity"])*area*wall*(1-g*half_resistance)
+        half_r = _wall_half_resistance(side,dx,dy,conductivity,conductivity_y,shape,cells)
+        half_resistance = half_r/area
+        cw = np.broadcast_to(spec["wall_areal_heat_capacity"],area.shape)
+        active = cw > 0
+        h = np.broadcast_to(spec.get("film_coefficient",0.),area.shape)[active]
+        ambient = np.broadcast_to(spec.get("values",0.),area.shape)[active]
+        heater = np.asarray(spec.get("wall_heater_flux",0.),dtype=complex)
+        correction[side] = np.zeros(area.shape,dtype=complex)
+        if active.any():
+            transmission = 1/(1+h*half_r[active])
+            wall = transmission*(state[cells[active]]+half_r[active]*(heater+h*ambient))
+            correction[side][active] = -cw[active]*area[active]*wall*transmission
         rhs[cells] += correction[side]
         if closed:
             surface_energy_lag += np.sum(area*np.asarray(spec["wall_areal_heat_capacity"])*
@@ -738,6 +761,11 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
     first = (cells_lag,powers)
     if return_interior_power:
         first += (_interior_conduction_power(cells_lag,faces),)
+    if return_storing_wall_response:
+        wall_dc = _storing_wall_response(steady,sides,bc,dx,dy,conductivity,conductivity_y,0.)
+        wall_lag = _storing_wall_response(first,sides,bc,dx,dy,conductivity,conductivity_y,0.,wall_dc)
+        steady += (wall_dc,)
+        first += (wall_lag,)
     return steady,first
 
 

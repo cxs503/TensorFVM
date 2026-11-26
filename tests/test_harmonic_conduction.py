@@ -243,3 +243,35 @@ def test_harmonic_storing_wall_response_selects_mixed_faces_without_heater():
     area = np.array([.125,.375])
     np.testing.assert_allclose(report["temperature"],cell[rows,0]+.125*power["west"][rows]/area)
     np.testing.assert_allclose(report["storage"],report["ambient"]-report["material"])
+
+
+@pytest.mark.parametrize("film", [0., 3., 1e9])
+def test_low_frequency_storing_wall_surface_coefficients(film,record_property):
+    from tensorfvm.cht.energy import solve_low_frequency_conduction
+
+    area, heater, ambient = .5, 1.+.75j, -.5+.25j
+    wall = dict(type="robin",values=ambient,film_coefficient=film,
+                wall_areal_heat_capacity=2.,wall_heater_flux=heater)
+    # Surface balance with the cell eliminated:
+    # [h+2s+s/(1+s/2)]Tw = P+h*Ta+S/(1+s/2).
+    # For the floating system S=-P and the conserved total energy is zero.
+    source = -heater if film==0 else 0.
+    dc,lag = solve_low_frequency_conduction([.5],[1.],.25,1.,{"north":wall},
+        conductivity_y=1.,source=source,return_interior_power=True,return_storing_wall_response=True)
+    if film:
+        w0 = ambient+heater/film
+        w1 = -3*w0/film
+    else:
+        w0,w1 = heater/6,-heater/18
+    q0 = -source
+    q1 = w0-q0/2
+    for order,(out,ws,q,store,drive,air) in enumerate((
+            (dc,w0,q0,0.,heater,-heater if film else 0.),
+            (lag,w1,q1,2*w0,0.,-film*w1))):
+        result = out[-1]["north"]
+        expected = dict(temperature=ws,heater=area*drive,ambient=area*air,
+                        material=area*q,storage=area*store)
+        for name,value in expected.items():
+            error = abs(result[name].item()-value)
+            record_property(f"order_{order}_{name}_error",float(error))
+            assert error < 3e-13
