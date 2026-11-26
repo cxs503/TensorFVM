@@ -67,3 +67,31 @@ def test_reversed_flow_is_rejected_by_the_config_guard():
     # limitation of the merged backend rather than a silent wrong answer.
     with pytest.raises(ValueError):
         AnnularConfig(ntheta=32, nr=16, pressure_gradient_pa_m=-0.01)
+
+
+@pytest.mark.parametrize("ulps", [3, 1024])
+def test_thin_gap_flux_quadrature(ulps, record_property):
+    import math
+    import mpmath as mp
+    from tensorfvm.verification.annular_order import quadrature_flow_rate
+
+    ri = .75
+    ro = ri + ulps*math.ulp(ri)
+    cfg = AnnularConfig(inner_radius_m=ri, outer_radius_m=ro,
+                        pressure_gradient_pa_m=3., viscosity_pa_s=.125)
+    split = ri + (ulps//2)*math.ulp(ri)
+    values = []
+    with mp.workdps(90):
+        inner, outer = mp.mpf(ri), mp.mpf(ro)
+        k = (outer**2-inner**2)/mp.log(outer/inner)
+        def integrand(r):
+            return 12*mp.pi*r*(outer**2-r**2-k*mp.log(outer/r))
+        for a, b in [(ri, ro), (ri, split), (ro, split)]:
+            expected = float(mp.quad(integrand, [a, b]))
+            measured = flow_rate_audit(cfg, a, b)["quadrature_flow_m3_s"]
+            values.append(abs(measured/expected-1))
+        full = float(mp.quad(integrand, [ri, ro]))
+    values.append(abs(quadrature_flow_rate(ri, ro, 3., .125)/full-1))
+    record_property("full_reference_m3_s", full)
+    record_property("max_relative_integral_error", max(values))
+    assert max(values) < 1e-13

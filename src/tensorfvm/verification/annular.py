@@ -87,13 +87,12 @@ def ode_and_bc_audit(c, radii=None):
 
 def flow_rate_audit(c, a=None, b=None):
     """Independent adaptive quadrature of Q = 2*pi*int_a^b u(r) r dr."""
-    from scipy.integrate import quad
-    a = c.inner_radius_m if a is None else a
-    b = c.outer_radius_m if b is None else b
-    value, error = quad(lambda r: float(_black_box(r, c)) * r, a, b, epsabs=0.0, epsrel=1e-13, limit=500)
-    q = 2 * math.pi * value
+    from .annular_order import integrate_annular_flow
+    ri, ro = c.inner_radius_m, c.outer_radius_m
+    q, error = integrate_annular_flow(ri, ro, c.pressure_gradient_pa_m, c.viscosity_pa_s,
+                                      ri if a is None else a, ro if b is None else b)
     closed = float(analytic_flow(c))
-    return dict(quadrature_flow_m3_s=q, quadrature_error_estimate=2 * math.pi * error,
+    return dict(quadrature_flow_m3_s=q, quadrature_error_estimate=error,
                 closed_form_flow_m3_s=closed,
                 relative_difference=abs(q - closed) / abs(closed))
 

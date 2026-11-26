@@ -64,15 +64,32 @@ def analytic_flow_rate(ri=RI, ro=RO, G=DP_DZ, mu=MU):
     return annular_flow_rate(ri, ro, G, mu)
 
 
-def quadrature_flow_rate(ri=RI, ro=RO, G=DP_DZ, mu=MU):
-    """Independent ``scipy.integrate.quad`` evaluation of the same integral."""
-    import warnings
+def integrate_annular_flow(ri, ro, G, mu, a, b):
+    """Adaptive velocity-profile integral and its absolute error estimate."""
     from scipy.integrate import quad
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        value, _ = quad(lambda r: 2.0 * math.pi * r * analytic_velocity(r, ri, ro, G, mu),
-                        ri, ro, epsabs=1e-18, epsrel=1e-13, limit=200)
-    return value
+    from ..annular import thin_annular_velocity
+
+    lower, upper = sorted((a, b))
+    if ro-ri <= .25*ri and ri <= lower <= upper <= ro:
+        span = upper-lower
+        def integrand(x):
+            # Form both wall distances before adding the large radius. This
+            # resolves quadrature nodes even inside a single binary64 spacing.
+            left = (lower-ri) + x*span
+            right = (ro-upper) + (1-x)*span
+            return (ri+left)*thin_annular_velocity(ri, ro, left, right, G, mu)
+        value, error = quad(integrand, 0., 1., epsabs=0., epsrel=1e-13)
+        scale = 2*math.pi*span
+    else:
+        value, error = quad(lambda r: r*analytic_velocity(r, ri, ro, G, mu),
+                            lower, upper, epsabs=0., epsrel=1e-13, limit=500)
+        scale = 2*math.pi
+    return (1 if b >= a else -1)*scale*value, scale*error
+
+
+def quadrature_flow_rate(ri=RI, ro=RO, G=DP_DZ, mu=MU):
+    """Independent adaptive quadrature of the full annular flow."""
+    return integrate_annular_flow(ri, ro, G, mu, ri, ro)[0]
 
 
 def analytic_wall_shear(ri=RI, ro=RO, G=DP_DZ, mu=MU):

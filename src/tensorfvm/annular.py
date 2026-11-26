@@ -99,24 +99,25 @@ def annular_wall_shear(ri, ro, gradient):
     return gradient/4*(k/ri-2*ri), gradient/4*(k/ro-2*ro)
 
 
+def thin_annular_velocity(ri, ro, from_inner, to_outer, gradient, viscosity):
+    """Thin-gap axial velocity using independently resolved wall distances."""
+    radius = ri + from_inner
+    t = np.log1p(from_inner/ri)
+    s = np.log1p(to_outer/radius)
+    # The two terms are nonnegative throughout the gap.
+    return (gradient/viscosity * radius**2*t*s
+            * (s*_exp_remainder(2*s)+t*_exp_remainder(-2*t))/math.log1p((ro-ri)/ri))
+
+
 def annular_velocity_profile(r, ri, ro, gradient, viscosity):
     """Axial no-slip Poiseuille velocity for scalar or array radii."""
     r = np.asarray(r, dtype=float)
     gap = ro-ri
     if gap <= .25*ri:
-        # Write the bracket in the closed form as
-        # 4*r²*t*s*(s*phi(2s)+t*phi(-2t))/log(ro/ri), where
-        # t=log(r/ri), s=log(ro/r), phi(z)=(exp(z)-1-z)/z².
-        # At physical radii both terms have the same sign and each wall
-        # distance is formed directly, including at the last interior float.
         inside = (ri <= r) & (r <= ro)
         interior = r[inside]
-        t = np.log1p((interior-ri)/ri)
-        s = np.log1p((ro-interior)/interior)
-
         velocity = np.empty_like(r)
-        velocity[inside] = (gradient/viscosity * interior**2*t*s
-                            * (s*_exp_remainder(2*s)+t*_exp_remainder(-2*t))/math.log1p(gap/ri))
+        velocity[inside] = thin_annular_velocity(ri, ro, interior-ri, ro-interior, gradient, viscosity)
         if inside.all():
             return velocity[()]
         # Polygonal cell centers can lie outside the circular domain.
