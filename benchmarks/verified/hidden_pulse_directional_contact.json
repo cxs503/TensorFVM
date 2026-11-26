@@ -1,0 +1,56 @@
+{
+  "source_commit": "5f2e5958bd252f096603b8cd58cfbad789e6aaf3",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_stepped_rod.py -o junit_family=legacy --junitxml=/tmp/fvm_hidden_pulse.xml",
+  "reference": "Two equal half-cells at zero temperature, unit area and conductivity, contact resistance 0.5. Known load jumps at 0.18 and 0.43 s produce a rightward power of 1 W outside the pulse and -3 W inside it. Compare one unsplit reporting window and three aligned reporting windows over 1 s.",
+  "reference_totals_J": {
+    "rightward": 0.75,
+    "leftward": 0.75,
+    "net": 0.0
+  },
+  "tests": 157,
+  "errors": 0,
+  "failures": 0,
+  "skipped": 0,
+  "cases": {
+    "test_resistive_contact_directional_heat_across_hidden_pulse[theta]": {
+      "windows1_forward_error_J": 0.0,
+      "windows1_reverse_error_J": 0.0,
+      "windows1_net_error_J": 0.0,
+      "windows3_forward_error_J": 0.0,
+      "windows3_reverse_error_J": 0.0,
+      "windows3_net_error_J": 0.0
+    },
+    "test_resistive_contact_directional_heat_across_hidden_pulse[sdirk2]": {
+      "windows1_forward_error_J": 0.0,
+      "windows1_reverse_error_J": 0.0,
+      "windows1_net_error_J": 1.1102230246251565e-16,
+      "windows3_forward_error_J": 1.1102230246251565e-16,
+      "windows3_reverse_error_J": 0.0,
+      "windows3_net_error_J": 1.1102230246251565e-16
+    },
+    "test_resistive_contact_directional_heat_across_hidden_pulse[rannacher]": {
+      "windows1_forward_error_J": 0.0,
+      "windows1_reverse_error_J": 0.0,
+      "windows1_net_error_J": 0.0,
+      "windows3_forward_error_J": 0.0,
+      "windows3_reverse_error_J": 0.0,
+      "windows3_net_error_J": 0.0
+    },
+    "test_resistive_contact_directional_heat_across_hidden_pulse[sdirk2_start]": {
+      "windows1_forward_error_J": 0.0,
+      "windows1_reverse_error_J": 0.0,
+      "windows1_net_error_J": 1.1102230246251565e-16,
+      "windows3_forward_error_J": 1.1102230246251565e-16,
+      "windows3_reverse_error_J": 0.0,
+      "windows3_net_error_J": 1.1102230246251565e-16
+    },
+    "test_resistive_contact_directional_heat_across_hidden_pulse[positive_cn]": {
+      "windows1_forward_error_J": 0.0,
+      "windows1_reverse_error_J": 0.0,
+      "windows1_net_error_J": 5.551115123125783e-17,
+      "windows3_forward_error_J": 0.0,
+      "windows3_reverse_error_J": 0.0,
+      "windows3_net_error_J": 0.0
+    }
+  }
+}
