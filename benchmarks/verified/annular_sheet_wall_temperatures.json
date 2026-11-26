@@ -1,0 +1,202 @@
+{
+  "source_commit": "ba569edb56631cc1335845c7d1f9ec38813ce9ff",
+  "reference": "Independent modified Bessel I/K radial solution in each material with a prescribed complex sheet temperature and one-sided fluxes; each material uses 12, 24, then 48 cells. A floating steady annulus additionally checks the logarithmic drop and volume-weighted datum.",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/sheet-wall.xml",
+  "passed": 140,
+  "finest_max_wall_error_K": 7.383673192644171e-05,
+  "minimum_mixed_wall_error_reduction": 3.9936402845848367,
+  "runs": {
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[0.0-0.0-None-False-0.0-0.3-fixed-walls]": {
+      "exterior_inner_12_K": 0.0,
+      "exterior_outer_12_K": 0.0,
+      "exterior_inner_24_K": 0.0,
+      "exterior_outer_24_K": 0.0,
+      "exterior_inner_48_K": 0.0,
+      "exterior_outer_48_K": 0.0
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[0.0-0.0-None-False-0.0-0.3-inner-flux]": {
+      "exterior_inner_12_K": 0.0010743499718340911,
+      "exterior_outer_12_K": 5.0761258870461536e-05,
+      "exterior_inner_24_K": 0.00026861158424437947,
+      "exterior_outer_24_K": 1.2710206344341413e-05,
+      "exterior_inner_48_K": 6.715440089498718e-05,
+      "exterior_outer_48_K": 3.178795956404058e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[0.0-0.0-None-False-0.0-0.3-outer-flux]": {
+      "exterior_inner_12_K": 0.0007332663242134458,
+      "exterior_outer_12_K": 0.00014264581971950256,
+      "exterior_inner_24_K": 0.00018337110419531065,
+      "exterior_outer_24_K": 3.5696266670370246e-05,
+      "exterior_inner_48_K": 4.5846184294188045e-05,
+      "exterior_outer_48_K": 8.926244861199016e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-None-False-0.0-0.3-fixed-walls]": {
+      "exterior_inner_12_K": 0.0,
+      "exterior_outer_12_K": 0.0,
+      "exterior_inner_24_K": 0.0,
+      "exterior_outer_24_K": 0.0,
+      "exterior_inner_48_K": 0.0,
+      "exterior_outer_48_K": 0.0
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-None-False-0.0-0.3-inner-flux]": {
+      "exterior_inner_12_K": 0.0011771511312225053,
+      "exterior_outer_12_K": 8.077448866439939e-05,
+      "exterior_inner_24_K": 0.0002943177039658085,
+      "exterior_outer_24_K": 2.022514656756715e-05,
+      "exterior_inner_48_K": 7.358129571936693e-05,
+      "exterior_outer_48_K": 5.058259633802179e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-None-False-0.0-0.3-outer-flux]": {
+      "exterior_inner_12_K": 0.0008261844460619511,
+      "exterior_outer_12_K": 0.00013442115502416407,
+      "exterior_inner_24_K": 0.00020660982211154945,
+      "exterior_outer_24_K": 3.3655250505020775e-05,
+      "exterior_inner_48_K": 5.165643857683528e-05,
+      "exterior_outer_48_K": 8.416939997431434e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-1.2-False-0.0-0.3-fixed-walls]": {
+      "exterior_inner_12_K": 0.0,
+      "exterior_outer_12_K": 0.0,
+      "exterior_inner_24_K": 0.0,
+      "exterior_outer_24_K": 0.0,
+      "exterior_inner_48_K": 0.0,
+      "exterior_outer_48_K": 0.0
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-1.2-False-0.0-0.3-inner-flux]": {
+      "exterior_inner_12_K": 0.0011688448888996172,
+      "exterior_outer_12_K": 8.06070316278075e-05,
+      "exterior_inner_24_K": 0.00029224037316851907,
+      "exterior_outer_24_K": 2.0182689213195424e-05,
+      "exterior_inner_48_K": 7.306191492235214e-05,
+      "exterior_outer_48_K": 5.047608243635505e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-1.2-False-0.0-0.3-outer-flux]": {
+      "exterior_inner_12_K": 0.000822778346862718,
+      "exterior_outer_12_K": 0.0001334728395900702,
+      "exterior_inner_24_K": 0.00020575713477863724,
+      "exterior_outer_24_K": 3.3416990637863516e-05,
+      "exterior_inner_48_K": 5.144319406021677e-05,
+      "exterior_outer_48_K": 8.357301168646323e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-0.0-False-0.0-0.3-fixed-walls]": {
+      "exterior_inner_12_K": 0.0,
+      "exterior_outer_12_K": 0.0,
+      "exterior_inner_24_K": 0.0,
+      "exterior_outer_24_K": 0.0,
+      "exterior_inner_48_K": 0.0,
+      "exterior_outer_48_K": 0.0
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-0.0-False-0.0-0.3-inner-flux]": {
+      "exterior_inner_12_K": 0.0011812361151117905,
+      "exterior_outer_12_K": 8.083482581088696e-05,
+      "exterior_inner_24_K": 0.00029533934908857243,
+      "exterior_outer_24_K": 2.0240502241226665e-05,
+      "exterior_inner_48_K": 7.383673192644171e-05,
+      "exterior_outer_48_K": 5.0621155046676395e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-0.0-False-0.0-0.3-outer-flux]": {
+      "exterior_inner_12_K": 0.0008278981915364791,
+      "exterior_outer_12_K": 0.0001348516053865038,
+      "exterior_inner_24_K": 0.00020703885512152564,
+      "exterior_outer_24_K": 3.376344255326411e-05,
+      "exterior_inner_48_K": 5.17637341331222e-05,
+      "exterior_outer_48_K": 8.444024248569038e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-1.2-True-0.0-0.3-fixed-walls]": {
+      "exterior_inner_12_K": 0.0,
+      "exterior_outer_12_K": 0.0,
+      "exterior_inner_24_K": 0.0,
+      "exterior_outer_24_K": 0.0,
+      "exterior_inner_48_K": 0.0,
+      "exterior_outer_48_K": 0.0
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-1.2-True-0.0-0.3-inner-flux]": {
+      "exterior_inner_12_K": 0.0007125697472347139,
+      "exterior_outer_12_K": 0.00010959474707291141,
+      "exterior_inner_24_K": 0.0001781655933519372,
+      "exterior_outer_24_K": 2.744231810159248e-05,
+      "exterior_inner_48_K": 4.4542845428339364e-05,
+      "exterior_outer_48_K": 6.863310653974392e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[-1.25-0.35-1.2-True-0.0-0.3-outer-flux]": {
+      "exterior_inner_12_K": 0.0004872769620948713,
+      "exterior_outer_12_K": 0.00016931803031107777,
+      "exterior_inner_24_K": 0.00012185461729281863,
+      "exterior_outer_24_K": 4.2395181183622626e-05,
+      "exterior_inner_48_K": 3.046586588966798e-05,
+      "exterior_outer_48_K": 1.0602906411128582e-05
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[reservoir-driven-fixed-walls]": {
+      "exterior_inner_12_K": 0.0,
+      "exterior_outer_12_K": 0.0,
+      "exterior_inner_24_K": 0.0,
+      "exterior_outer_24_K": 0.0,
+      "exterior_inner_48_K": 0.0,
+      "exterior_outer_48_K": 0.0
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[reservoir-driven-inner-flux]": {
+      "exterior_inner_12_K": 0.0007013254700878441,
+      "exterior_outer_12_K": 0.00010928521168423158,
+      "exterior_inner_24_K": 0.00017535210623282542,
+      "exterior_outer_24_K": 2.7364135670605895e-05,
+      "exterior_inner_48_K": 4.383932254693606e-05,
+      "exterior_outer_48_K": 6.843715142675928e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[reservoir-driven-outer-flux]": {
+      "exterior_inner_12_K": 0.00048177291154825067,
+      "exterior_outer_12_K": 0.00016802424495767206,
+      "exterior_inner_24_K": 0.00012047623600993943,
+      "exterior_outer_24_K": 4.207052806750619e-05,
+      "exterior_inner_48_K": 3.0121122470884828e-05,
+      "exterior_outer_48_K": 1.0521667654228957e-05
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[bonded-inner-fixed-walls]": {
+      "exterior_inner_12_K": 0.0,
+      "exterior_outer_12_K": 0.0,
+      "exterior_inner_24_K": 0.0,
+      "exterior_outer_24_K": 0.0,
+      "exterior_inner_48_K": 0.0,
+      "exterior_outer_48_K": 0.0
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[bonded-inner-inner-flux]": {
+      "exterior_inner_12_K": 0.0006319711382209242,
+      "exterior_outer_12_K": 0.00011351295519108368,
+      "exterior_inner_24_K": 0.000158012213540745,
+      "exterior_outer_24_K": 2.8422616790014354e-05,
+      "exterior_inner_48_K": 3.9504267616642036e-05,
+      "exterior_outer_48_K": 7.1084320903163386e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[bonded-inner-outer-flux]": {
+      "exterior_inner_12_K": 0.0004438383697262633,
+      "exterior_outer_12_K": 0.00017449280765503145,
+      "exterior_inner_24_K": 0.00011099038018790588,
+      "exterior_outer_24_K": 4.369057854314153e-05,
+      "exterior_inner_48_K": 2.7749519770104667e-05,
+      "exterior_outer_48_K": 1.0926862294882179e-05
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[bonded-outer-fixed-walls]": {
+      "exterior_inner_12_K": 0.0,
+      "exterior_outer_12_K": 0.0,
+      "exterior_inner_24_K": 0.0,
+      "exterior_outer_24_K": 0.0,
+      "exterior_inner_48_K": 0.0,
+      "exterior_outer_48_K": 0.0
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[bonded-outer-inner-flux]": {
+      "exterior_inner_12_K": 0.000865746507119983,
+      "exterior_outer_12_K": 9.659164612376919e-05,
+      "exterior_inner_24_K": 0.0002164642103662925,
+      "exterior_outer_24_K": 2.4185633616014155e-05,
+      "exterior_inner_48_K": 5.411777643507611e-05,
+      "exterior_outer_48_K": 6.0487699999676425e-06
+    },
+    "test_harmonic_two_material_sheet_traces_against_bessel_modes[bonded-outer-outer-flux]": {
+      "exterior_inner_12_K": 0.0005762785885337412,
+      "exterior_outer_12_K": 0.0001482602664964775,
+      "exterior_inner_24_K": 0.00014411095729047308,
+      "exterior_outer_24_K": 3.7119476954955736e-05,
+      "exterior_inner_48_K": 3.6030321873654634e-05,
+      "exterior_outer_48_K": 9.28327586113386e-06
+    }
+  }
+}
