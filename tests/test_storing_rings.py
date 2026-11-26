@@ -157,13 +157,16 @@ def test_double_flux_requires_a_temperature_anchor_in_static_zero_mode():
 def test_floating_double_flux_preserves_heat_rates_under_large_datum_shift():
     r = [.4, .55, .9, 1.1]
     options = dict(contact_resistances=(.5, .9), sheet_capacities=(.25, .8), return_wall_rates=True,
-                   return_wall_temperatures=True, return_contact_temperatures=True)
+                   return_wall_temperatures=True, return_contact_temperatures=True, return_layer_face_rates=True)
     args = (r, 2., [1,2], (None,None), 0.)
     q = (1.+.2j, -(.4/1.1)*(1.+.2j))
     base = solve_storing_rings(*args, **options, wall_fluxes=q, bore_temperature_reference=0.)
     shifted = solve_storing_rings(*args, **options, wall_fluxes=q, bore_temperature_reference=1e9)
     for i in (1,2,3):
         np.testing.assert_array_equal(shifted[i], base[i])
+    for layer, shifted_layer in zip(base[-1], shifted[-1]):
+        np.testing.assert_allclose(layer, 2*np.pi*r[0]*q[0], atol=1e-13, rtol=0.)
+        np.testing.assert_array_equal(shifted_layer, layer)
     for i in (0,4,5):
         np.testing.assert_array_equal(shifted[i], base[i]+1e9)
     with pytest.raises(ValueError, match="incompatible"):
