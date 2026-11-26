@@ -1,0 +1,22 @@
+{
+  "source_commit": "174a737233bd70918fb0ad87d8bdb7478bf2603d",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_annular_conduction.py -o junit_family=legacy --junitxml=/tmp/annulus_contact_window.xml",
+  "tests": 96,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Integrate the continuous radial Bessel eigenmode over the same [0.15,0.45] s output window on every mesh. Compare the signed jump of the two returned mean contact temperatures. Also locate the internal time interval with the largest mean jump error over [0,0.6] s. Space and internal time step refined together.",
+  "measurements": {
+    "n8_peak_start_s": 0.0375,
+    "n8_peak_end_s": 0.046875,
+    "n8_mean_jump_K": 0.00012550742325148634,
+    "n8_window_jump_error_K": 3.5903260259928516e-05,
+    "n16_peak_start_s": 0.0,
+    "n16_peak_end_s": 0.0046875,
+    "n16_mean_jump_K": 4.002872604383367e-05,
+    "n16_window_jump_error_K": 9.006232426833627e-06,
+    "n32_peak_start_s": 0.0,
+    "n32_peak_end_s": 0.00234375,
+    "n32_mean_jump_K": 1.3869953654321865e-05,
+    "n32_window_jump_error_K": 2.253469464807978e-06
+  }
+}
