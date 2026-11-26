@@ -1,0 +1,35 @@
+{
+  "source_commit": "4583f7237ed0fb8a317ca16eb0d3292ebe727004",
+  "baseline_commit": "13ba708ce8002d5ebe660f522c5e35288fae3d2b",
+  "reference": "70-digit decimal shoelace areas and first moments of each quadrilateral using the actual binary64 mesh vertices. Inner radius 0.75 m, four radial layers and 32 sectors. Test both gap widths including the angular seam.",
+  "command": "PYTHONPATH=src OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/thin-cell-after.xml",
+  "baseline_procedure": "Use the source commit test file against baseline src, selecting -k thin_annulus_cell_geometry.",
+  "before": {
+    "tests": 2,
+    "failures": 2,
+    "measurements": {
+      "test_thin_annulus_cell_geometry[1.52587890625e-05]": {
+        "max_relative_cell_area_error": 8.786660288251369e-11,
+        "max_centroid_displacement_m": 2.667388041617858e-11
+      },
+      "test_thin_annulus_cell_geometry[3.725290298461914e-09]": {
+        "max_relative_cell_area_error": 3.637378858112328e-07,
+        "max_centroid_displacement_m": 1.1956241708691527e-07
+      }
+    }
+  },
+  "after": {
+    "tests": 191,
+    "failures": 0,
+    "measurements": {
+      "test_thin_annulus_cell_geometry[1.52587890625e-05]": {
+        "max_relative_cell_area_error": 2.220446049250313e-16,
+        "max_centroid_displacement_m": 1.1102230246251565e-16
+      },
+      "test_thin_annulus_cell_geometry[3.725290298461914e-09]": {
+        "max_relative_cell_area_error": 2.220446049250313e-16,
+        "max_centroid_displacement_m": 1.1443916996305594e-16
+      }
+    }
+  }
+}
