@@ -1,0 +1,25 @@
+{
+  "source_commit": "cbaebecc5e1fa9b0c8d1876a9375aa97bc93297a",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_transient_conduction.py -o junit_family=legacy --junitxml=/tmp/fvm_equal_effusivity.xml",
+  "reference": "Two perfectly bonded layers of width 0.5, conductivities 2 and 2/3, volumetric capacities 1/2 and 3/2. Both walls ramp from 0 to 1 K over 0.04 s then hold until 0.09 s. In resistance coordinates the slab has unit diffusivity and the interface is at 1/4. Integrate the analytic rightward flux of the odd sine series over each phase.",
+  "tests": 78,
+  "errors": 0,
+  "failures": 0,
+  "skipped": 0,
+  "measurements": {
+    "ramp_interface_reference_J_m2": 0.022737175431071423,
+    "hold_interface_reference_J_m2": 0.0828147986097586,
+    "n12_steps32_left_layer_balance_J_m2": 7.91033905045424e-16,
+    "n12_steps32_ramp_interface_error_J_m2": 0.001406126914360057,
+    "n12_steps32_hold_interface_error_J_m2": 0.0010584113330810302,
+    "n24_steps64_left_layer_balance_J_m2": 1.8943180357666733e-15,
+    "n24_steps64_ramp_interface_error_J_m2": 0.00037139449959727386,
+    "n24_steps64_hold_interface_error_J_m2": 0.00024820470363906555,
+    "n48_steps128_left_layer_balance_J_m2": 4.3923198411732756e-15,
+    "n48_steps128_ramp_interface_error_J_m2": 9.410621119934279e-05,
+    "n48_steps128_hold_interface_error_J_m2": 6.100072931983225e-05,
+    "n48_steps256_left_layer_balance_J_m2": 7.500944310123714e-15,
+    "n48_steps256_ramp_interface_error_J_m2": 9.403585187676977e-05,
+    "n48_steps256_hold_interface_error_J_m2": 6.103316479966203e-05
+  }
+}
