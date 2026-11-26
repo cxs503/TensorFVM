@@ -1,0 +1,41 @@
+{
+  "source_commit": "d6fe2fccc9d3ba9f4eaa5a18e6ecb2b5fc04c94e",
+  "baseline_commit": "27f6006b7bd2e51627e8dd30ebb4a572cd292bc6",
+  "reference": "Uniformly generating shell with radii 1 and 2 m, k=1 W/(m K), generation 1 W/m^3. Integrate Q(r)=Q(1)+pi*(r^2-1) radially and impose fixed and film wall laws. Compare both wall orientations at h=1e-18 W/(m^2 K) on one and twelve cells; check the energy balance of every cell.",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/annular-leak-after.xml",
+  "baseline_procedure": "Run the source commit test against baseline src with -k weak_film_leak.",
+  "before": {
+    "tests": 2,
+    "failures": 1,
+    "measurements": {
+      "test_weak_film_leak_with_fixed_opposite_wall[0]": {
+        "relative_film_rate_error_1_cells": 0.0,
+        "computed_film_rate_1_cells_W_per_m": -2.534802890081088e-18,
+        "relative_film_rate_error_12_cells": 2.220446049250313e-16,
+        "computed_film_rate_12_cells_W_per_m": -2.5348028900810885e-18
+      },
+      "test_weak_film_leak_with_fixed_opposite_wall[1]": {
+        "relative_film_rate_error_1_cells": 1.0,
+        "computed_film_rate_1_cells_W_per_m": 0.0
+      }
+    }
+  },
+  "after": {
+    "tests": 154,
+    "failures": 0,
+    "measurements": {
+      "test_weak_film_leak_with_fixed_opposite_wall[0]": {
+        "relative_film_rate_error_1_cells": 0.0,
+        "computed_film_rate_1_cells_W_per_m": -2.534802890081088e-18,
+        "relative_film_rate_error_12_cells": 2.220446049250313e-16,
+        "computed_film_rate_12_cells_W_per_m": -2.5348028900810874e-18
+      },
+      "test_weak_film_leak_with_fixed_opposite_wall[1]": {
+        "relative_film_rate_error_1_cells": 0.0,
+        "computed_film_rate_1_cells_W_per_m": 7.995910761659438e-18,
+        "relative_film_rate_error_12_cells": 0.0,
+        "computed_film_rate_12_cells_W_per_m": 7.995910761659438e-18
+      }
+    }
+  }
+}
