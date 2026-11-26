@@ -481,9 +481,10 @@ def test_harmonic_flux_and_film_annulus_against_bessel_solution(mode, flux_side,
     for n in (16, 32, 64):
         r = np.geomspace(*ends, n + 1)
         centers = (2/3)*np.diff(r**3)/np.diff(r**2)
-        field, rates = solve_annular_conduction(
+        field, rates, surface = solve_annular_conduction(
             r, k, capacity, walls, omega, wall_fluxes=fluxes, azimuthal_mode=mode,
-            film_coefficients=films, cell_location="volume_centroid", distributed_source=True)
+            film_coefficients=films, cell_location="volume_centroid", distributed_source=True,
+            return_wall_temperatures=True)
         field_error = np.max(np.abs(field-temperature(centers)))
         rate_error = np.max(np.abs(rates-2*np.pi*r*radial_flux(r)))
         sink = 1j*omega*capacity*np.pi*np.diff(r**2) + 2*np.pi*k*mode**2*np.diff(np.log(r))
@@ -492,7 +493,10 @@ def test_harmonic_flux_and_film_annulus_against_bessel_solution(mode, flux_side,
         record_property(f"max_radial_rate_error_{n}_W_per_m", float(rate_error))
         record_property(f"max_shell_balance_error_{n}_W_per_m", float(residual))
         assert residual < 1e-11
-        errors.append((field_error, rate_error))
+        wall_error = np.abs(surface-temperature(ends))
+        for label, error in zip(("inner", "outer"), wall_error):
+            record_property(f"{label}_surface_error_{n}_K", float(error))
+        errors.append((field_error, rate_error, *wall_error))
     for coarse, fine in zip(errors, errors[1:]):
         assert all(a/b > 3.7 for a, b in zip(coarse, fine))
 
@@ -1086,3 +1090,16 @@ def test_annular_contact_temperatures_across_multiple_layers(location, omega, ge
     error = float(np.max(abs(traces-exact)))
     record_property("max_surface_temperature_error_K", error)
     assert error < 5e-14
+
+
+def test_generated_annular_insulated_surface_and_fixed_wall():
+    # T = r² - 2 log(r) has zero slope at the inner wall r=1.
+    r = np.array([1., 1.2, 1.5, 1.8])
+    def reference(x):
+        return x**2 - 2*np.log(x)
+    _, _, surface, contact = solve_annular_conduction(
+        r, 3., 1., [42., reference(r[-1])], 0., source=-12.,
+        film_coefficients=(0., None), distributed_source=True,
+        return_wall_temperatures=True, return_contact_temperatures=True)
+    np.testing.assert_allclose(surface, reference(r[[0, -1]]), atol=1e-14, rtol=0)
+    np.testing.assert_allclose(contact, np.tile(reference(r[1:-1]), (2, 1)), atol=1e-14, rtol=0)

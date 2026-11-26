@@ -62,7 +62,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
                              circumferential_conductivity=None, axial_conductivity=None,
                              axial_wavenumber=0., film_coefficients=(None, None), cell_location="midpoint",
                              wall_fluxes=(None, None), distributed_source=False, mean_temperature=None,
-                             return_contact_temperatures=False):
+                             return_contact_temperatures=False, return_wall_temperatures=False):
     """Return cell phasors and radial face heat rates per unit axial length.
 
     conductivity is radial. Optional positive circumferential_conductivity and
@@ -88,6 +88,8 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     when relating cell temperatures to face power. For an unanchored axisymmetric
     problem with zero axial wavenumber and either zero frequency or all capacities zero, supply the volume-weighted mean
     cell temperature. Wall inputs and integrated generation must sum to zero.
+    With return_wall_temperatures=True, append the material surface temperatures
+    (inner wall, outer wall) in K before any contact-temperature output.
     With return_contact_temperatures=True, append an array of shape (2, n-1)
     in K. Rows give the inner- and outer-material surface temperatures at
     each internal face in order of increasing radius.
@@ -157,16 +159,25 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         factor_r = -_half_shell_source_drop(-dr, r[1:], k)
 
     def result(field, rates):
-        if not return_contact_temperatures:
-            return field, rates
-        face_rates = rates[1:-1]
-        inner = field[:-1] - face_rates*right[:-1]
-        outer = field[1:] + face_rates*left[1:]
+        values = (field, rates)
+        if not (return_contact_temperatures or return_wall_temperatures):
+            return values
+        # Recover each cell's two surface values using its own material law.
+        at_left = field + rates[:-1]*left
+        at_right = field - rates[1:]*right
         if distributed_source:
             net = density - (sink/volume)*field
-            inner -= factor_r[:-1]*net[:-1]
-            outer += factor_l[1:]*net[1:]
-        return field, rates, np.stack((inner, outer))
+            at_left += factor_l*net
+            at_right -= factor_r*net
+        if return_wall_temperatures:
+            surfaces = np.array([at_left[0], at_right[-1]])
+            for side in (0, 1):
+                if wall_fluxes[side] is None and film_coefficients[side] is None:
+                    surfaces[side] = walls[side]
+            values += (surfaces,)
+        if return_contact_temperatures:
+            values += (np.stack((at_right[:-1], at_left[1:])),)
+        return values
 
     if not sink.any() and anchored.all():
         # Balance fixes differences between face rates. The total drop
