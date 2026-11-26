@@ -1,0 +1,32 @@
+{
+  "source_commit": "9fc021c6c19460889bc08f09a17d62f89198f6b9",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_annular_conduction.py -o junit_family=legacy --junitxml=/tmp/annular_cooldown.xml",
+  "tests": 95,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Time integration on a fixed two-cell radial grid with one storing contact sheet. Independently assemble three capacities and their conductances, initialize from the discrete steady heated solution, and use the matrix exponential of the source-free system at 0.6 s. Compare final temperatures, cumulative reservoir heat, and per-step local storage balances.",
+  "measurements": {
+    "test_insulated_annular_sheet_cooldown_after_steady_heating[theta]": {
+      "steps12_temperature_error_K": 0.0001712804360983755,
+      "steps12_reservoir_heat_error_J_per_m": 0.0005100346256301513,
+      "steps12_local_balance_J_per_m": 5.551115123125783e-16,
+      "steps24_temperature_error_K": 4.281649852577729e-05,
+      "steps24_reservoir_heat_error_J_per_m": 0.00012748629018810576,
+      "steps24_local_balance_J_per_m": 5.551115123125783e-16,
+      "steps48_temperature_error_K": 1.0703858955296575e-05,
+      "steps48_reservoir_heat_error_J_per_m": 3.187015497063683e-05,
+      "steps48_local_balance_J_per_m": 5.48172618408671e-16
+    },
+    "test_insulated_annular_sheet_cooldown_after_steady_heating[sdirk2]": {
+      "steps12_temperature_error_K": 8.496503052601856e-05,
+      "steps12_reservoir_heat_error_J_per_m": 0.0002495020499209133,
+      "steps12_local_balance_J_per_m": 6.106226635438361e-16,
+      "steps24_temperature_error_K": 2.1005465656975808e-05,
+      "steps24_reservoir_heat_error_J_per_m": 6.21149595105841e-05,
+      "steps24_local_balance_J_per_m": 5.134781488891349e-16,
+      "steps48_temperature_error_K": 5.222623742251464e-06,
+      "steps48_reservoir_heat_error_J_per_m": 1.549698955161105e-05,
+      "steps48_local_balance_J_per_m": 5.342948306008566e-16
+    }
+  }
+}
