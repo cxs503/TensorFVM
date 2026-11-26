@@ -315,3 +315,42 @@ def test_uniform_rate_for_plate_without_wall_capacity_and_for_anchored_plate():
     ref = solve_low_frequency_conduction(**opts,bc=bc)
     np.testing.assert_array_equal(dc[0],ref[0][0])
     np.testing.assert_array_equal(lag[0],ref[1][0])
+
+
+@pytest.mark.parametrize("omega", [1e-16, 1e-8, 1., 32.])
+@pytest.mark.parametrize("source,heater", [(0.,1.+.5j),(.25-.5j,0.),(.25j,.5j)])
+def test_floating_harmonic_plate_resolves_relative_temperature(omega,source,heater,record_property):
+    # Exact at every frequency: s*(T+2Tw)=S+P, (s+3)*(Tw-T)=P/2-S.
+    s = 1j*omega
+    spec = dict(type="robin",film_coefficient=0.,wall_areal_heat_capacity=2.,wall_heater_flux=heater)
+    rate,t,power,response = solve_harmonic_conduction([1.],[.5],1.,1.,{"west":spec},omega,
+        source=source,return_uniform_rate=True,return_storing_wall_response=True)
+    diff = (heater/2-source)/(3+s)
+    wall = response["west"]
+    errors = dict(rate_K_s=abs(rate-(source+heater)/3),cell_K=abs(t.item()+2*diff/3),
+                  surface_K=abs(wall["temperature"].item()-diff/3),material_W=abs(power["west"].item()-diff),
+                  storage_W=abs(wall["storage"].item()-(rate+s*diff/3)),
+                  total_excess_energy_J=abs(.5*t.item()+wall["temperature"].item()))
+    for name,error in errors.items():
+        record_property(name,float(error))
+        assert error < 1e-14
+
+
+def test_uniform_rate_multicell_periodic_plate_with_flux_load():
+    # Uniform source plus a boundary flux: the relative field must satisfy
+    # every local balance and have zero capacity-weighted mean.
+    area = np.outer([.25,.75],[.5,.5])
+    mass = area*np.array([1.,2.])
+    flux = np.array([1.,-.25])
+    bc = {"east":dict(type="neumann",values=flux)}
+    opts = dict(dx=[.5,.5],dy=[.25,.75],conductivity=2.,volumetric_heat_capacity=[1.,2.],
+                source=.75,periodic_y=True,return_uniform_rate=True,return_interior_power=True)
+    rate,t,power,cuts = solve_harmonic_conduction(**opts,bc=bc,angular_frequency=1e-15)
+    np.testing.assert_allclose(rate,(.75+np.dot([.25,.75],flux))/mass.sum())
+    np.testing.assert_allclose((mass*t).sum(),0.,atol=1e-15)
+    net = np.column_stack((-cuts["x"][:,0],cuts["x"][:,0]+power["east"]))
+    net[0] += power["south"]-cuts["y"][0]
+    net[1] += cuts["y"][0]+power["north"]
+    np.testing.assert_allclose(mass*(rate+1e-15j*t),.75*area+net,atol=1e-14)
+    rate,*_ = solve_harmonic_conduction(**opts,bc={"west":dict(type="dirichlet",values=1.)},angular_frequency=1.)
+    assert rate==0.

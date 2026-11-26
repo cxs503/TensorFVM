@@ -611,11 +611,51 @@ def _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links,he
     return temperature, powers
 
 
+def _floating_harmonic_state(matrix,faces,mass,bc,omega,dx,dy,kx,ky):
+    # The net source fixes the capacity-weighted mean exactly. Build the
+    # remaining load from physical powers before eliminating the wall stores.
+    _,_,sides,types,values,cell_source = faces
+    cell_power = cell_source.ravel().copy()
+    total_capacity = mass.sum()
+    walls = {}
+    for side,cells,_,_,_,area in sides:
+        prescribed = types[side]=="neumann"
+        cell_power[cells[prescribed]] += values[side][prescribed]*area[prescribed]
+        spec = bc.get(side) or {}
+        cw = np.broadcast_to(spec.get("wall_areal_heat_capacity",0.),area.shape)
+        active = cw>0
+        if active.any():
+            capacity = area[active]*cw[active]
+            total_capacity += capacity.sum()
+            applied = area[active]*np.asarray(spec.get("wall_heater_flux",0.),dtype=complex)
+            resistance = _wall_half_resistance(side,dx,dy,kx,ky,cell_source.shape,cells[active])/area[active]
+            walls[side] = active,cells[active],capacity,applied,resistance
+    rate = (cell_power.sum()+sum(applied.sum() for _,_,_,applied,_ in walls.values()))/total_capacity
+    rhs = cell_power-rate*mass
+    energy_weight = mass.astype(complex)
+    energy_offset = 0j
+    delivered = {}
+    for side,(active,cells,capacity,applied,resistance) in walls.items():
+        transmission = 1/(1+1j*omega*capacity*resistance)
+        power = (applied-rate*capacity)*transmission
+        rhs[cells] += power
+        delivered[side] = np.zeros(active.shape,dtype=complex)
+        delivered[side][active] = power
+        energy_weight[cells] += capacity*transmission
+        energy_offset += np.sum(capacity*resistance*power)
+    # The last row sets total excess energy (including surfaces) to zero.
+    # This independent constraint remains well-conditioned as omega tends to zero.
+    pin = sp.csc_matrix(([1.],([0],[0])),shape=(mass.size,1))
+    system = sp.bmat([[matrix,pin],[sp.csc_matrix(energy_weight[None,:]/total_capacity),None]],format="csc")
+    solution = spla.spsolve(system,np.r_[rhs,-energy_offset/total_capacity])
+    return solution[:-1],rate,delivered
+
+
 def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                               angular_frequency, *, source=0., conductivity_y=None,
                               contact_resistance_x=0., contact_resistance_y=0.,
                               return_interior_power=False, periodic_y=False, heat_loss_coefficient=0.,
-                              dirichlet_flux_order=1, return_storing_wall_response=False):
+                              dirichlet_flux_order=1, return_storing_wall_response=False, return_uniform_rate=False):
     """Return cell temperature and inward power per wall face for unit depth.
 
     Use Re(phasor * exp(iωt)), with positive angular frequency in rad/s.
@@ -631,6 +671,11 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     Each entry contains complex arrays in storing-face order: temperature (K)
     and powers (W) named heater, ambient (film into wall), material (wall into
     cells), and storage (rate of increase of wall energy).
+    With return_uniform_rate=True prepend the common heating rate (K/s).
+    For a lossless body without temperature anchoring the cell and surface
+    temperatures are deviations from rate/(i*omega), with zero total excess
+    stored energy. All returned powers retain their physical values. An
+    anchored body returns zero rate and its ordinary temperature phasors.
     With return_interior_power=True also return a third item, a dictionary
     of interior face powers (W). Its x and y arrays have shapes (ny,nx-1)
     and (ny-1,nx), positive toward increasing coordinates. periodic_y joins
@@ -643,12 +688,28 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
         raise ValueError("angular_frequency must be finite and positive")
     A,b,faces,mass,seam,fixed_wall_links,heater_power,_ = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,
         angular_frequency,source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order)
-    state = spla.spsolve(sp.diags(1j*angular_frequency*mass, format="csc") - A, -b)
+    matrix = sp.diags(1j*angular_frequency*mass,format="csc")-A
+    rate = 0j
+    # A capacitive wall has nonzero dynamic admittance even without a film.
+    floating = return_uniform_rate and not np.any(heat_loss_coefficient)
+    if floating:
+        for side,kinds in faces[3].items():
+            robin = kinds=="robin"
+            if np.any(kinds=="dirichlet") or (robin.any() and
+                    np.any(np.broadcast_to(bc[side]["film_coefficient"],kinds.shape)[robin]>0)):
+                floating = False
+                break
+    if floating:
+        state,rate,heater_power = _floating_harmonic_state(matrix,faces,mass,bc,angular_frequency,
+                                                           dx,dy,conductivity,conductivity_y)
+    else:
+        state = spla.spsolve(matrix,-b)
     result = _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links,heater_power)
-    if not return_storing_wall_response:
-        return result
-    response = _storing_wall_response(result,faces[2],bc,dx,dy,conductivity,conductivity_y,angular_frequency)
-    return (*result,response)
+    if return_storing_wall_response:
+        response = _storing_wall_response(result,faces[2],bc,dx,dy,conductivity,conductivity_y,
+                                          angular_frequency,uniform_rate=rate)
+        result += (response,)
+    return (rate,*result) if return_uniform_rate else result
 
 
 def _storing_wall_response(result,sides,bc,dx,dy,conductivity,conductivity_y,angular_frequency,steady_wall=None,uniform_rate=0.):
