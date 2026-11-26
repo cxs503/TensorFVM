@@ -1,0 +1,19 @@
+{
+  "source_commit": "b639bf664be3116690cda08a04edb672e33704b6",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_transient_conduction.py tests/test_harmonic_conduction.py tests/test_robin_conduction.py tests/test_steady_directional_conduction.py -o junit_family=legacy --junitxml=/tmp/fvm-interior-after.xml",
+  "passed": 145,
+  "reference": "Integrated heat exchange between two insulated unit-capacity cells: 0.5*dT*(1-exp(-2*g*duration)). Initial contrast is one float64 spacing at 1024 K, g=2^-60 W/K, duration=1.5 s. Small conductance isolates the face heat diagnostic from temporal truncation.",
+  "baseline_commit": "1fbf7ba815eae22ffda4c914182fb483c1f1b50b",
+  "before_relative_error": {
+    "test_interval_interior_heat_preserves_small_contrast[False-x]": 0.33333333333333326,
+    "test_interval_interior_heat_preserves_small_contrast[False-y]": 0.33333333333333326,
+    "test_interval_interior_heat_preserves_small_contrast[True-x]": 0.33333333333333326,
+    "test_interval_interior_heat_preserves_small_contrast[True-y]": 0.33333333333333326
+  },
+  "after_relative_error": {
+    "test_interval_interior_heat_preserves_small_contrast[False-x]": 0.0,
+    "test_interval_interior_heat_preserves_small_contrast[False-y]": 0.0,
+    "test_interval_interior_heat_preserves_small_contrast[True-x]": 0.0,
+    "test_interval_interior_heat_preserves_small_contrast[True-y]": 0.0
+  }
+}
