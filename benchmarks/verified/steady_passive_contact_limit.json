@@ -1,0 +1,79 @@
+{
+  "source_commit": "7dfbc3eaa516997c37cb20c3837e192683f3d702",
+  "baseline_commit": "5d03ec16e32ccfca53b7d5f66f3a287f0fa1a767",
+  "reference": "Unit conductivity, unit temperature difference, radii 1 to 2 m, sheet at 1.5 m with areal resistance 1e18 m^2 K/W. Analytic outward rate is 2*pi*(Tinner-Touter)/(ln(2)+1e18/1.5). Integrate the log profile from each wall to the material surfaces, then interpolate by the inner contact resistance fraction to obtain the sheet temperature.",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/passive-limit-after.xml",
+  "baseline_procedure": "Run the source commit test file against baseline src with -k steady_passive_sheet_insulating_limit.",
+  "before": {
+    "tests": 6,
+    "failures": 4,
+    "measurements": {
+      "test_steady_passive_sheet_insulating_limit[0.0-0]": {
+        "max_relative_face_rate_error": 0.0,
+        "max_relative_material_trace_error": 0.0,
+        "relative_sheet_error": 0.0
+      },
+      "test_steady_passive_sheet_insulating_limit[0.0-1]": {
+        "max_relative_face_rate_error": 1.0,
+        "max_relative_material_trace_error": 1.0,
+        "relative_sheet_error": 0.0
+      },
+      "test_steady_passive_sheet_insulating_limit[0.25-0]": {
+        "max_relative_face_rate_error": 2.220446049250313e-16,
+        "max_relative_material_trace_error": 1.0,
+        "relative_sheet_error": 0.0
+      },
+      "test_steady_passive_sheet_insulating_limit[0.25-1]": {
+        "max_relative_face_rate_error": 2.220446049250313e-16,
+        "max_relative_material_trace_error": 258.28008588630286,
+        "relative_sheet_error": 0.0
+      },
+      "test_steady_passive_sheet_insulating_limit[1.0-0]": {
+        "max_relative_face_rate_error": 1.0,
+        "max_relative_material_trace_error": 1.0,
+        "relative_sheet_error": 0.0
+      },
+      "test_steady_passive_sheet_insulating_limit[1.0-1]": {
+        "max_relative_face_rate_error": 0.0,
+        "max_relative_material_trace_error": 4.440892098500626e-16,
+        "relative_sheet_error": 4.440892098500626e-16
+      }
+    }
+  },
+  "after": {
+    "tests": 166,
+    "failures": 0,
+    "measurements": {
+      "test_steady_passive_sheet_insulating_limit[0.0-0]": {
+        "max_relative_face_rate_error": 0.0,
+        "max_relative_material_trace_error": 1.1102230246251565e-16,
+        "relative_sheet_error": 1.1102230246251565e-16
+      },
+      "test_steady_passive_sheet_insulating_limit[0.0-1]": {
+        "max_relative_face_rate_error": 0.0,
+        "max_relative_material_trace_error": 4.440892098500626e-16,
+        "relative_sheet_error": 0.0
+      },
+      "test_steady_passive_sheet_insulating_limit[0.25-0]": {
+        "max_relative_face_rate_error": 0.0,
+        "max_relative_material_trace_error": 1.1102230246251565e-16,
+        "relative_sheet_error": 0.0
+      },
+      "test_steady_passive_sheet_insulating_limit[0.25-1]": {
+        "max_relative_face_rate_error": 0.0,
+        "max_relative_material_trace_error": 4.440892098500626e-16,
+        "relative_sheet_error": 0.0
+      },
+      "test_steady_passive_sheet_insulating_limit[1.0-0]": {
+        "max_relative_face_rate_error": 0.0,
+        "max_relative_material_trace_error": 1.1102230246251565e-16,
+        "relative_sheet_error": 0.0
+      },
+      "test_steady_passive_sheet_insulating_limit[1.0-1]": {
+        "max_relative_face_rate_error": 0.0,
+        "max_relative_material_trace_error": 4.440892098500626e-16,
+        "relative_sheet_error": 4.440892098500626e-16
+      }
+    }
+  }
+}
