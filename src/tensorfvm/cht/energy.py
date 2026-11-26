@@ -1090,8 +1090,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         A, seam = _join_periodic_y(A, faces[1], bc)
     _, _, side_specs, types, values, _ = faces
     A = _bulk_loss_operator(A,heat_loss_coefficient,volume)
+    bulk_conductance = volume*np.asarray(heat_loss_coefficient)
     if bulk_ambient_temperature is not None:
-        bulk_conductance = volume*np.asarray(heat_loss_coefficient)
         def relative_ambient(value):
             if np.iscomplexobj(value):
                 raise ValueError("bulk ambient temperature must be real")
@@ -1101,8 +1101,13 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             return field-datum
         if callable(bulk_ambient_temperature):
             ambient_samples = np.stack([relative_ambient(bulk_ambient_temperature(float(t))) for t in sample_times])
+            bulk_start = ambient_samples[:len(time)-1]
+            bulk_end = ambient_samples[end_samples]
         else:
             ambient_stage = relative_ambient(bulk_ambient_temperature)
+            bulk_start = bulk_end = ambient_stage
+    else:
+        bulk_start = bulk_end = 0.
     A, fixed_wall_links = _fixed_wall_operator(A,b,faces,dx,dy,k,conductivity_y,dirichlet_flux_order)
     varying_loads = []
     for side, cells, conductance, _, _, area in side_specs:
@@ -1191,7 +1196,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         heater_stages[side] = (ids,power)
     if callable(bulk_ambient_temperature):
         w = stage_weights[:,None,None]
-        ambient_stage = (1-w)*ambient_samples[:len(time)-1]+w*ambient_samples[end_samples]
+        ambient_stage = (1-w)*bulk_start+w*bulk_end
     M = sp.diags(mass, format="csc")
     states = np.empty((len(time), len(mass)))
     states[0] = state
@@ -1278,16 +1283,11 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             interior[axis] = integrate_endpoints(power[:-1], power[1:])
         result.append({"wall":walls, "interior":interior})
     if return_cell_heat:
-        weights = stage_weights[:,None]
-        stage = (1-weights)*states[:-1]+weights*states[1:]
         source_heat = (integrate(source_stages) if varying_source else
                        np.diff(requested)[:,None,None]*(volume*np.asarray(source,dtype=float)))
-        if bulk_ambient_temperature is None:
-            integrated_cells = integrate(stage[:,:cell_count].reshape(-1,ny,nx))
-            bulk_heat = -integrated_cells*(volume*heat_loss_coefficient)
-        else:
-            relative_stage = stage[:,:cell_count].reshape(-1,ny,nx)
-            bulk_heat = integrate((ambient_stage-relative_stage)*bulk_conductance)
+        # Difference the reservoir and cell temperatures before time weighting.
+        bulk_heat = integrate_endpoints((bulk_start-history[:-1])*bulk_conductance,
+                                        (bulk_end-history[1:])*bulk_conductance)
         result.append({"source":source_heat, "bulk":bulk_heat})
     if return_storing_wall_state:
         wall_state = {}

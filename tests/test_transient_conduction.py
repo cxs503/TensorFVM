@@ -831,3 +831,31 @@ def test_storing_wall_small_film_heat_balances_applied_cooling(record_property):
     assert heat["ambient"].item() == expected
     assert heat["heater"].item() == -expected
     assert heat["material"].item() == heat["storage"].item() == 0.
+
+
+@pytest.mark.parametrize("moving", ["ambient", "cell"])
+@pytest.mark.parametrize("direction", [-1, 1])
+def test_bulk_heat_for_small_temperature_ramp(moving, direction, record_property):
+    # For a unit volume, Q_bulk = H * integral(T_ambient - T_cell) dt.
+    # Prescribe either a stationary cell or a stationary reservoir.
+    base, capacity, h = 1024., 2.**60, 2.
+    slope = direction*np.spacing(base)
+    if moving == "ambient":
+        ambient = lambda t: base + t*slope
+        source = lambda t: -h*t*slope
+        cell_rise = 0.
+    else:
+        ambient = base
+        source = lambda t: capacity*slope + h*t*slope
+        cell_rise = slope
+    field, heat = solve_transient_conduction(
+        [1.], [1.], 1., capacity, {}, [0., 1.], base, source=source,
+        heat_loss_coefficient=h, bulk_ambient_temperature=ambient,
+        cell_temperature_reference=0., return_cell_heat=True)
+    assert field[-1,0,0] - base == cell_rise
+    expected = .5*h*(slope if moving == "ambient" else -slope)
+    actual = heat["bulk"].item()
+    record_property("relative_bulk_heat_error", abs(actual/expected-1))
+    assert actual == expected
+    if moving == "ambient":
+        assert actual + heat["source"].item() == 0.
