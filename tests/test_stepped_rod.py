@@ -1024,3 +1024,47 @@ def test_harmonic_face_cycle_heat_static_and_nearly_tangent():
     forward,reverse = harmonic_face_cycle_heat([0.,1.],1.,steady_power=[-2.,1-gap])
     assert forward[0]==0. and reverse[0]==4*np.pi
     assert abs(reverse[1]/(4*np.sqrt(2)/3*gap**1.5)-1)<1e-14
+
+
+def test_resistive_decay_mode_interface_traces_and_heat(record_property):
+    """An asymmetric sine mode satisfies flux continuity and a finite jump."""
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    wave = 1.5*np.pi
+    rate = wave**2
+    # West sin(wx), east -sin(w(1-x))/3. Tripling both k and C
+    # preserves diffusivity and makes the flux continuous at the midpoint.
+    traces = np.sin(wave/2)*np.array([1., -1/3])
+    flux = -wave*np.cos(wave/2)
+    resistance = (traces[0]-traces[1])/flux
+    windows = np.array([0., .025, .05])
+    integral = -np.exp(-rate*windows[:-1])*np.expm1(-rate*np.diff(windows))/rate
+    exact_heat = flux*integral
+    exact_traces = traces*(integral/np.diff(windows))[:, None]
+    errors = []
+    for n, steps in ((12, 24), (24, 48), (48, 96), (48, 192)):
+        dx = 1/n
+        mid = n//2
+        centers = (np.arange(n)+.5)*dx
+        k = np.repeat([1., 3.], mid)
+        initial = np.where(centers < .5, np.sin(wave*centers), -np.sin(wave*(1-centers))/3)
+        initial *= np.sinc(wave*dx/(2*np.pi))  # Exact finite-volume averages.
+        contacts = np.zeros(n-1)
+        contacts[mid-1] = resistance
+        times = np.linspace(0., windows[-1], 2*steps+1)
+        _, _, _, _, heat, means = solve_transient_stepped_rod(
+            np.full(n, dx), 1., k, k, [0., 0.], times, initial, contact_resistance=contacts,
+            method="sdirk2", flux_order=2, return_step_heat=True, return_interval_temperatures=True)
+        observed = np.column_stack([means[key][:, mid-1] for key in ("trace_left", "trace_right")])
+        observed = observed.reshape(2, steps, 2).mean(axis=1)
+        transfer = heat["contact"][:, mid-1].reshape(2, steps).sum(axis=1)
+        jump = observed[:, 0]-observed[:, 1]
+        np.testing.assert_allclose(jump*np.diff(windows), resistance*transfer, atol=1e-12, rtol=0.)
+        error = np.r_[abs(observed-exact_traces).max(axis=0), abs(transfer-exact_heat).max()]
+        errors.append(error)
+        for quantity, value in zip(("west_trace_K", "east_trace_K", "contact_heat_J_m2"), error):
+            record_property(f"n{n}_steps{steps}_max_error_{quantity}", value)
+    for coarse, fine in zip(errors[:2], errors[1:3]):
+        assert np.all(coarse > 3*fine)
+    assert np.all(errors[-1] < [1e-3, 1e-3, 1e-4])
+    assert np.all(abs(errors[-1]-errors[-2]) < .1*errors[-1])
