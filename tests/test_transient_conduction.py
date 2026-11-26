@@ -659,3 +659,42 @@ def test_static_wall_heater_on_mixed_north_faces_without_film():
 def test_invalid_storing_wall_heater(spec):
     with pytest.raises(ValueError,match="wall_heater_flux"):
         solve_transient_conduction([1.],[1.],1.,1.,{"west":spec},[0.,1.],0.)
+
+
+def test_symmetric_slab_ramp_and_hold_wall_heat(record_property):
+    """Compare each wall's integrated inward heat with the unit slab series."""
+    ramp_end, end = .04, .09
+    wave = np.pi*np.arange(1, 80, 2)
+
+    def ramp_storage(t):
+        # Integrating the temperature over the unit slab gives the linear
+        # lift, the integrated steady lag, and the decaying odd sine modes.
+        return (t-1/12+np.sum(8*np.exp(-wave**2*t)/wave**4))/ramp_end
+
+    stored = [0., ramp_storage(ramp_end), ramp_storage(end)-ramp_storage(end-ramp_end)]
+    reference = np.diff(stored)/2
+    wall = dict(type="dirichlet", values=lambda t: min(t/ramp_end, 1.))
+    for phase, value in zip(("ramp", "hold"), reference):
+        record_property(f"{phase}_wall_reference_J_m2", value)
+    errors = []
+    for n, steps_per_phase in ((12, 32), (24, 64), (48, 128), (48, 256)):
+        times = np.r_[np.linspace(0., ramp_end, steps_per_phase+1),
+                      np.linspace(ramp_end, end, steps_per_phase+1)[1:]]
+        state, heat = solve_transient_conduction(
+            np.full(n, 1/n), [1.], 1., 1., {"west": wall, "east": wall},
+            times, 0., theta=.5, return_face_heat=True)
+        prefix = f"n{n}_steps{steps_per_phase}"
+        wall_inputs = np.array([heat["wall"][side][:, 0].reshape(2, steps_per_phase).sum(axis=1)
+                                for side in ("west", "east")])
+        error = np.max(abs(wall_inputs-reference), axis=0)
+        for phase, value in zip(("ramp", "hold"), error):
+            record_property(f"{prefix}_{phase}_wall_error_J_m2", value)
+        uptake = np.diff(state[::steps_per_phase, 0].mean(axis=1))
+        balance = np.max(abs(uptake-wall_inputs.sum(axis=0)))
+        record_property(f"{prefix}_balance_J_m2", balance)
+        assert balance < 1e-12
+        errors.append(error)
+    for coarse, fine in zip(errors[:2], errors[1:3]):
+        assert np.all(coarse > 3*fine)
+    assert np.all(errors[-1] < .01*reference)
+    assert np.all(abs(errors[-1]-errors[-2]) < .05*errors[-1])
