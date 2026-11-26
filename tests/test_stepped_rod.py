@@ -1109,3 +1109,59 @@ def test_linear_face_directional_heat_endpoint_crossings_and_short_lobes():
                           ([0., np.nan], power), ([0., 1.], [np.inf, 0.])):
         with pytest.raises(ValueError):
             linear_face_directional_heat(times, values)
+
+
+def test_contact_directional_heat_during_double_reversal(record_property):
+    """Test signed contact transfer against separate positive and negative modal integrals."""
+    from scipy.optimize import brentq
+    from tensorfvm.cht.rod import linear_face_directional_heat, solve_transient_stepped_rod
+
+    first_wave = 1.5*np.pi
+    resistance = 4/(3*first_wave)
+    roots = np.array([.005, .018])
+    end = .053
+
+    def contact_law(w):
+        return 4*np.sin(w/2)/3+resistance*w*np.cos(w/2)
+
+    waves = np.array([first_wave]+[brentq(contact_law, i*np.pi, (i+1)*np.pi) for i in (3, 5)])
+    rates = waves**2
+    decay = np.exp(-roots[:, None]*rates)
+    flux = np.r_[1., np.linalg.solve(decay[:, 1:], -decay[:, 0])]
+    amplitudes = flux/(-waves*np.cos(waves/2))
+    # Split the continuum integral at its two analytic zeros. The solver
+    # receives the initial cell means only; its output grid misses both zeros.
+    bounds = np.r_[0., roots, end]
+    phases = np.diff((-np.expm1(-bounds[:, None]*rates)/rates) @ flux)
+    reference = np.array([phases[0]+phases[2], -phases[1]])
+    for name, value in zip(("forward", "reverse"), reference):
+        record_property(f"reference_{name}_J", value)
+    previous = None
+    for n in (24, 48, 96, 192):
+        dx = 1/n
+        x = (np.arange(n)+.5)*dx
+        initial = np.sin(np.minimum(x, 1-x)[:, None]*waves) @ (amplitudes*np.sinc(waves*dx/(2*np.pi)))
+        initial[n//2:] *= -1/3
+        k = np.repeat([1., 3.], n//2)
+        cut = n//2-1
+        contacts = np.zeros(n-1)
+        contacts[cut] = resistance
+        times = np.linspace(0., end, 2*n+1)
+        _, _, _, _, traces, ledger = solve_transient_stepped_rod(
+            np.full(n, dx), 1., k, k, [0., 0.], times, initial, contact_resistance=contacts,
+            theta=.5, flux_order=2, return_traces=True, return_step_heat=True)
+        power = (traces[0][:, cut]-traces[1][:, cut])/resistance
+        forward, reverse = linear_face_directional_heat(times, power)
+        assert np.count_nonzero((forward > 0) & (reverse > 0)) == 2
+        balance = max(abs(forward-reverse-ledger["contact"][:, cut]))
+        assert balance < 1e-12
+        totals = np.array([forward.sum(), reverse.sum()])
+        errors = abs(totals-reference)
+        for name, value in zip(("forward", "reverse"), errors):
+            record_property(f"n{n}_{name}_error_J", value)
+        record_property(f"n{n}_net_error_J", abs(totals[0]-totals[1]-phases.sum()))
+        record_property(f"n{n}_interval_balance_J", balance)
+        if previous is not None:
+            assert np.all(previous > 3*errors)
+        previous = errors
+    assert np.all(errors < .005*reference)
