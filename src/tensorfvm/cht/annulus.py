@@ -27,6 +27,16 @@ def _half_shell_resistances(r,k,cell_location):
     return width,shift,left,right
 
 
+def _validate_axial_wavenumber(axial_wavenumber):
+    if np.ndim(axial_wavenumber) != 0 or not np.isrealobj(axial_wavenumber) or not np.isfinite(axial_wavenumber):
+        raise ValueError("axial_wavenumber must be a finite real scalar")
+
+
+def _modal_conductance(radii, conductivity, volume, mode, axial_wavenumber):
+    angular = 2*np.pi*conductivity*mode**2*np.log1p(np.diff(radii)/radii[:-1])
+    return angular + conductivity*volume*axial_wavenumber**2
+
+
 def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
                              angular_frequency, *, contact_resistance=0., source=0., azimuthal_mode=0,
                              axial_wavenumber=0., film_coefficients=(None, None), cell_location="midpoint",
@@ -61,8 +71,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         raise ValueError("angular_frequency must be finite and nonnegative")
     if not isinstance(azimuthal_mode, (int, np.integer)) or azimuthal_mode < 0:
         raise ValueError("azimuthal_mode must be a nonnegative integer")
-    if np.ndim(axial_wavenumber) != 0 or not np.isrealobj(axial_wavenumber) or not np.isfinite(axial_wavenumber):
-        raise ValueError("axial_wavenumber must be a finite real scalar")
+    _validate_axial_wavenumber(axial_wavenumber)
     n = len(r)-1
     k, cv = (np.broadcast_to(np.asarray(v, dtype=float), (n,)) for v in
              (conductivity, volumetric_heat_capacity))
@@ -106,8 +115,8 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         if not needs_mean or np.ndim(mean_temperature) != 0 or not np.isfinite(mean_temperature):
             raise ValueError("a finite mean temperature applies only to an unanchored steady axisymmetric mode")
     volume = np.pi*width*(r[1:]+r[:-1])
-    lateral = 2*np.pi*k*azimuthal_mode**2*np.log1p(width/r[:-1])
-    sink = lateral + k*axial_wavenumber**2*volume + 1j*angular_frequency*cv*volume
+    lateral = _modal_conductance(r, k, volume, azimuthal_mode, axial_wavenumber)
+    sink = lateral + 1j*angular_frequency*cv*volume
     # Face power = offset + outward*T_inner - inward_coefficient*T_outer.
     outward = conductance[1:].astype(complex)
     inward_coefficient = conductance[:-1].astype(complex)
@@ -152,7 +161,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
 def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temperatures, angular_frequency,
                         sheet_face, *, resistance=0., inner_resistance_fraction=.5, sheet_capacity=0.,
                         sheet_conductivity=0., sheet_film=0., ambient=0., sheet_source=0.,
-                        source=0., azimuthal_mode=0, wall_fluxes=(None,None), film_coefficients=(None,None),
+                        source=0., azimuthal_mode=0, axial_wavenumber=0., wall_fluxes=(None,None), film_coefficients=(None,None),
                         cell_location="midpoint", distributed_source=False, mean_temperature=None,
                         return_contact_temperatures=False):
     """Harmonic conduction with one storing sheet at internal face index sheet_face.
@@ -160,10 +169,10 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
     Return cell temperatures, radial rates on the inner and outer domains
     (each including its two boundary faces, outward positive, W/m), and sheet
     temperature. With return_contact_temperatures, append the two material-side
-    temperature phasors (inner, outer) at the contact radius. The sheet has areal heat capacity (J/m²/K), circumferential
+    temperature phasors (inner, outer) at the contact radius. The sheet has areal heat capacity (J/m²/K), isotropic in-plane
     conductivity times thickness (W/K), reservoir film (W/m²/K) and applied
     generation (W/m²). Sheet properties are uniform in angle; loads are the
-    selected complex modal amplitudes. The mean datum for a floating steady
+    selected complex modal amplitudes with axial wavenumber in rad/m. The mean datum for a floating steady
     zero mode is the volume-weighted temperature of the material cells.
     """
     edges = np.asarray(radii,dtype=float)
@@ -182,9 +191,10 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
     j = sheet_face
     radius = edges[j]
     circum = 2*np.pi*radius
-    impedance = sheet_film+1j*angular_frequency*sheet_capacity+sheet_conductivity*(azimuthal_mode/radius)**2
+    _validate_axial_wavenumber(axial_wavenumber)
+    impedance = sheet_film+1j*angular_frequency*sheet_capacity+sheet_conductivity*((azimuthal_mode/radius)**2 + axial_wavenumber**2)
     load = sheet_source+sheet_film*ambient
-    options = dict(azimuthal_mode=azimuthal_mode,cell_location=cell_location,distributed_source=distributed_source)
+    options = dict(axial_wavenumber=axial_wavenumber,azimuthal_mode=azimuthal_mode,cell_location=cell_location,distributed_source=distributed_source)
     ri,ro = resistance*inner_resistance_fraction,resistance*(1-inner_resistance_fraction)
 
     def result(field, inner_rates, outer_rates, sheet):
@@ -209,7 +219,7 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
     base,bi,bo = response(False)
     unit,ui,uo = response(True)
     closed = ((not angular_frequency or (not c.any() and not sheet_capacity))
-              and not azimuthal_mode and not sheet_film and
+              and not azimuthal_mode and not axial_wavenumber and not sheet_film and
               all(q is not None or h==0 for q,h in zip(wall_fluxes,film_coefficients)))
     volume = np.pi*np.diff(edges)*(edges[1:]+edges[:-1])
     if closed:
@@ -225,7 +235,7 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
     # Integrate the two bulk balances to evaluate their net response.
     # This preserves the small storage admittance near zero frequency under
     # insulated end conditions, where differences of radial rates cancel.
-    sink = 1j*angular_frequency*c*volume+2*np.pi*k*azimuthal_mode**2*np.log1p(np.diff(edges)/edges[:-1])
+    sink = 1j*angular_frequency*c*volume + _modal_conductance(edges, k, volume, azimuthal_mode, axial_wavenumber)
     forcing = circum*load+bi[0]-bo[-1]+np.sum(volume*p-sink*base)
     admittance = circum*impedance+uo[-1]-ui[0]+sink@unit
     sheet = forcing/admittance
@@ -245,12 +255,15 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
 def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
                                   times, initial_temperature, sheet_face, *, initial_sheet_temperature=None,
                                   sheet_capacity, resistance=0., inner_resistance_fraction=.5,
-                                  sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
+                                  sheet_conductivity=0., azimuthal_mode=0, axial_wavenumber=0., sheet_film=0., ambient=0.,
                                   sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.,
                                   film_coefficients=(None,None), return_wall_temperatures=False,
                                   return_contact_temperatures=False, method="theta", return_interval_temperatures=False,
                                   source_times=None, wall_times=None):
-    """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
+    """Advance a real circumferential and axial Fourier mode with a storing sheet.
+
+    axial_wavenumber is in rad/m. The sheet conductivity times thickness
+    (W/K) applies in both tangential directions.
 
     Walls and reservoir ambient accept constants, nodal samples or one-sided
     (interval,2) samples. wall_times optionally supplies their time grid
@@ -294,6 +307,7 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     j = sheet_face
     if not isinstance(j,(int,np.integer)) or not 0<j<len(r)-1:
         raise ValueError("sheet_face must index an internal radius")
+    _validate_axial_wavenumber(axial_wavenumber)
     if not isinstance(azimuthal_mode,(int,np.integer)) or azimuthal_mode<0:
         raise ValueError("azimuthal_mode must be a nonnegative integer")
     if not np.isfinite([sheet_capacity,resistance,inner_resistance_fraction,sheet_conductivity,sheet_film,theta]).all():
@@ -379,8 +393,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         g[-1],east_factor = 0.,-2*np.pi*r[-1]
     volume = np.pi*width*(r[:-1]+r[1:])
     capacity = np.insert(c*volume,j,circum*sheet_capacity)
-    sink = np.insert(2*np.pi*k*azimuthal_mode**2*np.log1p(width/r[:-1]),j,
-                     circum*(sheet_film+sheet_conductivity*(azimuthal_mode/r[j])**2))
+    sink = np.insert(_modal_conductance(r, k, volume, azimuthal_mode, axial_wavenumber),j,
+                     circum*(sheet_film+sheet_conductivity*((azimuthal_mode/r[j])**2 + axial_wavenumber**2)))
     diagonal = g[:-1]+g[1:]+sink
     state = np.empty((len(t),n+1))
     state[0] = np.insert(u,j,initial_sheet_temperature)

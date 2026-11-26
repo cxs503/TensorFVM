@@ -497,19 +497,21 @@ def test_harmonic_flux_and_film_annulus_against_bessel_solution(mode, flux_side,
         assert all(a/b > 3.7 for a, b in zip(coarse, fine))
 
 
-def test_harmonic_two_material_sheet_traces_against_bessel_modes(record_property):
+@pytest.mark.parametrize("axial,sheet_k", [(0., 0.), (-1.25, .35)])
+def test_harmonic_two_material_sheet_traces_against_bessel_modes(axial, sheet_k, record_property):
     from scipy.special import iv, ivp, kv, kvp
     from tensorfvm.cht.annulus import solve_annular_sheet
 
     radius, omega, mode = 0.8, 3.2, 2
     k = np.array([1.4, 2.3])
     capacity = np.array([1.8, 1.1])
-    wave = np.sqrt(1j*omega*capacity/k)
+    wave = np.sqrt(axial**2 + 1j*omega*capacity/k)
     sheet = 0.65 + 0.2j
     q = np.array([1.1-0.4j, -0.25+0.5j])  # Increasing-r heat flux on each side.
     resistance, fraction, surface_capacity = 0.25, 0.3, 0.4
     traces = sheet + resistance*np.array([fraction, -(1-fraction)])*q
-    generation = 1j*omega*surface_capacity*sheet + q[1] - q[0]
+    surface_response = 1j*omega*surface_capacity + sheet_k*((mode/radius)**2 + axial**2)
+    generation = surface_response*sheet + q[1] - q[0]
 
     def basis(side, r):
         z = wave[side]*r
@@ -529,7 +531,7 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(record_property
         field, inner, outer, bulk_sheet, observed = solve_annular_sheet(
             edges, np.repeat(k, n), np.repeat(capacity, n), walls, omega, n,
             azimuthal_mode=mode, resistance=resistance, inner_resistance_fraction=fraction,
-            sheet_capacity=surface_capacity, sheet_source=generation, distributed_source=True,
+            axial_wavenumber=axial, sheet_conductivity=sheet_k, sheet_capacity=surface_capacity, sheet_source=generation, distributed_source=True,
             cell_location="volume_centroid", return_contact_temperatures=True)
         exact_field, exact_rates = [], []
         for side, r in enumerate(parts):
@@ -540,7 +542,8 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(record_property
                max(abs(observed-traces)), abs(bulk_sheet-sheet)]
         for name, error in zip(("field_K", "radial_rate_W_per_m", "trace_K", "sheet_K"), row):
             record_property(f"max_error_{n}_{name}", float(error))
-        residual = inner[-1]-outer[0]+2*np.pi*radius*(generation-1j*omega*surface_capacity*bulk_sheet)
+        residual = inner[-1]-outer[0]+2*np.pi*radius*(generation-surface_response*bulk_sheet)
+        record_property(f"balance_{n}_W_per_m", float(abs(residual)))
         assert abs(residual) < 1e-11
         errors.append(row)
     for coarse, fine in zip(errors, errors[1:]):
@@ -611,3 +614,40 @@ def test_axial_mode_with_insulated_walls_balances_source_without_reference():
     for invalid in (np.inf, 1j, [1.]):
         with pytest.raises(ValueError, match="axial_wavenumber"):
             solve_annular_conduction(r, k, 1., (0., 0.), 0., axial_wavenumber=invalid)
+
+
+@pytest.mark.parametrize("method", ["theta", "sdirk2"])
+def test_axial_decay_across_storing_sheet(method, record_property):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+
+    # Equal diffusivities give the same exponential decay throughout both
+    # materials and the sheet, with no radial heat crossing either contact.
+    k = np.array([.8, .8, 1.7, 1.7])
+    axial, diffusivity = 2., .6
+    previous = None
+    for steps in (10, 20, 40):
+        times = np.linspace(0., .5, steps + 1)
+        field, sheet, inner, outer, _ = solve_transient_annular_sheet(
+            [.3, .38, .5, .73, 1.], k, k/diffusivity, (None, None), times, 1., 2,
+            sheet_capacity=.5, sheet_conductivity=.5*diffusivity, axial_wavenumber=axial,
+            initial_sheet_temperature=1., resistance=.4, wall_fluxes=(0., 0.), method=method)
+        exact = np.exp(-diffusivity*axial**2*times)
+        error = max(np.max(abs(field - exact[:, None])), np.max(abs(sheet - exact)))
+        record_property(f"steps{steps}_temperature_K", float(error))
+        assert max(np.max(abs(inner)), np.max(abs(outer))) < 1e-13
+        if previous is not None:
+            assert previous/error > 3.7
+        previous = error
+
+
+def test_axial_sheet_steady_mode_between_insulated_walls():
+    from tensorfvm.cht.annulus import solve_annular_sheet
+
+    k = np.array([1., 3., 2.])
+    axial, amplitude, sheet_k = 1.5, 2., .7
+    field, inner, outer, sheet = solve_annular_sheet(
+        [.3, .45, .8, 1.], k, 0., (None, None), 0., 1, axial_wavenumber=axial,
+        wall_fluxes=(0., 0.), source=k*axial**2*amplitude, sheet_conductivity=sheet_k,
+        sheet_source=sheet_k*axial**2*amplitude)
+    np.testing.assert_allclose(np.r_[field, sheet], amplitude, atol=1e-13, rtol=0)
+    np.testing.assert_allclose(np.r_[inner, outer], 0., atol=1e-13)
