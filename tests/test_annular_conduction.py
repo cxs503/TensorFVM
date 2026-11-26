@@ -866,3 +866,54 @@ def test_insulated_annular_sheet_cooldown_after_steady_heating(method, record_pr
         if previous is not None:
             assert np.all(previous/errors > 3.7)
         previous = errors
+
+
+def test_insulated_annular_cooldown_against_continuous_radial_mode(record_property):
+    from scipy.special import jv, yv
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+
+    ends = np.array([.3, 1.15])
+    radius, decay, sheet_capacity = .7, .8, .4
+    conductivity, capacity = np.array([1.4, 2.3]), np.array([1.5, 2.])
+    wave = np.sqrt(decay*capacity/conductivity)
+    contact = .3*np.array([.35, -.65])
+
+    # Each radial eigenfunction has zero derivative at its insulated wall.
+    def mode(side, r):
+        z = wave[side]*r
+        wall = wave[side]*ends[side]
+        a, b = yv(1, wall), -jv(1, wall)
+        value = a*jv(0, z) + b*yv(0, z)
+        flux = conductivity[side]*wave[side]*(a*jv(1, z) + b*yv(1, z))
+        return value, flux
+
+    sides = np.arange(2)
+    values, flux = mode(sides, radius)
+    # Normalize both fields to a unit sheet temperature via their contact jumps.
+    amplitude = 1/(values-contact*flux)
+    contact_flux = amplitude*flux
+    film = contact_flux[0]-contact_flux[1]+decay*sheet_capacity
+    assert film > 0
+    duration = .6
+    integrated = -np.expm1(-decay*duration)/decay
+    exact_heat = 2*np.pi*radius*integrated*np.r_[contact_flux, film]
+    previous = None
+    for n in (8, 16, 32):
+        edges = np.r_[np.geomspace(ends[0], radius, n+1), np.geomspace(radius, ends[1], n+1)[1:]]
+        centers = (2/3)*np.diff(edges**3)/np.diff(edges**2)
+        side = np.repeat(sides, n)
+        initial = amplitude[side]*mode(side, centers)[0]
+        times = np.linspace(0., duration, 8*n+1)
+        field, sheet, inner, outer, reservoir = solve_transient_annular_sheet(
+            edges, conductivity[side], capacity[side], (None, None), times, initial, n,
+            initial_sheet_temperature=1., sheet_capacity=sheet_capacity, resistance=.3,
+            inner_resistance_fraction=.35, wall_fluxes=(0., 0.), sheet_film=film, method="sdirk2")
+        final = np.r_[field[-1], sheet[-1]]
+        temperature_error = max(abs(final-np.r_[initial, 1.]*np.exp(-decay*duration)))
+        heat = np.array([inner[:, -1].sum(), outer[:, 0].sum(), reservoir.sum()])
+        errors = np.r_[temperature_error, abs(heat-exact_heat)]
+        for label, error in zip(("temperature_K", "inner_J_per_m", "outer_J_per_m", "reservoir_J_per_m"), errors):
+            record_property(f"n{n}_{label}", float(error))
+        if previous is not None:
+            assert np.all(previous/errors > 3.5)
+        previous = errors
