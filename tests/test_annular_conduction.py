@@ -1270,3 +1270,34 @@ def test_strong_film_surface_matches_series_resistance(solver, side, record_prop
     record_property("analytic_surface_temperature_K", float(exact))
     record_property("max_relative_surface_error", error)
     assert error < 1e-13
+
+
+@pytest.mark.parametrize("cold_side", [0, 1])
+def test_transient_one_sided_contact_insulating_limit(cold_side, record_property):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+
+    r = np.array([1., 1.5, 2.])
+    contact = 1e18
+    sheet_radius = r[1]
+    cold_radius = r[[0, -1]][cold_side]
+    walls = [1., 1.]
+    walls[cold_side] = 0.
+    power = 2*np.pi / (np.log(2.) + contact/sheet_radius)
+    exact = power * abs(np.log(sheet_radius/cold_radius))/(2*np.pi)
+    centers = (2/3)*np.diff(r**3)/np.diff(r**2)
+    initial = np.array(walls)
+    initial[cold_side] = power * abs(np.log(centers[cold_side]/cold_radius))/(2*np.pi)
+    hot_radius = r[[0, -1]][1-cold_side]
+    initial[1-cold_side] -= power * abs(np.log(centers[1-cold_side]/hot_radius))/(2*np.pi)
+    sheet = 1. - power * abs(np.log(sheet_radius/hot_radius))/(2*np.pi)
+    result = solve_transient_annular_sheet(
+        r, 1., 1., walls, [0., .01, .1], initial, 1, sheet_capacity=1.,
+        initial_sheet_temperature=sheet, resistance=contact,
+        inner_resistance_fraction=float(cold_side == 0), return_contact_temperatures=True,
+        return_interval_temperatures=True)
+    endpoints = result[-2][:, cold_side]
+    means = result[-1]["contact"][:, cold_side]
+    error = max(np.max(abs(endpoints/exact - 1)), np.max(abs(means/exact - 1)))
+    record_property("analytic_cold_contact_temperature_K", float(exact))
+    record_property("relative_contact_error", float(error))
+    assert error < 1e-13

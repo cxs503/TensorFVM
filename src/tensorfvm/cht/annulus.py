@@ -615,17 +615,26 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     if return_wall_temperatures:
         wall_samples = (np.r_[v[:,0],v[-1,1]][keep] for v in (west,east))
         result += (wall_surfaces(state, *wall_samples),)
+    def contact_surfaces(states):
+        # The material surface lies between the cell center and the sheet.
+        # Reconstruct across the smaller resistance to retain a small
+        # surface temperature even when the opposite endpoint is hot.
+        traces = []
+        for cell, link, bulk, fraction in ((j-1, j, right[j-1], inner_resistance_fraction),
+                                            (j+1, j+1, left[j], 1-inner_resistance_fraction)):
+            contact = fraction*resistance/circum
+            delta = states[:,cell] - states[:,j]
+            if contact <= bulk:
+                trace = states[:,j] + (contact*g[link])*delta
+            else:
+                trace = states[:,cell] - (bulk*g[link])*delta
+            traces.append(trace)
+        return np.column_stack(traces)
+
     if return_contact_temperatures:
-        inner_flux = g[j]*(state[:,j-1]-state[:,j])/circum
-        outer_flux = g[j+1]*(state[:,j]-state[:,j+1])/circum
-        result += (np.column_stack((state[:,j]+inner_resistance_fraction*resistance*inner_flux,
-                                    state[:,j]-(1-inner_resistance_fraction)*resistance*outer_flux)),)
+        result += (contact_surfaces(state),)
     if return_interval_temperatures:
-        dt = np.diff(t)
-        inner_flux = heat[:,j]/(circum*dt)
-        outer_flux = heat[:,j+1]/(circum*dt)
         mean_sheet = interval_state[:,j]
-        mean_contact = np.column_stack((mean_sheet+inner_resistance_fraction*resistance*inner_flux,
-                                        mean_sheet-(1-inner_resistance_fraction)*resistance*outer_flux))
+        mean_contact = contact_surfaces(interval_state)
         result += (dict(cell=np.delete(interval_state,j,axis=1),sheet=mean_sheet,contact=mean_contact,wall=interval_wall),)
     return result
