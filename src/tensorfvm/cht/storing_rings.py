@@ -11,7 +11,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
                         bore_temperature_reference=None, mean_temperature=None,
                         inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
                         return_wall_rates=False, return_bulk_storage=False, return_angular_conduction=False,
-                        return_wall_temperatures=False, return_contact_temperatures=False):
+                        return_wall_temperatures=False, return_contact_temperatures=False,
+                        return_cell_temperatures=False):
     """Return two sheet temperatures and their incoming and outgoing radial fluxes.
 
     The cell faces include both sheets. Conductivity is scalar or per cell.
@@ -49,9 +50,11 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     amplitudes, integral(2π k m² T/r dr) per layer in W/m. They vanish for
     mode zero and enter each modal balance as radial input plus volume generation minus output and storage.
     With return_wall_temperatures, append the physical bore and exterior surface
-    temperature phasors (K). With return_contact_temperatures, append a final
+    temperature phasors (K). With return_contact_temperatures, append a
     (2, 2) array of material temperatures (K), one row per sheet, with the
     smaller-radius and larger-radius material in columns zero and one.
+    With return_cell_temperatures, append the bulk temperature phasor (K)
+    at each shell volume centroid, in order of increasing radius.
     """
     r = np.asarray(radii, dtype=float)
     faces = np.asarray(sheet_faces)
@@ -132,6 +135,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     if return_angular_conduction:
         cell_angular = 2*np.pi*k*azimuthal_mode**2*np.log1p(np.diff(r)/r[:-1])
         angular_maps = np.zeros((3, 3), dtype=complex)
+    if return_cell_temperatures:
+        field_maps = np.zeros((len(k), 3), dtype=complex)
     for layer, (a, b) in enumerate(zip(ends, ends[1:])):
         film = layer_films[layer]
         # The two unit temperature responses map end temperatures to radial rates.
@@ -143,6 +148,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
                 r[a:b+1], k[a:b], cv[a:b], boundary, bulk_frequency, film_coefficients=film,
                 source=volume_source[a:b] if column == 2 else 0.,
                 azimuthal_mode=azimuthal_mode, cell_location="volume_centroid", distributed_source=True)
+            if return_cell_temperatures:
+                field_maps[a:b, column] = field
             response[:, column] = rate[[0, -1]]
             if mean_temperature is not None:
                 mean_maps[layer, column] = weights[a:b] @ field
@@ -191,7 +198,7 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     outer_rates = c @ [sheet[1], walls[1], 1.]
     incoming = np.array([inner_rates[1], middle[1]]) / area
     outgoing = np.array([middle[0], outer_rates[0]]) / area
-    if return_bulk_storage or return_angular_conduction or mean_temperature is not None:
+    if return_bulk_storage or return_angular_conduction or return_cell_temperatures or mean_temperature is not None:
         nodes = np.r_[walls[0], sheet, walls[1]]
     datum = references[0] if floating else 0.
     if mean_temperature is not None:
@@ -212,4 +219,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
         result += (surface + datum,)
     if return_contact_temperatures:
         result += (np.column_stack((sheet + inner*incoming, sheet - outer*outgoing)) + datum,)
+    if return_cell_temperatures:
+        fields = [field_maps[a:b] @ [nodes[i], nodes[i+1], 1.]
+                  for i, (a, b) in enumerate(zip(ends, ends[1:]))]
+        result += (np.concatenate(fields) + datum,)
     return result

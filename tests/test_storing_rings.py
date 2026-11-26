@@ -180,7 +180,9 @@ def test_volume_mean_reference_uses_shell_volumes_and_resists_conflicting_data()
     bore = mean - np.average(slope*np.log(centers/edges[0]), weights=volumes)
     args = (edges, 2., [1, 2], (None, None), 0.)
     options = dict(sheet_capacities=(0.,0.), contact_resistances=(0.,0.), wall_fluxes=flux)
-    _, _, _, wall = solve_storing_rings(*args, **options, mean_temperature=mean, return_wall_temperatures=True)
+    _, _, _, wall, field = solve_storing_rings(*args, **options, mean_temperature=mean,
+        return_wall_temperatures=True, return_cell_temperatures=True)
+    np.testing.assert_allclose(field, bore+slope*np.log(centers/edges[0]), rtol=0., atol=1e-13)
     np.testing.assert_allclose(wall, bore+slope*np.log(edges[[0,-1]]/edges[0]), rtol=0., atol=1e-13)
     with pytest.raises(ValueError, match="exactly one"):
         solve_storing_rings(*args, **options, mean_temperature=mean, bore_temperature_reference=bore)
