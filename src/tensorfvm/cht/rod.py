@@ -736,7 +736,10 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     internal time steps across one requested output interval.
     return_resistive_contact_heat appends a dictionary with face_indices
     (zero-based interior faces of positive resistance) and rightward/leftward
-    heat magnitudes in J, shaped (output intervals, selected faces). At each
+    heat magnitudes in J, shaped (output intervals, selected faces). Matching
+    rightward_duration, leftward_duration and idle_duration arrays give the
+    durations in seconds. Idle means exactly zero reconstructed power.
+    At each
     internal step, integrate an affine power ending at the final contact power
     and having the integrator's weighted mean. For SDIRK2 this line passes
     through both stage powers; for Crank-Nicolson it joins the endpoints.
@@ -862,6 +865,9 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         east_nodes = layout.left[indices+1]-1
         rightward = np.zeros((len(time)-1, len(indices)))
         leftward = np.zeros_like(rightward)
+        rightward_duration = np.zeros_like(rightward)
+        leftward_duration = np.zeros_like(rightward)
+        idle_duration = np.zeros_like(rightward)
     # Eliminating massless faces of the first-order conductance network
     # preserves nonpositive off-diagonals and can only lower its diagonal.
     # This bound therefore makes the explicit CN half nonnegative too.
@@ -908,11 +914,20 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 if two_stages and not sdirk:
                     rightward[step] += .5*dt*(np.maximum(q_stage, 0.)+np.maximum(q_end, 0.))
                     leftward[step] += .5*dt*(np.maximum(-q_stage, 0.)+np.maximum(-q_end, 0.))
+                    for q in (q_stage, q_end):
+                        rightward_duration[step] += .5*dt*(q > 0)
+                        leftward_duration[step] += .5*dt*(q < 0)
+                        idle_duration[step] += .5*dt*(q == 0)
                 else:
                     # Extrapolate the two SDIRK powers to the beginning, or
                     # apply the theta weight to match the step's mean power.
                     q_start = 2*(1-weight)*q_stage+(2*weight-1)*q_end
-                    forward, reverse = linear_face_directional_heat((0., dt), np.stack((q_start, q_end)))
+                    endpoints = np.stack((q_start, q_end))
+                    forward, reverse = linear_face_directional_heat((0., dt), endpoints)
+                    positive, negative, idle = linear_face_directional_duration((0., dt), endpoints)
+                    rightward_duration[step] += positive[0]
+                    leftward_duration[step] += negative[0]
+                    idle_duration[step] += idle[0]
                     rightward[step] += forward[0]
                     leftward[step] += reverse[0]
             if return_step_heat or return_interval_temperatures:
@@ -982,5 +997,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
             values /= widths
         output += (temperatures,)
     if return_resistive_contact_heat:
-        output += (dict(face_indices=indices, rightward=rightward, leftward=leftward),)
+        output += (dict(face_indices=indices, rightward=rightward, leftward=leftward,
+                        rightward_duration=rightward_duration, leftward_duration=leftward_duration,
+                        idle_duration=idle_duration),)
     return output

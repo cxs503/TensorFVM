@@ -1205,6 +1205,13 @@ def test_stage_directional_resistive_contact_heat(method, record_property):
     record_property("net_error_J", error)
     assert error < 1e-13
     assert np.all(forward >= 0.) and np.all(reverse >= 0.)
+    expected_positive = np.diff(np.minimum(times, .3))
+    duration_error = max(abs(parts["rightward_duration"][:, 0]-expected_positive))
+    record_property("ramp_duration_error_s", duration_error)
+    assert duration_error < 1e-13
+    np.testing.assert_allclose(parts["leftward_duration"][:, 0], np.diff(times)-expected_positive,
+                               atol=1e-13, rtol=0.)
+    np.testing.assert_array_equal(parts["idle_duration"], 0.)
     if method == "rannacher":
         # Right-end rectangles on [0,.1,.2] and [.5,.6,.7], trapezoids elsewhere.
         exact_forward = [.03, .005, 0.]
@@ -1252,3 +1259,29 @@ def test_resistive_contact_directional_heat_across_hidden_pulse(method, record_p
             maximum = np.max(abs(error))
             record_property(f"windows{len(times)-1}_{label}_error_J", maximum)
             assert maximum < 1e-13
+
+
+@pytest.mark.parametrize("method", ["theta", "sdirk2", "rannacher", "sdirk2_start", "positive_cn"])
+def test_contact_duration_hidden_idle_and_pulse(method, record_property):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    def power(t):
+        if t < .125:
+            return 0.
+        return -2. if .375 <= t < .625 else 1.
+
+    # Balanced volume and trace loads hold the two cell centers at zero.
+    # The massless contact alone changes power when the loads switch.
+    _, _, _, _, parts = solve_transient_stepped_rod(
+        [.5, .5], 1., 1., 1., [0., 0.], [0., .5, 1.], 0., contact_resistance=.5,
+        source=lambda t: np.array([-2., 2.])*power(t), trace_power=lambda t: (2*power(t), -2*power(t)),
+        load_jump_times=[.125, .375, .625], method=method, return_resistive_contact_heat=True)
+    durations = np.stack([parts[key][:, 0] for key in
+                          ("rightward_duration", "leftward_duration", "idle_duration")], axis=1)
+    expected = np.array([[.25, .125, .125], [.375, .125, 0.]])
+    error = abs(durations-expected).max()
+    record_property("max_duration_error_s", error)
+    assert error < 1e-13
+    np.testing.assert_allclose(durations.sum(axis=1), .5, atol=1e-13, rtol=0.)
+    np.testing.assert_allclose(parts["rightward"][:, 0], durations[:, 0], atol=1e-13, rtol=0.)
+    np.testing.assert_allclose(parts["leftward"][:, 0], 2*durations[:, 1], atol=1e-13, rtol=0.)
