@@ -792,3 +792,42 @@ def test_periodic_seam_heat_for_a_ramping_small_contrast(direction, theta, recor
     record_property("relative_stage_heat_error", abs(south/expected-1))
     assert interior == -expected
     assert south == expected and north == -expected
+
+
+@pytest.mark.parametrize("kind", ["dirichlet", "robin"])
+@pytest.mark.parametrize("direction", [-1, 1])
+def test_integrated_wall_heat_for_small_temperature_ramp(kind, direction, record_property):
+    # West half-cell resistance = 1/2, and the optional film adds 1/2.
+    # A compensating source keeps the cell at the prescribed initial state.
+    base = 1024.
+    jump = direction*np.spacing(base)
+    g = 2. if kind == "dirichlet" else 1.
+    spec = {"type": kind, "values": lambda t: base+jump*t}
+    if kind == "robin":
+        spec["film_coefficient"] = 2.
+    temperature, heat = solve_transient_conduction(
+        [1.], [1.], 1., 2.**60, {"west": spec}, [0., 1.], base,
+        source=lambda t: -g*jump*t, return_face_heat=True)
+    np.testing.assert_array_equal(temperature[:, 0, 0], base)
+    expected = .5*g*jump
+    measured = heat["wall"]["west"].item()
+    record_property("relative_heat_error", abs(measured/expected-1))
+    assert measured == expected
+
+
+def test_storing_wall_small_film_heat_balances_applied_cooling(record_property):
+    base = 1024.
+    jump = np.spacing(base)
+    film = 2.
+    spec = dict(type="robin", film_coefficient=film, wall_areal_heat_capacity=2.**60,
+                initial_wall_temperature=base, values=lambda t: base+jump*t,
+                wall_heater_flux=lambda t: -film*jump*t)
+    _, ledger = solve_transient_conduction(
+        [1.], [1.], 1., 2.**60, {"west": spec}, [0., 1.], base,
+        return_storing_wall_heat=True)
+    heat = ledger["west"]
+    expected = .5*film*jump
+    record_property("relative_film_heat_error", abs(heat["ambient"].item()/expected-1))
+    assert heat["ambient"].item() == expected
+    assert heat["heater"].item() == -expected
+    assert heat["material"].item() == heat["storage"].item() == 0.

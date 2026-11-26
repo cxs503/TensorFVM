@@ -1256,24 +1256,30 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             step_heat = power*durations.reshape((-1,)+(1,)*(power.ndim-1))
             return np.add.reduceat(step_heat,outputs[:-1],axis=0) if subdivided else step_heat
 
-        weights = stage_weights[:,None]
-        stage = (1-weights)*states[:-1]+weights*states[1:]
+        def integrate_endpoints(start_power, end_power):
+            weights = stage_weights.reshape((-1,) + (1,)*(start_power.ndim-1))
+            return integrate((1-weights)*start_power + weights*end_power)
+
     if return_face_heat or return_storing_wall_heat:
-        stage_bc = {s:(1-weights)*v[:len(time)-1]+weights*v[end_samples] for s,v in signals.items()}
+        # At a declared jump the preceding step ends at the left limit.
+        start_bc = {side: samples[:len(time)-1] for side, samples in signals.items()}
+        end_bc = {side: samples[end_samples] for side, samples in signals.items()}
     if return_face_heat:
-        walls = {s:integrate(v) for s,v in wall_powers(stage,stage_bc).items()}
-        # Form face differences before time weighting to retain small contrasts
-        # on a shared temperature datum, including across internal substeps.
+        start_power = wall_powers(states[:-1], start_bc)
+        end_power = wall_powers(states[1:], end_bc)
+        walls = {side: integrate_endpoints(power, end_power[side]) for side, power in start_power.items()}
+        # Form face differences before time weighting to retain small contrasts.
         if periodic_y:
             power = periodic_power(history)
-            south = integrate((1-weights)*power[:-1] + weights*power[1:])
+            south = integrate_endpoints(power[:-1], power[1:])
             walls.update(south=south, north=-south)
         interior = _interior_conduction_power(history, faces)
-        face_weights = stage_weights[:, None, None]
         for axis, power in interior.items():
-            interior[axis] = integrate((1-face_weights)*power[:-1] + face_weights*power[1:])
+            interior[axis] = integrate_endpoints(power[:-1], power[1:])
         result.append({"wall":walls, "interior":interior})
     if return_cell_heat:
+        weights = stage_weights[:,None]
+        stage = (1-weights)*states[:-1]+weights*states[1:]
         source_heat = (integrate(source_stages) if varying_source else
                        np.diff(requested)[:,None,None]*(volume*np.asarray(source,dtype=float)))
         if bulk_ambient_temperature is None:
@@ -1295,10 +1301,13 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         wall_heat = {}
         for side,link in wall_links.items():
             mask, ids, _, _, _, _, film = link
-            ambient = stage_bc.get(side,values[side])[...,mask]
+            ambient_start = start_bc.get(side,values[side])[...,mask]
+            ambient_end = end_bc.get(side,values[side])[...,mask]
+            material_power = storing_wall_power(states, link)
             wall_heat[side] = {
-                "ambient": integrate(film*(ambient-stage[:,ids])),
-                "material": integrate(storing_wall_power(stage,link)),
+                "ambient": integrate_endpoints(film*(ambient_start-states[:-1,ids]),
+                                               film*(ambient_end-states[1:,ids])),
+                "material": integrate_endpoints(material_power[:-1], material_power[1:]),
                 "storage": mass[ids]*np.diff(states[:,ids][outputs],axis=0),
             }
             if side in heater_stages:
