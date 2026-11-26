@@ -1154,3 +1154,50 @@ def test_interval_wall_temperature_recovers_switched_film_heat(method, theta, fi
     record_property("film_heat_residual_J_per_m", float(residual))
     assert residual < 3e-15
     assert abs(.2*surface[1-film_side] - integrated(fixed)) < 1e-15
+
+
+@pytest.mark.parametrize("method,theta,order", [("theta", .5, 2), ("theta", 1., 1), ("sdirk2", .5, 2)])
+def test_interval_wall_cooling_mode_time_refinement(method, theta, order, record_property):
+    from scipy.linalg import eigh
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+
+    # Hold space fixed: two radial control volumes and one capacitive sheet.
+    # Independently assemble the logarithmic radial, contact and film resistances.
+    r = np.array([.4, .7, 1.1])
+    k = np.array([1.2, 2.3])
+    cv = np.array([1.5, 2.])
+    film = np.array([1.8, 3.2])
+    centroid = (2/3)*np.diff(r**3)/np.diff(r**2)
+    cell_to_wall = np.array([np.log(centroid[0]/r[0]), np.log(r[-1]/centroid[1])])/(2*np.pi*k)
+    film_r = 1/(2*np.pi*r[[0,-1]]*film)
+    sheet_r = np.array([np.log(r[1]/centroid[0]), np.log(centroid[1]/r[1])])/(2*np.pi*k)
+    sheet_r += np.array([.09, .21])/(2*np.pi*r[1])
+    wall_r = cell_to_wall + film_r
+    g = 1/np.r_[wall_r[0], sheet_r, wall_r[1]]
+    stiffness = np.diag(g[:-1]+g[1:]) - np.diag(g[1:-1],1) - np.diag(g[1:-1],-1)
+    storage = np.insert(cv*np.pi*np.diff(r**2), 1, 2*np.pi*r[1]*.31)
+    eigenvalues, eigenvectors = eigh(stiffness, np.diag(storage))
+    decay = eigenvalues[1]
+    mode = eigenvectors[:,1]
+    mode /= max(abs(mode))
+    # Both ambient temperatures are zero, so the surface amplitudes are the
+    # film-resistance fraction of the adjacent cell amplitudes.
+    wall_mode = mode[[0,2]]*film_r/wall_r
+    times = np.array([0., .035, .14])
+    dt = np.diff(times)
+    mean_decay = np.exp(-decay*times[:-1])*(-np.expm1(-decay*dt))/(decay*dt)
+    exact = mean_decay[:,None]*wall_mode
+    previous = None
+    for n in (8, 16, 32, 64):
+        grid = np.r_[np.linspace(times[0], times[1], n+1), np.linspace(times[1], times[2], n+1)[1:]]
+        *_, avg = solve_transient_annular_sheet(
+            r, k, cv, (0., 0.), times, mode[[0,2]], 1, sheet_capacity=.31,
+            initial_sheet_temperature=mode[1], resistance=.3, inner_resistance_fraction=.3,
+            film_coefficients=film, method=method, theta=theta, source_times=grid,
+            return_interval_temperatures=True)
+        errors = np.max(abs(avg["wall"]-exact), axis=0)
+        for side, value in zip(("inner", "outer"), errors):
+            record_property(f"{side}_wall_mean_error_{n}_K", float(value))
+        if previous is not None:
+            assert np.all(previous/errors > .94*2**order)
+        previous = errors
