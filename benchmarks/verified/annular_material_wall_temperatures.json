@@ -1,0 +1,40 @@
+{
+  "source_commit": "c03e4cfb12dfd7a752fe87038fa6ca7648f4f3f3",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/fvm-annular-walls.xml",
+  "reference": "Modified Bessel I and K phasors on a hollow annulus, with prescribed flux and finite film on opposite walls. A separate generated steady solution T=r\u00b2-2 log(r) covers an insulated and a fixed wall.",
+  "runs": {
+    "test_harmonic_flux_and_film_annulus_against_bessel_solution[0-0]": {
+      "inner_surface_error_16_K": 0.00047424745014041254,
+      "outer_surface_error_16_K": 0.0006558516404474646,
+      "inner_surface_error_32_K": 0.0001186711728319692,
+      "outer_surface_error_32_K": 0.00016438522630691908,
+      "inner_surface_error_64_K": 2.9674691185777562e-05,
+      "outer_surface_error_64_K": 4.112274827490424e-05
+    },
+    "test_harmonic_flux_and_film_annulus_against_bessel_solution[0-2]": {
+      "inner_surface_error_16_K": 0.0007907748065452866,
+      "outer_surface_error_16_K": 0.0005264187985289831,
+      "inner_surface_error_32_K": 0.00019780908943065447,
+      "outer_surface_error_32_K": 0.00013187414695835134,
+      "inner_surface_error_64_K": 4.9459489885516656e-05,
+      "outer_surface_error_64_K": 3.298541082416794e-05
+    },
+    "test_harmonic_flux_and_film_annulus_against_bessel_solution[1-0]": {
+      "inner_surface_error_16_K": 0.0002017022437907666,
+      "outer_surface_error_16_K": 0.0010959884474681476,
+      "inner_surface_error_32_K": 5.0206753497382714e-05,
+      "outer_surface_error_32_K": 0.000274647996305542,
+      "inner_surface_error_64_K": 1.2537948534481625e-05,
+      "outer_surface_error_64_K": 6.87027585669018e-05
+    },
+    "test_harmonic_flux_and_film_annulus_against_bessel_solution[1-2]": {
+      "inner_surface_error_16_K": 0.0006295351158131324,
+      "outer_surface_error_16_K": 0.0009042164315551837,
+      "inner_surface_error_32_K": 0.00015758403168242798,
+      "outer_surface_error_32_K": 0.00022655248211736828,
+      "inner_surface_error_64_K": 3.940854760369554e-05,
+      "outer_surface_error_64_K": 5.666933995843747e-05
+    }
+  },
+  "passed": 140
+}
