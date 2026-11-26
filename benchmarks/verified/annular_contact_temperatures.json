@@ -1,0 +1,16 @@
+{
+  "source_commit": "8df9950619b1b5f9dc4e688b5ffccdf9fec53b44",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/fvm-multi-traces.xml",
+  "reference": "Prescribed complex radial flux c/r + g*r/2. Integrate Fourier law piecewise and impose R*q on two resistive faces, with continuous traces on the other two. The harmonic manufactured source includes storage collocated at each cell temperature.",
+  "max_surface_temperature_error_K": {
+    "test_annular_contact_temperatures_across_multiple_layers[False-0.0-midpoint]": 2.220446049250313e-16,
+    "test_annular_contact_temperatures_across_multiple_layers[False-0.0-volume_centroid]": 4.440892098500626e-16,
+    "test_annular_contact_temperatures_across_multiple_layers[False-2.5-midpoint]": 9.930136612989092e-16,
+    "test_annular_contact_temperatures_across_multiple_layers[False-2.5-volume_centroid]": 8.005932084973443e-16,
+    "test_annular_contact_temperatures_across_multiple_layers[True-0.0-midpoint]": 4.577566798522237e-16,
+    "test_annular_contact_temperatures_across_multiple_layers[True-0.0-volume_centroid]": 4.965068306494546e-16,
+    "test_annular_contact_temperatures_across_multiple_layers[True-2.5-midpoint]": 9.155133597044475e-16,
+    "test_annular_contact_temperatures_across_multiple_layers[True-2.5-volume_centroid]": 5.551115123125783e-16
+  },
+  "passed": 139
+}
