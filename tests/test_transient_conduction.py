@@ -466,3 +466,50 @@ def test_bulk_reference_preserves_mixed_storing_wall_and_flux_values():
         np.testing.assert_allclose(wall[key],reference[key],atol=1e-14)
     for key in expected:
         np.testing.assert_allclose(cell[key],expected[key],atol=1e-14)
+
+
+@pytest.mark.parametrize("steps", [4, 8, 16, 32])
+def test_relative_cell_restart_under_sub_ulp_heating(steps, record_property):
+    # A unit cell exchanges heat with a fixed wall and an ambient reservoir.
+    # Its temperature excess divided by P solves v'+5v=1, initially v=0.
+    base, power, duration = 305., 2.**-50, .5
+    times = np.linspace(0., duration, steps+1)
+    opts = dict(dx=[1.],dy=[1.],conductivity=1.,volumetric_heat_capacity=1.,
+                bc={"west":dict(type="dirichlet",values=base)},source=power,
+                heat_loss_coefficient=3.,bulk_ambient_temperature=base,
+                cell_temperature_reference=base,return_face_heat=True,return_cell_heat=True)
+    full, face, cell = solve_transient_conduction(time=times,initial_temperature=0.,**opts)
+    state = full[0]
+    accumulated = np.zeros(3)
+    for start, stop in zip(times,times[1:]):
+        field, f, c = solve_transient_conduction(time=[start,stop],initial_temperature=state,**opts)
+        state = field[-1]
+        accumulated += [f["wall"]["west"].item(),c["bulk"].item(),c["source"].item()]
+    np.testing.assert_array_equal(state,full[-1])
+    expected_heat = [face["wall"]["west"].sum(),cell["bulk"].sum(),cell["source"].sum()]
+    restart_error = max(abs(accumulated-expected_heat))/power
+    dt = duration/steps
+    ratio = (1-2.5*dt)/(1+2.5*dt)
+    discrete = (1-ratio**steps)/5
+    exact = -np.expm1(-5*duration)/5
+    end = state.item()/power
+    # Each loss receives its conductance fraction of the integrated excess.
+    discrete_heats = np.array([-2*(duration-discrete)/5,-3*(duration-discrete)/5,duration])
+    discrete_error = max(abs(end-discrete), max(abs(accumulated/power-discrete_heats)))
+    for name,value in (("restart_error_divided_by_power",restart_error),
+                       ("discrete_error_divided_by_power",discrete_error),
+                       ("continuum_end_error_divided_by_power",abs(end-exact))):
+        record_property(name,float(value))
+    assert max(restart_error,discrete_error) < 5e-15
+    assert abs(end-exact) < .1*dt**2
+
+
+def test_relative_cell_reference_with_default_zero_ambient():
+    args = dict(dx=[.25,.75],dy=[.5],conductivity=2.,volumetric_heat_capacity=1.,
+                bc={"west":dict(type="robin",values=306.,film_coefficient=2.,
+                                wall_areal_heat_capacity=.5,initial_wall_temperature=304.)},
+                time=[0.,.0625,.25],heat_loss_coefficient=.5,return_cell_heat=True)
+    absolute, heat = solve_transient_conduction(initial_temperature=[305.,306.],**args)
+    relative, shifted = solve_transient_conduction(initial_temperature=[0.,1.],cell_temperature_reference=305.,**args)
+    np.testing.assert_allclose(relative,absolute-305.,rtol=0,atol=2e-13)
+    np.testing.assert_allclose(shifted["bulk"],heat["bulk"],rtol=0,atol=1e-13)

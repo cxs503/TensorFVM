@@ -691,11 +691,17 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False,
                                load_jump_times=(), return_face_heat=False, rannacher=False,
                                monotone_theta=False, dirichlet_flux_order=1, return_cell_heat=False,
-                               bulk_ambient_temperature=None):
+                               bulk_ambient_temperature=None, cell_temperature_reference=None):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
-    widths are in metres, conductivity in W/(m K), volumetric heat capacity
+    temperatures normally use absolute kelvins. If cell_temperature_reference
+    is supplied, initial_temperature and the returned cell history are
+    deviations in K from that constant reference. A returned cell field can
+    then start a subsequent solve at the same reference. Prescribed wall,
+    bulk ambient and explicit initial wall temperatures still use absolute K.
+    Restarting a wall with heat capacity also requires its own temperature.
+    Cell widths are in metres, conductivity in W/(m K), volumetric heat capacity
     in J/(m³ K), source in W/m³, and contact resistance in m² K/W. Fixed
     wall temperatures and prescribed inward flux use the steady BC format.
     A side's values may also be a callable of time, returning a scalar or
@@ -785,9 +791,17 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     if not np.isfinite(initial).all():
         raise ValueError("temperature must be finite")
 
-    datum = float(initial[0,0]) if bulk_ambient_temperature is not None else 0.
-    if datum:
-        initial = initial-datum
+    if cell_temperature_reference is None:
+        datum = float(initial[0,0]) if bulk_ambient_temperature is not None else 0.
+        if datum:
+            initial = initial-datum
+    else:
+        reference = np.asarray(cell_temperature_reference)
+        if reference.ndim or not np.isrealobj(reference) or not np.isfinite(reference):
+            raise ValueError("cell_temperature_reference must be a finite real scalar")
+        datum = float(reference)
+        if bulk_ambient_temperature is None:
+            bulk_ambient_temperature = 0.
 
     sides = {"west": ny, "east": ny, "south": nx, "north": nx}
     static_bc = dict(bc)
@@ -991,7 +1005,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             relative_stage = stage[:,:cell_count].reshape(-1,ny,nx)
             bulk_heat = integrate((ambient_stage-relative_stage)*bulk_conductance)
         result.append({"source":source_heat, "bulk":bulk_heat})
-    if datum:
+    if cell_temperature_reference is None and datum:
         result[0] = result[0]+datum
     return tuple(result) if len(result)>1 else result[0]
 
