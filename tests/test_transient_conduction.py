@@ -698,3 +698,47 @@ def test_symmetric_slab_ramp_and_hold_wall_heat(record_property):
         assert np.all(coarse > 3*fine)
     assert np.all(errors[-1] < .01*reference)
     assert np.all(abs(errors[-1]-errors[-2]) < .05*errors[-1])
+
+
+def test_equal_effusivity_layers_ramp_and_hold_interface_heat(record_property):
+    """Identical wall drives produce a nonzero flux at the material interface."""
+    ramp_end, end = .04, .09
+    # y = integral(dx/k) ranges from 0 to 1. With k*C=1, T_t=T_yy
+    # and the physical rightward heat flux equals -T_y in both materials.
+    y = .25
+    wave = np.pi*np.arange(1, 80, 2)
+
+    def ramp_heat(t):
+        # Time integral of -T_y at the interface for a continuing unit-amplitude
+        # ramp. The undamped cosine sum equals 1/24-y**2/4+y**3/6.
+        transient = np.sum(4*np.cos(wave*y)*np.exp(-wave**2*t)/wave**4)
+        return (t*(.5-y)-(1/24-y**2/4+y**3/6)+transient)/ramp_end
+
+    reference = np.diff([0., ramp_heat(ramp_end), ramp_heat(end)-ramp_heat(end-ramp_end)])
+    wall = dict(type="dirichlet", values=lambda t: min(t/ramp_end, 1.))
+    for phase, expected in zip(("ramp", "hold"), reference):
+        record_property(f"{phase}_interface_reference_J_m2", expected)
+    errors = []
+    for n, steps in ((12, 32), (24, 64), (48, 128), (48, 256)):
+        times = np.r_[np.linspace(0., ramp_end, steps+1), np.linspace(ramp_end, end, steps+1)[1:]]
+        middle = n//2
+        k = np.repeat([2., 2/3], middle)
+        capacity = 1/k
+        field, heat = solve_transient_conduction(
+            np.full(n, 1/n), [1.], k, capacity, {"west": wall, "east": wall},
+            times, 0., theta=.5, return_face_heat=True)
+        through = heat["interior"]["x"][:, 0, middle-1].reshape(2, steps).sum(axis=1)
+        west = heat["wall"]["west"][:, 0].reshape(2, steps).sum(axis=1)
+        uptake = np.diff(field[::steps, 0, :middle] @ capacity[:middle])/n
+        balance = np.max(abs(west-through-uptake))
+        error = abs(through-reference)
+        prefix = f"n{n}_steps{steps}"
+        record_property(f"{prefix}_left_layer_balance_J_m2", balance)
+        for phase, value in zip(("ramp", "hold"), error):
+            record_property(f"{prefix}_{phase}_interface_error_J_m2", value)
+        assert balance < 1e-12
+        errors.append(error)
+    for coarse, fine in zip(errors[:2], errors[1:3]):
+        assert np.all(coarse > 3*fine)
+    assert np.all(errors[-1] < .015*abs(reference))
+    assert np.all(abs(errors[-1]-errors[-2]) < .05*errors[-1])
