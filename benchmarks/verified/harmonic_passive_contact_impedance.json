@@ -1,0 +1,79 @@
+{
+  "source_commit": "210398423c336711e8c0397ba0124e1746c61df5",
+  "baseline_commit": "e269dcafa7b67ea2ae8c3eb6265bdf1f53e05434",
+  "reference": "Independent two-cell complex thermal impedance network. Combine each wall conductance with i*omega*C in parallel, then reconnect the two cells through bulk half-shell resistances and the contact. Test both drive orientations at omega=2 rad/s and three resistance splits for a passive sheet of resistance 1e18 m^2 K/W.",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_annular*.py -o junit_family=legacy --junitxml=/tmp/harm-passive-after.xml",
+  "baseline_procedure": "Run source commit tests against baseline src with -k harmonic_passive_sheet_contact_impedance.",
+  "before": {
+    "tests": 6,
+    "failures": 6,
+    "measurements": {
+      "test_harmonic_passive_sheet_contact_impedance[0.0-0]": {
+        "max_relative_contact_rate_error": 188.55939670579227,
+        "max_relative_trace_error": 188.5593967057923,
+        "relative_sheet_error": 188.5593967057923
+      },
+      "test_harmonic_passive_sheet_contact_impedance[0.0-1]": {
+        "max_relative_contact_rate_error": 759.31601996245,
+        "max_relative_trace_error": 1.0,
+        "relative_sheet_error": 1.406589362089886e-16
+      },
+      "test_harmonic_passive_sheet_contact_impedance[0.25-0]": {
+        "max_relative_contact_rate_error": 141.2350757853588,
+        "max_relative_trace_error": 23584.020548053228,
+        "relative_sheet_error": 141.23507578535876
+      },
+      "test_harmonic_passive_sheet_contact_impedance[0.25-1]": {
+        "max_relative_contact_rate_error": 685.8506407185969,
+        "max_relative_trace_error": 199432.8005747646,
+        "relative_sheet_error": 228.61688023953232
+      },
+      "test_harmonic_passive_sheet_contact_impedance[1.0-0]": {
+        "max_relative_contact_rate_error": 5785.480349691048,
+        "max_relative_trace_error": 680.4588223324768,
+        "relative_sheet_error": 5.570543887362056e-16
+      },
+      "test_harmonic_passive_sheet_contact_impedance[1.0-1]": {
+        "max_relative_contact_rate_error": 911.4934544362503,
+        "max_relative_trace_error": 911.4934544362504,
+        "relative_sheet_error": 911.4934544362504
+      }
+    }
+  },
+  "after": {
+    "tests": 172,
+    "failures": 0,
+    "measurements": {
+      "test_harmonic_passive_sheet_contact_impedance[0.0-0]": {
+        "max_relative_contact_rate_error": 0.0,
+        "max_relative_trace_error": 2.246381228460108e-16,
+        "relative_sheet_error": 2.246381228460108e-16
+      },
+      "test_harmonic_passive_sheet_contact_impedance[0.0-1]": {
+        "max_relative_contact_rate_error": 0.0,
+        "max_relative_trace_error": 2.4689018703871765e-16,
+        "relative_sheet_error": 0.0
+      },
+      "test_harmonic_passive_sheet_contact_impedance[0.25-0]": {
+        "max_relative_contact_rate_error": 0.0,
+        "max_relative_trace_error": 2.246381228460108e-16,
+        "relative_sheet_error": 0.0
+      },
+      "test_harmonic_passive_sheet_contact_impedance[0.25-1]": {
+        "max_relative_contact_rate_error": 0.0,
+        "max_relative_trace_error": 2.4689018703871765e-16,
+        "relative_sheet_error": 0.0
+      },
+      "test_harmonic_passive_sheet_contact_impedance[1.0-0]": {
+        "max_relative_contact_rate_error": 0.0,
+        "max_relative_trace_error": 2.246381228460108e-16,
+        "relative_sheet_error": 0.0
+      },
+      "test_harmonic_passive_sheet_contact_impedance[1.0-1]": {
+        "max_relative_contact_rate_error": 0.0,
+        "max_relative_trace_error": 2.4689018703871765e-16,
+        "relative_sheet_error": 2.468901870387177e-16
+      }
+    }
+  }
+}
