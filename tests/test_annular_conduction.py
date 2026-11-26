@@ -1327,3 +1327,35 @@ def test_steady_passive_sheet_insulating_limit(cold_side, fraction, record_prope
     record_property("relative_sheet_error", sheet_error)
     np.testing.assert_array_equal(surfaces, walls)
     assert max(flux_error, trace_error, sheet_error) < 1e-13
+
+
+@pytest.mark.parametrize("cold_side", [0, 1])
+@pytest.mark.parametrize("fraction", [0., .25, 1.])
+def test_harmonic_passive_sheet_contact_impedance(cold_side, fraction, record_property):
+    from tensorfvm.cht.annulus import solve_annular_sheet
+
+    edges = np.array([1., 1.5, 2.])
+    centers = (edges[:-1] + edges[1:])/2
+    k = np.array([2., 3.])
+    capacity = np.pi*np.diff(edges**2)*[.8, 1.2]
+    walls = np.array([1.+.5j, 1.+.5j])
+    walls[cold_side] = 0.
+    omega, contact = 2., 1e18
+    wall_r = abs(np.log(centers/edges[[0, 2]]))/(2*np.pi*k)
+    bulk_r = abs(np.log(centers/edges[1]))/(2*np.pi*k)
+    # Each cell with the contact disconnected has an open-circuit temperature
+    # and a parallel storage/wall impedance. Reconnect in series to obtain Q.
+    impedance = 1/(1/wall_r + 1j*omega*capacity)
+    unloaded = impedance*walls/wall_r
+    rate = (unloaded[0]-unloaded[1])/(sum(impedance+bulk_r) + contact/(2*np.pi*edges[1]))
+    exact = unloaded + np.array([-1., 1.])*rate*(impedance+bulk_r)
+    _, inner, outer, sheet, traces = solve_annular_sheet(
+        edges, k, [.8, 1.2], walls, omega, 1, resistance=contact,
+        inner_resistance_fraction=fraction, return_contact_temperatures=True)
+    rate_error = float(max(abs(np.array([inner[-1], outer[0]])/rate - 1)))
+    trace_error = float(max(abs(traces/exact - 1)))
+    sheet_error = float(abs(sheet/((1-fraction)*exact[0]+fraction*exact[1])-1))
+    record_property("max_relative_contact_rate_error", rate_error)
+    record_property("max_relative_trace_error", trace_error)
+    record_property("relative_sheet_error", sheet_error)
+    assert max(rate_error, trace_error, sheet_error) < 1e-13

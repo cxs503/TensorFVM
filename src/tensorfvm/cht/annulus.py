@@ -313,8 +313,10 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
     options = dict(axial_wavenumber=axial_wavenumber,azimuthal_mode=azimuthal_mode,cell_location=cell_location,distributed_source=distributed_source)
     ri,ro = resistance*inner_resistance_fraction,resistance*(1-inner_resistance_fraction)
 
-    if angular_frequency == 0 and azimuthal_mode == 0 and axial_wavenumber == 0 and not sheet_film and not sheet_source:
-        # A passive steady sheet carries one continuous face power. Solve
+    steady_radial = angular_frequency == 0 and azimuthal_mode == 0 and axial_wavenumber == 0
+    anchored_walls = all(q is None and h != 0 for q, h in zip(wall_fluxes, film_coefficients))
+    if impedance == 0 and load == 0 and (steady_radial or anchored_walls):
+        # Without a sheet sink or load the face power is continuous. Solve
         # for it directly, even when the contact dominates both bulk paths.
         contacts = np.zeros(n-1)
         contacts[j-1] = resistance
