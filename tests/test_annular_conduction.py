@@ -1157,11 +1157,12 @@ def test_interval_wall_temperature_recovers_switched_film_heat(method, theta, fi
 
 
 @pytest.mark.parametrize("method,theta,order", [("theta", .5, 2), ("theta", 1., 1), ("sdirk2", .5, 2)])
-def test_interval_wall_cooling_mode_time_refinement(method, theta, order, record_property):
+@pytest.mark.parametrize("sheet_capacity", [0., .31])
+def test_interval_wall_cooling_mode_time_refinement(method, theta, order, sheet_capacity, record_property):
     from scipy.linalg import eigh
     from tensorfvm.cht.annulus import solve_transient_annular_sheet
 
-    # Hold space fixed: two radial control volumes and one capacitive sheet.
+    # Hold space fixed: two radial control volumes and one contact sheet.
     # Independently assemble the logarithmic radial, contact and film resistances.
     r = np.array([.4, .7, 1.1])
     k = np.array([1.2, 2.3])
@@ -1173,31 +1174,44 @@ def test_interval_wall_cooling_mode_time_refinement(method, theta, order, record
     sheet_r = np.array([np.log(r[1]/centroid[0]), np.log(centroid[1]/r[1])])/(2*np.pi*k)
     sheet_r += np.array([.09, .21])/(2*np.pi*r[1])
     wall_r = cell_to_wall + film_r
-    g = 1/np.r_[wall_r[0], sheet_r, wall_r[1]]
+    storage = cv*np.pi*np.diff(r**2)
+    if sheet_capacity:
+        storage = np.insert(storage, 1, 2*np.pi*r[1]*sheet_capacity)
+        resistances = np.r_[wall_r[0], sheet_r, wall_r[1]]
+    else:
+        # The same radial power crosses both sides of a massless sheet.
+        # Eliminate its algebraic temperature by adding the resistances.
+        resistances = np.r_[wall_r[0], sheet_r.sum(), wall_r[1]]
+    g = 1/resistances
     stiffness = np.diag(g[:-1]+g[1:]) - np.diag(g[1:-1],1) - np.diag(g[1:-1],-1)
-    storage = np.insert(cv*np.pi*np.diff(r**2), 1, 2*np.pi*r[1]*.31)
     eigenvalues, eigenvectors = eigh(stiffness, np.diag(storage))
     decay = eigenvalues[1]
     mode = eigenvectors[:,1]
     mode /= max(abs(mode))
-    # Both ambient temperatures are zero, so the surface amplitudes are the
-    # film-resistance fraction of the adjacent cell amplitudes.
-    wall_mode = mode[[0,2]]*film_r/wall_r
+    cells = mode[[0,-1]]
+    sheet = mode[1] if sheet_capacity else cells[0]-(cells[0]-cells[1])*sheet_r[0]/sheet_r.sum()
+    # Each material trace lies one half-cell resistance from its cell.
+    contact_r = np.array([.09, .21])/(2*np.pi*r[1])
+    contact = sheet + (cells-sheet)*contact_r/sheet_r
+    wall_mode = cells*film_r/wall_r
+    amplitudes = np.r_[wall_mode, sheet, contact]
+    labels = ("inner_wall", "outer_wall", "sheet", "inner_contact", "outer_contact")
     times = np.array([0., .035, .14])
     dt = np.diff(times)
     mean_decay = np.exp(-decay*times[:-1])*(-np.expm1(-decay*dt))/(decay*dt)
-    exact = mean_decay[:,None]*wall_mode
+    exact = mean_decay[:,None]*amplitudes
     previous = None
     for n in (8, 16, 32, 64):
         grid = np.r_[np.linspace(times[0], times[1], n+1), np.linspace(times[1], times[2], n+1)[1:]]
         *_, avg = solve_transient_annular_sheet(
-            r, k, cv, (0., 0.), times, mode[[0,2]], 1, sheet_capacity=.31,
-            initial_sheet_temperature=mode[1], resistance=.3, inner_resistance_fraction=.3,
+            r, k, cv, (0., 0.), times, cells, 1, sheet_capacity=sheet_capacity,
+            initial_sheet_temperature=sheet, resistance=.3, inner_resistance_fraction=.3,
             film_coefficients=film, method=method, theta=theta, source_times=grid,
             return_interval_temperatures=True)
-        errors = np.max(abs(avg["wall"]-exact), axis=0)
-        for side, value in zip(("inner", "outer"), errors):
-            record_property(f"{side}_wall_mean_error_{n}_K", float(value))
+        observed = np.column_stack((avg["wall"], avg["sheet"], avg["contact"]))
+        errors = np.max(abs(observed-exact), axis=0)
+        for label, value in zip(labels, errors):
+            record_property(f"{label}_mean_error_{n}_K", float(value))
         if previous is not None:
             assert np.all(previous/errors > .94*2**order)
         previous = errors
