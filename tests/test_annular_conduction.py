@@ -732,18 +732,24 @@ def test_transient_orthotropic_annulus_mixed_mode_decay(method, record_property)
         previous = error
 
 
+@pytest.mark.parametrize("insulated", [None, 0, 1], ids=["two-films", "inner-insulated", "outer-insulated"])
 @pytest.mark.parametrize("location", ["midpoint", "volume_centroid"])
-def test_generated_heat_partition_in_two_material_annulus(location, record_property):
+def test_generated_heat_partition_in_two_material_annulus(location, insulated, record_property):
     from tensorfvm.cht.annulus import solve_annular_sheet
 
-    # Distinct bulk sources and a heated resistive sheet feed both convective walls.
+    # Both materials and the contact sheet generate heat.
     radius, sheet_temperature, resistance, fraction = .7, 1.2, .3, .35
     k = np.array([1.4, 2.3])
     source = np.array([1.9, .8])
-    contact_flux = np.array([-.2, .6])
-    generation = contact_flux[1]-contact_flux[0]
-    traces = sheet_temperature + resistance*np.array([fraction, fraction-1])*contact_flux
     edges = np.array([.3, .39, .58, radius, .73, .91, 1.15])
+    ends = edges[[0, -1]]
+    generation = .8
+    contact_flux = np.array([-.2, .6])
+    if insulated is not None:
+        # Integrate from the insulated wall to the sheet, then apply its source jump.
+        q = source[insulated]*(radius**2-ends[insulated]**2)/(2*radius)
+        contact_flux = q + generation*(np.arange(2)-insulated)
+    traces = sheet_temperature + resistance*np.array([fraction, fraction-1])*contact_flux
     face = 3
     films = np.array([2.1, 3.4])
     # Integrate d(r*q)/dr = r*S, then integrate dT/dr = -q/k from the sheet.
@@ -754,9 +760,10 @@ def test_generated_heat_partition_in_two_material_annulus(location, record_prope
                                       + constant*np.log(r/radius))/k[side]
         return temperature, flux
 
-    ends = edges[[0, -1]]
     surfaces, flux = exact(np.arange(2), ends)
     ambient = surfaces + np.array([1., -1.])*flux/films
+    if insulated is not None:
+        films[insulated] = 0.
     centers = (edges[:-1]+edges[1:])/2
     if location == "volume_centroid":
         centers = (2/3)*np.diff(edges**3)/np.diff(edges**2)
@@ -770,6 +777,9 @@ def test_generated_heat_partition_in_two_material_annulus(location, record_prope
     wall_heat = np.array([-inner[0], outer[-1]])
     target = 2*np.pi*ends*flux*[-1, 1]
     supplied = np.pi*np.diff(edges**2) @ source[sides] + 2*np.pi*radius*generation
+    if insulated is not None:
+        np.testing.assert_allclose(wall_heat[insulated], 0., atol=1e-13)
+        np.testing.assert_allclose(wall_heat[1-insulated], supplied, rtol=0, atol=2e-12)
     balance = abs(wall_heat.sum()-supplied)
     np.testing.assert_allclose(np.r_[sheet, observed], np.r_[sheet_temperature, traces], rtol=0, atol=2e-13)
     np.testing.assert_allclose(wall_heat, target, rtol=0, atol=2e-12)
